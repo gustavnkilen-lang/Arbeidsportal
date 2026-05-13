@@ -69,7 +69,7 @@
 }
 
 .app-wrapper {
-    max-width: 1600px;
+    max-width: 1400px;
     margin: 0 auto;
 }
 
@@ -112,6 +112,20 @@
     font-weight: 500;
 }
 
+.home-btn {
+    background: #3b82f6;
+    color: white;
+    text-decoration: none;
+    padding: 6px 16px;
+    border-radius: 30px;
+    font-size: 0.85rem;
+    font-weight: 500;
+}
+
+.home-btn:hover {
+    background: #2563eb;
+}
+
 .logout-btn {
     background: #dc2626;
     border: none;
@@ -124,6 +138,63 @@
 
 .logout-btn:hover {
     background: #b91c1c;
+}
+
+/* Page Title */
+.page-title {
+    margin-bottom: 28px;
+}
+
+.page-title h2 {
+    color: white;
+    font-size: 1.8rem;
+    font-weight: 600;
+}
+
+.page-title p {
+    color: #94a3b8;
+    margin-top: 6px;
+}
+
+/* Navigasjonsmeny (kort) */
+.nav-menu {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 24px;
+    margin-top: 20px;
+}
+
+.nav-card {
+    background: linear-gradient(145deg, #1e293b, #0f172a);
+    border-radius: 28px;
+    padding: 28px 24px;
+    text-decoration: none;
+    transition: all 0.3s ease;
+    border: 1px solid #1e293b;
+    text-align: center;
+}
+
+.nav-card:hover {
+    transform: translateY(-5px);
+    border-color: #3b82f6;
+    background: linear-gradient(145deg, #2d3a4e, #1a2438);
+}
+
+.nav-icon {
+    font-size: 3rem;
+    margin-bottom: 16px;
+}
+
+.nav-title {
+    font-size: 1.3rem;
+    font-weight: 700;
+    color: white;
+    margin-bottom: 8px;
+}
+
+.nav-desc {
+    font-size: 0.85rem;
+    color: #94a3b8;
 }
 
 /* KPI Grid */
@@ -170,53 +241,28 @@
     color: #f87171;
 }
 
-/* Tabs */
-.nav-tabs-pro {
-    display: flex;
-    background: #0f172a;
-    border-radius: 60px;
-    padding: 6px;
-    margin-bottom: 28px;
-    gap: 6px;
-    flex-wrap: wrap;
-    border: 1px solid #1e293b;
+/* Saldo kort for lommebok */
+.saldo-card {
+    background: linear-gradient(135deg, #1e3a5f, #0f2b44);
+    border-radius: 28px;
+    padding: 28px 32px;
+    margin-bottom: 24px;
+    text-align: center;
+    border: 1px solid #3b82f6;
 }
 
-.tab-pro {
-    background: transparent;
-    border: none;
-    padding: 10px 24px;
-    border-radius: 40px;
-    font-weight: 600;
+.saldo-label {
     font-size: 0.8rem;
+    text-transform: uppercase;
+    letter-spacing: 2px;
     color: #94a3b8;
-    cursor: pointer;
-    transition: all 0.2s;
+    margin-bottom: 12px;
 }
 
-.tab-pro.active {
-    background: #3b82f6;
-    color: white;
-}
-
-.tab-pro:hover:not(.active) {
-    background: #1e293b;
-    color: #cbd5e1;
-}
-
-/* Paneler */
-.tab-pane {
-    display: none;
-    animation: fadeIn 0.25s ease;
-}
-
-.tab-pane.active-pane {
-    display: block;
-}
-
-@keyframes fadeIn {
-    from { opacity: 0; transform: translateY(6px);}
-    to { opacity: 1; transform: translateY(0);}
+.saldo-value {
+    font-size: 3rem;
+    font-weight: 800;
+    color: #4ade80;
 }
 
 /* Kort */
@@ -282,10 +328,12 @@ label {
     font-weight: 600;
     color: white;
     cursor: pointer;
+    transition: all 0.2s;
 }
 
 .btn-primary:hover {
     background: #2563eb;
+    transform: translateY(-1px);
 }
 
 .btn-secondary {
@@ -306,6 +354,12 @@ label {
     font-weight: 600;
     color: #cbd5e1;
     cursor: pointer;
+    transition: all 0.2s;
+}
+
+.btn-outline:hover {
+    background: #1e293b;
+    border-color: #3b82f6;
 }
 
 .btn-danger {
@@ -316,6 +370,10 @@ label {
     font-weight: 600;
     color: white;
     cursor: pointer;
+}
+
+.btn-danger:hover {
+    background: #b91c1c;
 }
 
 .btn-full {
@@ -358,10 +416,16 @@ label {
     color: #f97316;
     cursor: pointer;
     font-size: 0.75rem;
+    padding: 4px 8px;
+    border-radius: 12px;
+}
+
+.action-btn:hover {
+    background: #1e293b;
 }
 
 .scroll-table {
-    max-height: 320px;
+    max-height: 400px;
     overflow-y: auto;
 }
 
@@ -392,11 +456,34 @@ label {
 }
 
 .aggregering-list {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+    gap: 12px;
+}
+
+.aggregering-list .stat-card {
+    margin: 0;
+}
+
+/* Import status */
+.import-status {
+    margin-top: 12px;
+    padding: 10px;
+    border-radius: 16px;
+}
+
+.info-box {
+    background: #1e293b;
+    border-radius: 16px;
+    padding: 16px;
     color: #cbd5e1;
     font-size: 0.85rem;
-    display: flex;
-    flex-direction: column;
-    gap: 8px;
+}
+
+.warning-text {
+    color: #f87171;
+    font-size: 0.8rem;
+    margin-top: 8px;
 }
 
 .footer-note {
@@ -410,6 +497,7 @@ label {
 
 @media (max-width: 700px) {
     .kpi-value { font-size: 1.5rem; }
-    .tab-pro { padding: 6px 14px; font-size: 0.7rem; }
+    .saldo-value { font-size: 2rem; }
     .card-glass { padding: 1rem; }
+    .nav-menu { grid-template-columns: 1fr; }
 }

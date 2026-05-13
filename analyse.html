@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="no">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>WorkBench Pro - Analyse</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body class="dashboard-body">
+    <div class="app-wrapper">
+        <div class="pro-header">
+            <div class="logo-area">
+                <h1>WORKBENCH PRO</h1>
+                <p>timelogg | fravær | finans | lommebok</p>
+            </div>
+            <div class="user-area">
+                <span class="user-name" id="currentUserDisplay"></span>
+                <a href="dashboard.html" class="home-btn">🏠 Hjem</a>
+                <button id="logoutBtn" class="logout-btn">Logg ut</button>
+            </div>
+        </div>
+        
+        <div class="page-title">
+            <h2>Analyse & Rapporter</h2>
+            <p>Statistikk og innsikt i arbeidsdataene dine</p>
+        </div>
+        
+        <div class="card-glass">
+            <div class="card-title">Nøkkeltall</div>
+            <div class="stats-grid" id="statsContainer"></div>
+        </div>
+        
+        <div class="card-glass">
+            <div class="card-title">Timer per måned (aggregering)</div>
+            <div id="aggregeringContainer" class="aggregering-list"></div>
+        </div>
+        
+        <div class="card-glass">
+            <div class="card-title">Månedslønn historikk</div>
+            <div class="scroll-table">
+                <table class="data-table" id="lonnHistorikkTable">
+                    <thead><tr><th>MÅNED</th><th>BELØP</th></thead>
+                    <tbody id="lonnHistorikkBody"></tbody>
+                </table>
+            </div>
+        </div>
+        
+        <div class="card-glass">
+            <div class="card-title">Topp 5 arbeidsdager (flest timer)</div>
+            <div id="toppArbeidsdager" class="aggregering-list"></div>
+        </div>
+    </div>
+    
+    <script src="data.js"></script>
+    <script src="analyse.js"></script>
+</body>
+</html>

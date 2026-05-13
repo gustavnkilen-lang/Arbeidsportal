@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="no">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>WorkBench Pro - Lønn</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body class="dashboard-body">
+    <div class="app-wrapper">
+        <div class="pro-header">
+            <div class="logo-area">
+                <h1>WORKBENCH PRO</h1>
+                <p>timelogg | fravær | finans | lommebok</p>
+            </div>
+            <div class="user-area">
+                <span class="user-name" id="currentUserDisplay"></span>
+                <a href="dashboard.html" class="home-btn">🏠 Hjem</a>
+                <button id="logoutBtn" class="logout-btn">Logg ut</button>
+            </div>
+        </div>
+        
+        <div class="page-title">
+            <h2>Lønn</h2>
+            <p>Registrer månedslønn og overfør til lommebok</p>
+        </div>
+        
+        <div class="card-glass">
+            <div class="card-title">Registrer månedslønn (brutto)</div>
+            <div class="form-row">
+                <div><label>MÅNED</label><input type="month" id="lonnMaaned" class="input-field"></div>
+                <div><label>BELØP (NOK)</label><input type="number" id="lonnBelop" class="input-field" placeholder="38500"></div>
+                <div><label>KOMMENTAR</label><input type="text" id="lonnKommentar" class="input-field" placeholder="fastlønn, bonus"></div>
+            </div>
+            <div class="flex-between">
+                <button id="regLonnBtn" class="btn-primary">Registrer lønn</button>
+                <button id="overforTilLommebokBtn" class="btn-outline">+ Overfør til lommebok</button>
+            </div>
+        </div>
+        
+        <div class="card-glass">
+            <div class="card-title">Lønnshistorikk</div>
+            <div class="scroll-table">
+                <table class="data-table">
+                    <thead><tr><th>MÅNED</th><th>BELØP</th><th>KOMMENTAR</th><th></th></tr></thead>
+                    <tbody id="lonnTableBody"></tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+    
+    <script src="data.js"></script>
+    <script src="lonn.js"></script>
+</body>
+</html>

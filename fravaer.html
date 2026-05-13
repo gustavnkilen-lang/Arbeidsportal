@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="no">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>WorkBench Pro - Fravær</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body class="dashboard-body">
+    <div class="app-wrapper">
+        <div class="pro-header">
+            <div class="logo-area">
+                <h1>WORKBENCH PRO</h1>
+                <p>timelogg | fravær | finans | lommebok</p>
+            </div>
+            <div class="user-area">
+                <span class="user-name" id="currentUserDisplay"></span>
+                <a href="dashboard.html" class="home-btn">🏠 Hjem</a>
+                <button id="logoutBtn" class="logout-btn">Logg ut</button>
+            </div>
+        </div>
+        
+        <div class="page-title">
+            <h2>Fravær</h2>
+            <p>Registrer fravær og årsak</p>
+        </div>
+        
+        <div class="card-glass">
+            <div class="card-title">Registrer fravær</div>
+            <div class="form-row">
+                <div><label>DATO</label><input type="date" id="fravDato" class="input-field"></div>
+                <div><label>TIMER FRAVÆR</label><input type="number" step="0.5" id="fravTimer" class="input-field" placeholder="7.5"></div>
+                <div><label>ÅRSAK</label><input type="text" id="fravArsak" class="input-field" placeholder="sykdom, omsorg, etc"></div>
+            </div>
+            <button id="leggFraværBtn" class="btn-primary">Registrer fravær</button>
+        </div>
+        
+        <div class="card-glass">
+            <div class="card-title">Fraværsoversikt</div>
+            <div class="scroll-table">
+                <table class="data-table">
+                    <thead><tr><th>DATO</th><th>TIMER</th><th>ÅRSAK</th><th></th></tr></thead>
+                    <tbody id="fraværTableBody"></tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+    
+    <script src="data.js"></script>
+    <script src="fravaer.js"></script>
+</body>
+</html>

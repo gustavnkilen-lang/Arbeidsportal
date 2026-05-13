@@ -1,4 +1,5 @@
 // ==================== DASHBOARD LOGIKK ====================
+// Koblet sammen med data.js og auth.js
 
 let currentData = null;
 
@@ -95,6 +96,10 @@ function updateTimerTable() {
         </tr>
     `).join('');
     
+    if (sorted.length === 0) {
+        tbody.innerHTML = '<tr><td colspan="6" style="text-align:center;">Ingen timer registrert</td></tr>';
+    }
+    
     // Legg til slett-lyttere
     document.querySelectorAll('.delete-timer').forEach(btn => {
         btn.addEventListener('click', (e) => {
@@ -115,11 +120,15 @@ function updateFraværTable() {
     tbody.innerHTML = sorted.map(f => `
         <tr>
             <td>${f.dato}</td>
-            <td>${f.timerFravær}</td>
+            <td>${f.timerFravær} h</td>
             <td>${f.årsak}</td>
             <td><button class="action-btn delete-fravær" data-id="${f.id}">Slett</button></td>
         </tr>
     `).join('');
+    
+    if (sorted.length === 0) {
+        tbody.innerHTML = '<tr><td colspan="4" style="text-align:center;">Ingen fravær registrert</td></tr>';
+    }
     
     document.querySelectorAll('.delete-fravær').forEach(btn => {
         btn.addEventListener('click', (e) => {
@@ -146,6 +155,10 @@ function updateLonnTable() {
         </tr>
     `).join('');
     
+    if (sorted.length === 0) {
+        tbody.innerHTML = '<tr><td colspan="4" style="text-align:center;">Ingen lønn registrert</td></tr>';
+    }
+    
     document.querySelectorAll('.delete-lonn').forEach(btn => {
         btn.addEventListener('click', (e) => {
             const month = btn.getAttribute('data-month');
@@ -170,6 +183,10 @@ function updateWalletTable() {
             <td><button class="action-btn delete-trans" data-id="${w.id}">Slett</button></td>
         </tr>
     `).join('');
+    
+    if (sorted.length === 0) {
+        tbody.innerHTML = '<tr><td colspan="4" style="text-align:center;">Ingen transaksjoner registrert</td></tr>';
+    }
     
     document.querySelectorAll('.delete-trans').forEach(btn => {
         btn.addEventListener('click', (e) => {
@@ -206,7 +223,7 @@ function updateAggregering() {
     }
 }
 
-// Statistikk
+// Statistikk for analyse-siden
 function updateStats() {
     const container = document.getElementById('statsContainer');
     if (!container) return;
@@ -214,12 +231,15 @@ function updateStats() {
     const totalTimer = currentData.timerLogg.reduce((s, t) => s + t.totalTimer, 0);
     const totalFravær = currentData.fravær.reduce((s, f) => s + f.timerFravær, 0);
     const snittLonn = currentData.månedslønn.length ? currentData.månedslønn.reduce((s, l) => s + l.beløp, 0) / currentData.månedslønn.length : 0;
+    const antallMåneder = currentData.månedslønn.length;
     
     container.innerHTML = `
-        <div class="stat-card"><div class="stat-number">${totalTimer.toFixed(1)}</div><div class="stat-label">Totalt timer jobbet</div></div>
-        <div class="stat-card"><div class="stat-number">${totalFravær.toFixed(1)}</div><div class="stat-label">Totalt fravær (timer)</div></div>
+        <div class="stat-card"><div class="stat-number">${totalTimer.toFixed(1)} h</div><div class="stat-label">Totalt timer jobbet</div></div>
+        <div class="stat-card"><div class="stat-number">${totalFravær.toFixed(1)} h</div><div class="stat-label">Totalt fravær (timer)</div></div>
         <div class="stat-card"><div class="stat-number">${formatNOK(snittLonn)}</div><div class="stat-label">Gjennomsnittlig månedslønn</div></div>
+        <div class="stat-card"><div class="stat-number">${antallMåneder}</div><div class="stat-label">Måneder med lønn</div></div>
         <div class="stat-card"><div class="stat-number">${currentData.walletHistory.length}</div><div class="stat-label">Antall transaksjoner</div></div>
+        <div class="stat-card"><div class="stat-number">${currentData.timerLogg.length}</div><div class="stat-label">Antall arbeidsøkter</div></div>
     `;
 }
 
@@ -254,6 +274,9 @@ function setupEventListeners() {
             });
             saveWorkData(currentData);
             refreshAllData();
+            
+            // Tøm beskrivelse for neste registrering (valgfritt)
+            document.getElementById('timerBeskrivelse').value = '';
         });
     }
     
@@ -278,6 +301,9 @@ function setupEventListeners() {
             });
             saveWorkData(currentData);
             refreshAllData();
+            
+            document.getElementById('fravArsak').value = '';
+            document.getElementById('fravTimer').value = '';
         });
     }
     
@@ -302,6 +328,9 @@ function setupEventListeners() {
             }
             saveWorkData(currentData);
             refreshAllData();
+            
+            document.getElementById('lonnBelop').value = '';
+            document.getElementById('lonnKommentar').value = '';
         });
     }
     
@@ -326,6 +355,7 @@ function setupEventListeners() {
             });
             saveWorkData(currentData);
             refreshAllData();
+            alert(`Lønn på ${formatNOK(lonnPost.beløp)} er overført til lommeboken!`);
         });
     }
     
@@ -354,6 +384,9 @@ function setupEventListeners() {
             });
             saveWorkData(currentData);
             refreshAllData();
+            
+            document.getElementById('transBeskrivelse').value = '';
+            document.getElementById('transBelop').value = '';
         });
     }
     
@@ -399,7 +432,7 @@ function setupEventListeners() {
                         refreshAllData();
                         alert("Data gjenopprettet fra backup!");
                     } else {
-                        alert("Ugyldig backup-format");
+                        alert("Ugyldig backup-format. Må inneholde 'data'-felt med timerLogg, fravær etc.");
                     }
                 } catch (err) {
                     alert("Feil ved parsing: " + err.message);

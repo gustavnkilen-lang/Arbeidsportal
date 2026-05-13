@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="no">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>WorkBench Pro - Lommebok</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body class="dashboard-body">
+    <div class="app-wrapper">
+        <div class="pro-header">
+            <div class="logo-area">
+                <h1>WORKBENCH PRO</h1>
+                <p>timelogg | fravær | finans | lommebok</p>
+            </div>
+            <div class="user-area">
+                <span class="user-name" id="currentUserDisplay"></span>
+                <a href="dashboard.html" class="home-btn">🏠 Hjem</a>
+                <button id="logoutBtn" class="logout-btn">Logg ut</button>
+            </div>
+        </div>
+        
+        <div class="page-title">
+            <h2>Lommebok</h2>
+            <p>Hold oversikt over saldo, utgifter og inntekter</p>
+        </div>
+        
+        <!-- Saldo visning -->
+        <div class="saldo-card" id="saldoCard">
+            <div class="saldo-label">NÅVÆRENDE SALDO</div>
+            <div class="saldo-value" id="saldoValue">0 kr</div>
+        </div>
+        
+        <div class="card-glass">
+            <div class="card-title">Legg til transaksjon</div>
+            <div class="form-row">
+                <div><label>BESKRIVELSE</label><input type="text" id="transBeskrivelse" class="input-field" placeholder="Mat, regning, lønn"></div>
+                <div><label>BELØP</label><input type="number" id="transBelop" class="input-field" placeholder="0"></div>
+                <div><label>TYPE</label>
+                    <select id="transType" class="input-field">
+                        <option value="utgift">Utgift (minus fra saldo)</option>
+                        <option value="inntekt">Inntekt (pluss til saldo)</option>
+                    </select>
+                </div>
+                <div><label>DATO</label><input type="date" id="transDato" class="input-field"></div>
+            </div>
+            <button id="leggTilTransaksjonBtn" class="btn-primary">Legg til i lommebok</button>
+        </div>
+        
+        <div class="card-glass">
+            <div class="card-title">Transaksjonshistorikk</div>
+            <div class="scroll-table">
+                <table class="data-table">
+                    <thead><tr><th>DATO</th><th>BESKRIVELSE</th><th>BELØP</th><th></th></tr></thead>
+                    <tbody id="walletTableBody"></tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+    
+    <script src="data.js"></script>
+    <script src="lommebok.js"></script>
+</body>
+</html>

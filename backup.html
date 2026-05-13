@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="no">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>WorkBench Pro - Backup</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body class="dashboard-body">
+    <div class="app-wrapper">
+        <div class="pro-header">
+            <div class="logo-area">
+                <h1>WORKBENCH PRO</h1>
+                <p>timelogg | fravær | finans | lommebok</p>
+            </div>
+            <div class="user-area">
+                <span class="user-name" id="currentUserDisplay"></span>
+                <a href="dashboard.html" class="home-btn">🏠 Hjem</a>
+                <button id="logoutBtn" class="logout-btn">Logg ut</button>
+            </div>
+        </div>
+        
+        <div class="page-title">
+            <h2>Backup & Datasikkerhet</h2>
+            <p>Eksporter data til JSON for lagring på GitHub eller importér sikkerhetskopi</p>
+        </div>
+        
+        <div class="card-glass">
+            <div class="card-title">Eksporter data</div>
+            <p>Last ned alle dine data som en JSON-fil. Kan lagres på GitHub, Google Drive eller annen skylagring.</p>
+            <button id="exportDataBtn" class="btn-primary" style="margin-top: 16px;">📁 Eksporter alle data (JSON)</button>
+        </div>
+        
+        <div class="card-glass">
+            <div class="card-title">Importer backup</div>
+            <p>Gjenopprett data fra tidligere eksportert JSON-fil.</p>
+            <label for="importFile" class="btn-outline" style="display: inline-block; margin-top: 16px; cursor: pointer;">📂 Velg backup-fil</label>
+            <input type="file" id="importFile" accept=".json" style="display:none;">
+            <div id="importStatus" class="import-status"></div>
+        </div>
+        
+        <div class="card-glass">
+            <div class="card-title">Tilbakestill all data</div>
+            <p class="warning-text">ADVARSEL: Dette sletter ALLE dine timer, fravær, lønn og transaksjoner. Handlingen kan ikke angres.</p>
+            <button id="resetAllDataBtn" class="btn-danger">⚠️ Tilbakestill all data</button>
+        </div>
+        
+        <div class="card-glass">
+            <div class="card-title">Data informasjon</div>
+            <div class="info-box" id="dataInfo"></div>
+        </div>
+    </div>
+    
+    <script src="data.js"></script>
+    <script src="backup.js"></script>
+</body>
+</html>

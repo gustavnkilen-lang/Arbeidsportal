@@ -1,4 +1,5 @@
 // ==================== BRUKERADMINISTRASJON ====================
+// Koblet sammen med data.js og dashboard.html
 
 // Registrer ny bruker
 function registerUser(username, password, confirmPassword) {
@@ -53,7 +54,7 @@ function getCurrentUser() {
 
 // -------------------- EVENT LISTENERS --------------------
 document.addEventListener('DOMContentLoaded', () => {
-    // Login
+    // LOGIN (bare på index.html)
     const loginBtn = document.getElementById('loginBtn');
     if (loginBtn) {
         loginBtn.addEventListener('click', () => {
@@ -68,9 +69,19 @@ document.addEventListener('DOMContentLoaded', () => {
                 msgDiv.innerHTML = `<div style="background:#450a0a; padding:12px; border-radius:16px; color:#f87171; border:1px solid #7f1d1d;">${result.message}</div>`;
             }
         });
+        
+        // Enter key på login
+        const loginPass = document.getElementById('loginPassword');
+        if (loginPass) {
+            loginPass.addEventListener('keypress', (e) => {
+                if (e.key === 'Enter') {
+                    document.getElementById('loginBtn').click();
+                }
+            });
+        }
     }
     
-    // Register
+    // REGISTER (bare på index.html)
     const registerBtn = document.getElementById('registerBtn');
     if (registerBtn) {
         registerBtn.addEventListener('click', () => {
@@ -85,7 +96,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 document.getElementById('regUsername').value = '';
                 document.getElementById('regPassword').value = '';
                 document.getElementById('regPasswordConfirm').value = '';
-                // Fyll inn loginfelter
+                // Fyll inn loginfelter for enkelhet
                 document.getElementById('loginUsername').value = username;
                 document.getElementById('loginPassword').value = '';
             } else {
@@ -94,8 +105,18 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
     
-    // Redirect hvis allerede logget inn
-    if (isLoggedIn() && window.location.pathname.includes('index.html')) {
-        window.location.href = 'dashboard.html';
+    // SJEKK OM BRUKER ER ALLEREDE INNLOGGET
+    // Hvis på index.html og allerede logget inn -> redirect til dashboard
+    if (window.location.pathname.includes('index.html') || window.location.pathname === '/' || window.location.pathname.endsWith('/')) {
+        if (isLoggedIn()) {
+            window.location.href = 'dashboard.html';
+        }
+    }
+    
+    // Hvis på dashboard.html og IKKE logget inn -> redirect til index
+    if (window.location.pathname.includes('dashboard.html')) {
+        if (!isLoggedIn()) {
+            window.location.href = 'index.html';
+        }
     }
 });
