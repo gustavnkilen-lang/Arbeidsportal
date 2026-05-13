@@ -19,7 +19,7 @@
         }
 
         .app-wrapper {
-            max-width: 1400px;
+            max-width: 1600px;
             margin: 0 auto;
         }
 
@@ -80,7 +80,6 @@
             cursor: pointer;
         }
 
-        /* Page Title */
         .page-title {
             margin-bottom: 28px;
         }
@@ -218,12 +217,94 @@
             font-size: 0.8rem;
         }
 
-        /* Tidslinje stil for logginnlegg */
+        /* Prosjekt mappe styling */
+        .prosjekt-mappe {
+            background: #0f172a;
+            border-radius: 20px;
+            margin-bottom: 20px;
+            border: 1px solid #1e293b;
+            overflow: hidden;
+        }
+
+        .mappe-header {
+            background: linear-gradient(135deg, #1e293b, #0f172a);
+            padding: 16px 20px;
+            cursor: pointer;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            transition: all 0.2s;
+            border-bottom: 1px solid #334155;
+        }
+
+        .mappe-header:hover {
+            background: #2d3a4e;
+        }
+
+        .mappe-tittel {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            flex-wrap: wrap;
+        }
+
+        .mappe-ikon {
+            font-size: 1.5rem;
+        }
+
+        .mappe-navn {
+            font-size: 1.2rem;
+            font-weight: 600;
+            color: #3b82f6;
+        }
+
+        .mappe-stats {
+            display: flex;
+            gap: 20px;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+
+        .mappe-timer {
+            background: #10b981;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            color: white;
+        }
+
+        .mappe-antall {
+            color: #94a3b8;
+            font-size: 0.75rem;
+        }
+
+        .mappe-chevron {
+            font-size: 1.2rem;
+            color: #64748b;
+            transition: transform 0.2s;
+        }
+
+        .mappe-chevron.open {
+            transform: rotate(90deg);
+        }
+
+        .mappe-innhold {
+            display: none;
+            padding: 16px;
+            background: #111827;
+        }
+
+        .mappe-innhold.open {
+            display: block;
+        }
+
+        /* Logg innlegg inne i mappe */
         .logg-innlegg {
             background: #1e293b;
-            border-radius: 20px;
-            padding: 20px;
-            margin-bottom: 16px;
+            border-radius: 16px;
+            padding: 16px;
+            margin-bottom: 12px;
             border-left: 3px solid #3b82f6;
             transition: all 0.2s;
         }
@@ -238,27 +319,27 @@
             justify-content: space-between;
             align-items: center;
             flex-wrap: wrap;
-            margin-bottom: 12px;
-            padding-bottom: 8px;
+            margin-bottom: 10px;
+            padding-bottom: 6px;
             border-bottom: 1px solid #334155;
         }
 
         .logg-dato {
-            font-size: 0.8rem;
+            font-size: 0.75rem;
             color: #3b82f6;
             font-weight: 600;
         }
 
         .logg-timer {
             background: #0f172a;
-            padding: 4px 12px;
+            padding: 2px 10px;
             border-radius: 20px;
-            font-size: 0.75rem;
+            font-size: 0.7rem;
             color: #4ade80;
         }
 
         .logg-tittel {
-            font-size: 1.1rem;
+            font-size: 1rem;
             font-weight: 600;
             color: white;
             margin-bottom: 8px;
@@ -266,26 +347,25 @@
 
         .logg-beskrivelse {
             color: #cbd5e1;
-            font-size: 0.85rem;
-            line-height: 1.5;
-            margin-bottom: 12px;
+            font-size: 0.8rem;
+            line-height: 1.4;
+            margin-bottom: 10px;
         }
 
         .logg-bilder {
             display: flex;
             flex-wrap: wrap;
-            gap: 12px;
-            margin-top: 12px;
+            gap: 8px;
+            margin-top: 10px;
         }
 
         .logg-bilde {
-            max-width: 120px;
-            max-height: 120px;
-            border-radius: 12px;
+            max-width: 80px;
+            max-height: 80px;
+            border-radius: 8px;
             object-fit: cover;
             cursor: pointer;
             border: 1px solid #475569;
-            transition: 0.2s;
         }
 
         .logg-bilde:hover {
@@ -296,9 +376,8 @@
         .logg-footer {
             display: flex;
             justify-content: flex-end;
-            gap: 12px;
-            margin-top: 12px;
-            padding-top: 8px;
+            margin-top: 10px;
+            padding-top: 6px;
         }
 
         .delete-btn {
@@ -315,7 +394,34 @@
             background: #7f1d1d;
         }
 
-        /* Modal for bildevisning */
+        /* Filter bar */
+        .filter-bar {
+            display: flex;
+            gap: 12px;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+            align-items: flex-end;
+        }
+
+        .filter-input {
+            flex: 1;
+            background: #1e293b;
+            border: 1px solid #334155;
+            border-radius: 40px;
+            padding: 10px 16px;
+            color: white;
+        }
+
+        .filter-select {
+            background: #1e293b;
+            border: 1px solid #334155;
+            border-radius: 40px;
+            padding: 10px 16px;
+            color: white;
+            cursor: pointer;
+        }
+
+        /* Modal */
         .modal {
             display: none;
             position: fixed;
@@ -348,35 +454,34 @@
             cursor: pointer;
         }
 
-        /* Filtrering */
-        .filter-bar {
-            display: flex;
-            gap: 12px;
-            margin-bottom: 20px;
-            flex-wrap: wrap;
-        }
-
-        .filter-input {
-            flex: 1;
-            background: #1e293b;
-            border: 1px solid #334155;
-            border-radius: 40px;
-            padding: 10px 16px;
-            color: white;
-        }
-
-        /* Scroll */
-        .logg-liste {
-            max-height: 600px;
-            overflow-y: auto;
-            padding-right: 8px;
-        }
-
         .info-text {
             color: #64748b;
             text-align: center;
             padding: 40px;
             font-style: italic;
+        }
+
+        .visning-toggle {
+            display: flex;
+            gap: 12px;
+            margin-bottom: 16px;
+            justify-content: flex-end;
+        }
+
+        .toggle-btn {
+            background: #1e293b;
+            border: 1px solid #334155;
+            border-radius: 30px;
+            padding: 6px 16px;
+            color: #94a3b8;
+            cursor: pointer;
+            font-size: 0.75rem;
+        }
+
+        .toggle-btn.active {
+            background: #3b82f6;
+            color: white;
+            border-color: #3b82f6;
         }
     </style>
 </head>
@@ -385,7 +490,7 @@
         <div class="pro-header">
             <div class="logo-area">
                 <h1>WORKBENCH PRO</h1>
-                <p>arbeidslogg | dokumentasjon | tidslinje</p>
+                <p>arbeidslogg | prosjektmapper | dokumentasjon</p>
             </div>
             <div class="user-area">
                 <span class="user-name" id="currentUserDisplay"></span>
@@ -396,8 +501,8 @@
         </div>
 
         <div class="page-title">
-            <h2>Arbeidslogg & Dokumentasjon</h2>
-            <p>Skriv daglig rapport, last opp bilder, og dokumenter arbeidstimer</p>
+            <h2>Arbeidslogg & Prosjektmapper</h2>
+            <p>Organiser logger etter prosjekt | Se total timer per prosjekt</p>
         </div>
 
         <!-- Statistikk -->
@@ -413,7 +518,17 @@
                         <input type="date" id="loggDato" class="input-field">
                     </div>
                     <div class="form-group">
-                        <label>Tittel / Prosjekt</label>
+                        <label>Prosjekt / Mappe navn</label>
+                        <div style="display: flex; gap: 8px;">
+                            <input type="text" id="loggProsjekt" class="input-field" placeholder="f.eks. Prosjekt A, Kunde X, Utvikling" style="flex:2;">
+                            <select id="eksisterendeProsjekt" class="input-field" style="flex:1;">
+                                <option value="">Eller velg</option>
+                            </select>
+                        </div>
+                        <small style="color:#64748b;">Skriv et prosjektnavn - alle logger med samme navn samles i en mappe</small>
+                    </div>
+                    <div class="form-group">
+                        <label>Tittel / Oppgave</label>
                         <input type="text" id="loggTittel" class="input-field" placeholder="f.eks. Frontend utvikling, Møte med kunde">
                     </div>
                     <div class="form-group">
@@ -427,7 +542,7 @@
                     <div class="form-group">
                         <label>Last opp bilder (dokumentasjon)</label>
                         <input type="file" id="loggBilder" class="input-field" accept="image/*" multiple>
-                        <small style="color:#64748b; display:block; margin-top:6px;">Kan velge flere bilder samtidig</small>
+                        <small style="color:#64748b;">Kan velge flere bilder samtidig</small>
                     </div>
                     <div id="bildePreview" style="display:flex; gap:8px; flex-wrap:wrap; margin-bottom:16px;"></div>
                     <button id="lagreLoggBtn" class="btn-primary">💾 Lagre arbeidslogg</button>
@@ -441,16 +556,23 @@
                 </div>
             </div>
 
-            <!-- Høyre: Vis alle logger -->
+            <!-- Høyre: Vis alle logger med mappevisning -->
             <div>
                 <div class="card-glass">
-                    <div class="card-title">📋 Loggoversikt</div>
-                    <div class="filter-bar">
-                        <input type="text" id="filterInput" class="filter-input" placeholder="Filtrer på tittel eller beskrivelse...">
-                        <input type="date" id="filterDato" class="filter-input" style="width:auto;">
-                        <button id="clearFilterBtn" class="btn-outline">Tøm filter</button>
+                    <div class="card-title">📁 Prosjektmapper</div>
+                    <div class="visning-toggle">
+                        <button id="visningListeBtn" class="toggle-btn active">📋 Listevisning</button>
+                        <button id="visningMappeBtn" class="toggle-btn">📁 Mappevisning</button>
                     </div>
-                    <div class="logg-liste" id="loggListe"></div>
+                    <div class="filter-bar">
+                        <input type="text" id="filterInput" class="filter-input" placeholder="Søk i tittel eller beskrivelse...">
+                        <input type="date" id="filterDato" class="filter-input" style="width:auto;">
+                        <select id="filterProsjekt" class="filter-select">
+                            <option value="">Alle prosjekter</option>
+                        </select>
+                        <button id="clearFilterBtn" class="btn-outline">Tøm</button>
+                    </div>
+                    <div id="loggContainer" style="max-height: 600px; overflow-y: auto; padding-right: 8px;"></div>
                 </div>
             </div>
         </div>
@@ -470,21 +592,22 @@
         }
         document.getElementById('currentUserDisplay').innerText = currentUser;
 
-        // Data struktur for logger
+        let alleLogger = [];
+        let currentView = 'liste'; // 'liste' eller 'mappe'
+
+        // Data funksjoner
         function loadLoggData() {
             const raw = localStorage.getItem(`workbench_logg_${currentUser}`);
             if (raw) {
                 return JSON.parse(raw);
-            } else {
-                return [];
             }
+            return [];
         }
 
         function saveLoggData(data) {
             localStorage.setItem(`workbench_logg_${currentUser}`, JSON.stringify(data));
         }
 
-        // Last timereg data for å hente dagens timer
         function loadTimeregData() {
             const raw = localStorage.getItem(`workbench_${currentUser}`);
             if (raw) {
@@ -493,19 +616,161 @@
             return { timerLogg: [] };
         }
 
-        // Vis alle logger
-        let alleLogger = [];
+        // Hent unike prosjekter
+        function getUnikeProsjekter() {
+            const prosjekter = new Set();
+            alleLogger.forEach(logg => {
+                if (logg.prosjekt) prosjekter.add(logg.prosjekt);
+            });
+            return Array.from(prosjekter).sort();
+        }
 
+        // Oppdater prosjekt dropdowns
+        function updateProsjektDropdowns() {
+            const prosjekter = getUnikeProsjekter();
+            const selectEksisterende = document.getElementById('eksisterendeProsjekt');
+            const filterSelect = document.getElementById('filterProsjekt');
+            
+            selectEksisterende.innerHTML = '<option value="">-- Nytt prosjekt --</option>' + 
+                prosjekter.map(p => `<option value="${p}">📁 ${p}</option>`).join('');
+            
+            filterSelect.innerHTML = '<option value="">Alle prosjekter</option>' + 
+                prosjekter.map(p => `<option value="${p}">📁 ${p}</option>`).join('');
+        }
+
+        // Grupper logger etter prosjekt
+        function groupByProsjekt(logger) {
+            const groups = {};
+            logger.forEach(logg => {
+                const prosjekt = logg.prosjekt || 'Uten prosjekt';
+                if (!groups[prosjekt]) {
+                    groups[prosjekt] = [];
+                }
+                groups[prosjekt].push(logg);
+            });
+            return groups;
+        }
+
+        // Beregn total timer per prosjekt
+        function getProsjektTotals(groups) {
+            const totals = {};
+            Object.keys(groups).forEach(prosjekt => {
+                totals[prosjekt] = groups[prosjekt].reduce((sum, l) => sum + l.timer, 0);
+            });
+            return totals;
+        }
+
+        // Escape HTML
+        function escapeHtml(str) {
+            if (!str) return '';
+            return str.replace(/[&<>]/g, function(m) {
+                if (m === '&') return '&amp;';
+                if (m === '<') return '&lt;';
+                if (m === '>') return '&gt;';
+                return m;
+            });
+        }
+
+        // Listevisning
+        function renderListeVisning(filtrerte) {
+            if (filtrerte.length === 0) {
+                return '<div class="info-text">Ingen logger funnet</div>';
+            }
+            
+            return filtrerte.map(logg => `
+                <div class="logg-innlegg">
+                    <div class="logg-header">
+                        <span class="logg-dato">${logg.dato}</span>
+                        <span class="logg-timer">⏱️ ${logg.timer} timer</span>
+                    </div>
+                    <div style="font-size:0.7rem; color:#3b82f6; margin-bottom:6px;">📁 ${escapeHtml(logg.prosjekt || 'Uten prosjekt')}</div>
+                    <div class="logg-tittel">${escapeHtml(logg.tittel)}</div>
+                    <div class="logg-beskrivelse">${escapeHtml(logg.beskrivelse)}</div>
+                    ${logg.bilder && logg.bilder.length > 0 ? `
+                        <div class="logg-bilder">
+                            ${logg.bilder.map((bilde, idx) => `
+                                <img src="${bilde}" class="logg-bilde" data-img="${bilde}">
+                            `).join('')}
+                        </div>
+                    ` : ''}
+                    <div class="logg-footer">
+                        <button class="delete-btn" data-id="${logg.id}">🗑️ Slett</button>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        // Mappevisning
+        function renderMappeVisning(filtrerte) {
+            if (filtrerte.length === 0) {
+                return '<div class="info-text">Ingen logger funnet</div>';
+            }
+            
+            const groups = groupByProsjekt(filtrerte);
+            const totals = getProsjektTotals(groups);
+            const sorterteProsjekter = Object.keys(groups).sort();
+            
+            let html = '';
+            sorterteProsjekter.forEach(prosjekt => {
+                const logger = groups[prosjekt];
+                const totalTimer = totals[prosjekt];
+                const sorterteLogger = [...logger].sort((a, b) => b.dato.localeCompare(a.dato));
+                const mappeId = `mappe_${prosjekt.replace(/[^a-zA-Z0-9]/g, '_')}`;
+                
+                html += `
+                    <div class="prosjekt-mappe">
+                        <div class="mappe-header" data-mappe="${mappeId}">
+                            <div class="mappe-tittel">
+                                <span class="mappe-ikon">📁</span>
+                                <span class="mappe-navn">${escapeHtml(prosjekt)}</span>
+                            </div>
+                            <div class="mappe-stats">
+                                <span class="mappe-timer">⏱️ ${totalTimer.toFixed(1)} timer totalt</span>
+                                <span class="mappe-antall">${logger.length} logger</span>
+                                <span class="mappe-chevron">▶</span>
+                            </div>
+                        </div>
+                        <div class="mappe-innhold" id="${mappeId}">
+                            ${sorterteLogger.map(logg => `
+                                <div class="logg-innlegg">
+                                    <div class="logg-header">
+                                        <span class="logg-dato">${logg.dato}</span>
+                                        <span class="logg-timer">⏱️ ${logg.timer} timer</span>
+                                    </div>
+                                    <div class="logg-tittel">${escapeHtml(logg.tittel)}</div>
+                                    <div class="logg-beskrivelse">${escapeHtml(logg.beskrivelse)}</div>
+                                    ${logg.bilder && logg.bilder.length > 0 ? `
+                                        <div class="logg-bilder">
+                                            ${logg.bilder.map((bilde, idx) => `
+                                                <img src="${bilde}" class="logg-bilde" data-img="${bilde}">
+                                            `).join('')}
+                                        </div>
+                                    ` : ''}
+                                    <div class="logg-footer">
+                                        <button class="delete-btn" data-id="${logg.id}">🗑️ Slett</button>
+                                    </div>
+                                </div>
+                            `).join('')}
+                        </div>
+                    </div>
+                `;
+            });
+            
+            return html;
+        }
+
+        // Hoved render funksjon
         function renderLogger() {
             const filterTekst = document.getElementById('filterInput').value.toLowerCase();
             const filterDato = document.getElementById('filterDato').value;
+            const filterProsjekt = document.getElementById('filterProsjekt').value;
             
             let filtrerte = [...alleLogger];
             
             if (filterTekst) {
                 filtrerte = filtrerte.filter(l => 
-                    l.tittel.toLowerCase().includes(filterTekst) || 
-                    l.beskrivelse.toLowerCase().includes(filterTekst)
+                    (l.tittel && l.tittel.toLowerCase().includes(filterTekst)) || 
+                    (l.beskrivelse && l.beskrivelse.toLowerCase().includes(filterTekst))
                 );
             }
             
@@ -513,48 +778,20 @@
                 filtrerte = filtrerte.filter(l => l.dato === filterDato);
             }
             
-            // Sorter nyeste først
-            filtrerte.sort((a, b) => b.dato.localeCompare(a.dato));
-            
-            const container = document.getElementById('loggListe');
-            
-            if (filtrerte.length === 0) {
-                container.innerHTML = '<div class="info-text">Ingen logger funnet. Opprett din første logg!</div>';
-            } else {
-                container.innerHTML = filtrerte.map(logg => `
-                    <div class="logg-innlegg">
-                        <div class="logg-header">
-                            <span class="logg-dato">${logg.dato}</span>
-                            <span class="logg-timer">⏱️ ${logg.timer} timer</span>
-                        </div>
-                        <div class="logg-tittel">${escapeHtml(logg.tittel)}</div>
-                        <div class="logg-beskrivelse">${escapeHtml(logg.beskrivelse)}</div>
-                        ${logg.bilder && logg.bilder.length > 0 ? `
-                            <div class="logg-bilder">
-                                ${logg.bilder.map((bilde, idx) => `
-                                    <img src="${bilde}" class="logg-bilde" alt="Bilde ${idx+1}" data-img="${bilde}">
-                                `).join('')}
-                            </div>
-                        ` : ''}
-                        <div class="logg-footer">
-                            <button class="delete-btn" data-id="${logg.id}">🗑️ Slett logg</button>
-                        </div>
-                    </div>
-                `).join('');
+            if (filterProsjekt) {
+                filtrerte = filtrerte.filter(l => l.prosjekt === filterProsjekt);
             }
             
-            // Oppdater statistikk
-            updateStats();
+            // Sorter nyeste først innen hver gruppe
+            filtrerte.sort((a, b) => b.dato.localeCompare(a.dato));
             
-            // Legg til slett eventer
-            document.querySelectorAll('.delete-btn').forEach(btn => {
-                btn.addEventListener('click', (e) => {
-                    const id = parseInt(btn.getAttribute('data-id'));
-                    alleLogger = alleLogger.filter(l => l.id !== id);
-                    saveLoggData(alleLogger);
-                    renderLogger();
-                });
-            });
+            const container = document.getElementById('loggContainer');
+            
+            if (currentView === 'liste') {
+                container.innerHTML = renderListeVisning(filtrerte);
+            } else {
+                container.innerHTML = renderMappeVisning(filtrerte);
+            }
             
             // Legg til bilde klikk eventer
             document.querySelectorAll('.logg-bilde').forEach(img => {
@@ -565,33 +802,52 @@
                     modal.classList.add('active');
                 });
             });
-        }
-        
-        function escapeHtml(str) {
-            if (!str) return '';
-            return str.replace(/[&<>]/g, function(m) {
-                if (m === '&') return '&amp;';
-                if (m === '<') return '&lt;';
-                if (m === '>') return '&gt;';
-                return m;
-            }).replace(/[\uD800-\uDBFF][\uDC00-\uDFFF]/g, function(c) {
-                return c;
+            
+            // Legg til slett eventer
+            document.querySelectorAll('.delete-btn').forEach(btn => {
+                btn.addEventListener('click', (e) => {
+                    const id = parseInt(btn.getAttribute('data-id'));
+                    alleLogger = alleLogger.filter(l => l.id !== id);
+                    saveLoggData(alleLogger);
+                    renderLogger();
+                    updateStats();
+                    updateProsjektDropdowns();
+                });
             });
+            
+            // Legg til mappe toggle eventer (kun i mappevisning)
+            if (currentView === 'mappe') {
+                document.querySelectorAll('.mappe-header').forEach(header => {
+                    header.addEventListener('click', () => {
+                        const mappeId = header.getAttribute('data-mappe');
+                        const innhold = document.getElementById(mappeId);
+                        const chevron = header.querySelector('.mappe-chevron');
+                        if (innhold) {
+                            innhold.classList.toggle('open');
+                            chevron.classList.toggle('open');
+                        }
+                    });
+                });
+            }
+            
+            updateStats();
         }
-        
+
         function updateStats() {
             const totalTimer = alleLogger.reduce((sum, l) => sum + l.timer, 0);
             const antallLogger = alleLogger.length;
             const unikeDager = new Set(alleLogger.map(l => l.dato)).size;
+            const unikeProsjekter = getUnikeProsjekter().length;
             
             document.getElementById('statsBar').innerHTML = `
-                <div class="stat-card"><div class="stat-number">${totalTimer.toFixed(1)}</div><div class="stat-label">Totaltimer loggført</div></div>
+                <div class="stat-card"><div class="stat-number">${totalTimer.toFixed(1)}</div><div class="stat-label">Totaltimer</div></div>
                 <div class="stat-card"><div class="stat-number">${antallLogger}</div><div class="stat-label">Antall logger</div></div>
                 <div class="stat-card"><div class="stat-number">${unikeDager}</div><div class="stat-label">Arbeidsdager</div></div>
-                <div class="stat-card"><div class="stat-number">${alleLogger.length ? (totalTimer / alleLogger.length).toFixed(1) : 0}</div><div class="stat-label">Snitt timer per logg</div></div>
+                <div class="stat-card"><div class="stat-number">${unikeProsjekter}</div><div class="stat-label">Prosjekter</div></div>
+                <div class="stat-card"><div class="stat-number">${alleLogger.length ? (totalTimer / alleLogger.length).toFixed(1) : 0}</div><div class="stat-label">Snitt per logg</div></div>
             `;
         }
-        
+
         // Bilde preview
         document.getElementById('loggBilder').addEventListener('change', function(e) {
             const preview = document.getElementById('bildePreview');
@@ -613,41 +869,30 @@
                 reader.readAsDataURL(file);
             });
         });
-        
+
         // Lagre ny logg
         document.getElementById('lagreLoggBtn').addEventListener('click', () => {
             const dato = document.getElementById('loggDato').value;
+            const prosjekt = document.getElementById('loggProsjekt').value.trim() || 
+                            document.getElementById('eksisterendeProsjekt').value || 'Uten prosjekt';
             const tittel = document.getElementById('loggTittel').value.trim();
             const timer = parseFloat(document.getElementById('loggTimer').value);
             const beskrivelse = document.getElementById('loggBeskrivelse').value.trim();
             const bildeFiles = document.getElementById('loggBilder').files;
             
-            if (!dato) {
-                alert('Vennligst velg dato');
-                return;
-            }
-            if (!tittel) {
-                alert('Vennligst skriv inn en tittel');
-                return;
-            }
-            if (isNaN(timer) || timer <= 0) {
-                alert('Vennligst skriv inn gyldig antall timer');
-                return;
-            }
-            if (!beskrivelse) {
-                alert('Vennligst skriv en beskrivelse');
-                return;
-            }
+            if (!dato) { alert('Vennligst velg dato'); return; }
+            if (!tittel) { alert('Vennligst skriv inn en tittel'); return; }
+            if (isNaN(timer) || timer <= 0) { alert('Vennligst skriv inn gyldig antall timer'); return; }
+            if (!beskrivelse) { alert('Vennligst skriv en beskrivelse'); return; }
             
-            // Konverter bilder til base64
             const bilder = [];
             const files = Array.from(bildeFiles);
             
             if (files.length === 0) {
-                // Ingen bilder, lagre direkte
                 const nyLogg = {
                     id: Date.now(),
                     dato: dato,
+                    prosjekt: prosjekt,
                     tittel: tittel,
                     timer: timer,
                     beskrivelse: beskrivelse,
@@ -658,9 +903,9 @@
                 saveLoggData(alleLogger);
                 clearForm();
                 renderLogger();
+                updateProsjektDropdowns();
                 alert('✓ Logg lagret!');
             } else {
-                // Last opp bilder først
                 let ferdigLastet = 0;
                 files.forEach(file => {
                     const reader = new FileReader();
@@ -671,6 +916,7 @@
                             const nyLogg = {
                                 id: Date.now(),
                                 dato: dato,
+                                prosjekt: prosjekt,
                                 tittel: tittel,
                                 timer: timer,
                                 beskrivelse: beskrivelse,
@@ -681,6 +927,7 @@
                             saveLoggData(alleLogger);
                             clearForm();
                             renderLogger();
+                            updateProsjektDropdowns();
                             alert('✓ Logg med bilder lagret!');
                         }
                     };
@@ -688,17 +935,18 @@
                 });
             }
         });
-        
+
         function clearForm() {
             document.getElementById('loggTittel').value = '';
             document.getElementById('loggTimer').value = '';
             document.getElementById('loggBeskrivelse').value = '';
+            document.getElementById('loggProsjekt').value = '';
             document.getElementById('loggBilder').value = '';
             document.getElementById('bildePreview').innerHTML = '';
             document.getElementById('loggDato').value = new Date().toISOString().slice(0, 10);
         }
-        
-        // Hent timer fra timereg.html data
+
+        // Hent timer fra timereg
         document.getElementById('hentTimeregBtn').addEventListener('click', () => {
             const dagensDato = new Date().toISOString().slice(0, 10);
             const timeregData = loadTimeregData();
@@ -707,31 +955,47 @@
             
             if (totalTimer > 0) {
                 document.getElementById('loggTimer').value = totalTimer;
-                document.getElementById('timeregStatus').innerHTML = `<span style="color:#4ade80;">✓ Hentet ${totalTimer} timer fra timeregistrering for ${dagensDato}</span>`;
+                document.getElementById('timeregStatus').innerHTML = `<span style="color:#4ade80;">✓ Hentet ${totalTimer} timer fra timeregistrering</span>`;
                 setTimeout(() => {
                     document.getElementById('timeregStatus').innerHTML = '';
                 }, 3000);
             } else {
-                document.getElementById('timeregStatus').innerHTML = `<span style="color:#f87171;">Ingen timer registrert i timereg.html for ${dagensDato}</span>`;
+                document.getElementById('timeregStatus').innerHTML = `<span style="color:#f87171;">Ingen timer registrert for ${dagensDato}</span>`;
                 setTimeout(() => {
                     document.getElementById('timeregStatus').innerHTML = '';
                 }, 3000);
             }
         });
-        
-        // Filtrering
-        document.getElementById('filterInput').addEventListener('input', () => renderLogger());
-        document.getElementById('filterDato').addEventListener('change', () => renderLogger());
-        document.getElementById('clearFilterBtn').addEventListener('click', () => {
-            document.getElementById('filterInput').value = '';
-            document.getElementById('filterDato').value = '';
+
+        // Visning toggle
+        document.getElementById('visningListeBtn').addEventListener('click', () => {
+            currentView = 'liste';
+            document.getElementById('visningListeBtn').classList.add('active');
+            document.getElementById('visningMappeBtn').classList.remove('active');
             renderLogger();
         });
         
-        // Modal lukk
+        document.getElementById('visningMappeBtn').addEventListener('click', () => {
+            currentView = 'mappe';
+            document.getElementById('visningMappeBtn').classList.add('active');
+            document.getElementById('visningListeBtn').classList.remove('active');
+            renderLogger();
+        });
+
+        // Filtrering
+        document.getElementById('filterInput').addEventListener('input', () => renderLogger());
+        document.getElementById('filterDato').addEventListener('change', () => renderLogger());
+        document.getElementById('filterProsjekt').addEventListener('change', () => renderLogger());
+        document.getElementById('clearFilterBtn').addEventListener('click', () => {
+            document.getElementById('filterInput').value = '';
+            document.getElementById('filterDato').value = '';
+            document.getElementById('filterProsjekt').value = '';
+            renderLogger();
+        });
+
+        // Modal
         const modal = document.getElementById('imageModal');
-        const modalClose = document.querySelector('.modal-close');
-        modalClose.addEventListener('click', () => {
+        document.querySelector('.modal-close').addEventListener('click', () => {
             modal.classList.remove('active');
         });
         modal.addEventListener('click', (e) => {
@@ -739,17 +1003,18 @@
                 modal.classList.remove('active');
             }
         });
-        
-        // Initialiser
-        alleLogger = loadLoggData();
-        document.getElementById('loggDato').value = new Date().toISOString().slice(0, 10);
-        renderLogger();
-        
+
         // Logg ut
         document.getElementById('logoutBtn').addEventListener('click', () => {
             sessionStorage.removeItem('workbench_currentUser');
             window.location.href = 'index.html';
         });
+
+        // Initialiser
+        alleLogger = loadLoggData();
+        document.getElementById('loggDato').value = new Date().toISOString().slice(0, 10);
+        updateProsjektDropdowns();
+        renderLogger();
     </script>
 </body>
 </html>

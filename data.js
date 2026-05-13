@@ -1,5 +1,4 @@
 // ==================== DATALAGRING (localStorage) ====================
-// Dette er den sentrale datakilden for hele applikasjonen
 
 // Standard tom datastruktur
 function getDefaultWorkData() {
@@ -63,7 +62,7 @@ function formatNOK(verdi) {
     return verdi.toLocaleString('nb-NO') + ' kr';
 }
 
-// Oppdater KPI-visning (henter statistikk)
+// Oppdater KPI-visning
 function updateKPICards(data) {
     const totalInntekt = (data.månedslønn || []).reduce((sum, m) => sum + (m.beløp || 0), 0);
     const totalUtgift = (data.walletHistory || []).filter(w => w.type === 'utgift').reduce((sum, w) => sum + w.belop, 0);

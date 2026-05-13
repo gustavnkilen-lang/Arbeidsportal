@@ -157,7 +157,6 @@ async function loginUserDB(username, password) {
             } else if (user.password !== password) {
                 resolve({ success: false, message: 'Feil passord' });
             } else {
-                // Lagre innlogget bruker i sessionStorage
                 sessionStorage.setItem('workbench_currentUser', username);
                 resolve({ success: true, message: 'Innlogging vellykket', username: username });
             }
@@ -344,7 +343,7 @@ async function deleteArbeidsloggDB(id) {
     });
 }
 
-// ==================== TIMELØNN PER ØKT (spesifikk for lonn.html) ====================
+// ==================== TIMELØNN PER ØKT ====================
 
 async function getTimelonnPerOktDB(username) {
     const db = await initDatabase();
@@ -412,7 +411,6 @@ async function exportAllDataDB(username) {
 
 // Importer data fra JSON
 async function importAllDataDB(username, data) {
-    // Slett eksisterende data for brukeren
     const allTimer = await getTimerLoggDB(username);
     for (const t of allTimer) await deleteTimerLoggDB(t.id);
     
@@ -431,7 +429,6 @@ async function importAllDataDB(username, data) {
     const allTimelonn = await getTimelonnPerOktDB(username);
     for (const t of allTimelonn) await deleteTimelonnPerOktDB(t.id);
     
-    // Importer nye data
     if (data.timerLogg) for (const t of data.timerLogg) await addTimerLoggDB(t);
     if (data.fravaer) for (const f of data.fravaer) await addFravaerDB(f);
     if (data.lonninger) for (const l of data.lonninger) await addLonningDB(l);
