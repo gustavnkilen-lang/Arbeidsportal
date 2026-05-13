@@ -68,6 +68,8 @@
         
         .prosjekt-tag { background: #3b82f6; padding: 2px 8px; border-radius: 12px; font-size: 0.7rem; display: inline-block; }
         
+        .lonn-type-badge { background: #8b5cf6; padding: 2px 8px; border-radius: 12px; font-size: 0.65rem; display: inline-block; margin-left: 6px; }
+        
         .modal {
             display: none;
             position: fixed;
@@ -107,6 +109,19 @@
         .prosjekt-filter { background: #1e293b; padding: 6px 16px; border-radius: 30px; cursor: pointer; font-size: 0.8rem; color: #94a3b8; }
         .prosjekt-filter.active { background: #3b82f6; color: white; }
         .prosjekt-filter:hover { background: #2d3a4e; }
+        
+        .radio-group { display: flex; gap: 20px; align-items: center; flex-wrap: wrap; margin-top: 8px; }
+        .radio-group label { display: flex; align-items: center; gap: 8px; text-transform: none; font-size: 0.85rem; color: #cbd5e1; cursor: pointer; }
+        .radio-group input { width: 18px; height: 18px; cursor: pointer; }
+        
+        .lonn-type-group { display: flex; gap: 20px; align-items: center; flex-wrap: wrap; margin-bottom: 16px; padding: 12px; background: #1e293b; border-radius: 20px; }
+        .lonn-type-group label { display: flex; align-items: center; gap: 8px; text-transform: none; font-size: 0.9rem; color: #e2e8f0; cursor: pointer; padding: 6px 16px; border-radius: 30px; transition: all 0.2s; }
+        .lonn-type-group input { display: none; }
+        .lonn-type-group label:has(input:checked) { background: #3b82f6; color: white; }
+        .lonn-type-group label:hover { background: #2d3a4e; }
+        
+        .maanedslonn-felt { display: none; background: #1e293b; border-radius: 20px; padding: 16px; margin-top: 12px; }
+        .timelonn-felt { display: block; }
     </style>
 </head>
 <body>
@@ -123,16 +138,32 @@
         
         <div class="page-title">
             <h2>💰 Lønn & Timelønn</h2>
-            <p>Registrer timelønn for spesifikke økter | Velg prosjekt/mappe | Velg utbetalingsdato | Månedssummering</p>
+            <p>Registrer timelønn eller månedslønn | Velg prosjekt/mappe | Velg utbetalingsdato</p>
         </div>
         
         <!-- Statistikk -->
         <div class="stats-grid" id="statsGrid"></div>
         
         <div class="log-grid" style="display: grid; grid-template-columns: 1fr 1fr; gap: 24px;">
-            <!-- Venstre: Velg økt fra timereg -->
+            <!-- Venstre: Velg økt fra timereg (for timelønn) eller registrer månedslønn -->
             <div>
+                <!-- Lønnstype valg -->
                 <div class="card-glass">
+                    <div class="card-title">📋 Velg lønnstype</div>
+                    <div class="lonn-type-group">
+                        <label>
+                            <input type="radio" name="lonnType" value="timelonn" checked>
+                            <span>⏱️ Timelønn (per time)</span>
+                        </label>
+                        <label>
+                            <input type="radio" name="lonnType" value="maanedslonn">
+                            <span>📅 Månedslønn (fast beløp)</span>
+                        </label>
+                    </div>
+                </div>
+                
+                <!-- Timelønn seksjon (velg økt) -->
+                <div id="timelonnSeksjon" class="card-glass">
                     <div class="card-title">📋 Velg økt fra timeregistrering</div>
                     <p style="color:#94a3b8; font-size:0.8rem; margin-bottom:16px;">Klikk på en økt for å registrere timelønn for den</p>
                     <div class="form-group">
@@ -144,21 +175,39 @@
                         ⚡ Totalt registrerte økter: <span id="totaltOkter">0</span>
                     </div>
                 </div>
+                
+                <!-- Månedslønn seksjon (direkte registrering) -->
+                <div id="maanedslonnSeksjon" class="card-glass" style="display:none;">
+                    <div class="card-title">📅 Registrer månedslønn</div>
+                    <div class="form-group">
+                        <label>Måned (YYYY-MM)</label>
+                        <input type="month" id="maanedslonnMaaned" class="input-field">
+                    </div>
+                    <div class="form-group">
+                        <label>Månedsbeløp (NOK)</label>
+                        <input type="number" id="maanedslonnBelop" class="input-field" placeholder="f.eks. 45000">
+                    </div>
+                    <div class="form-group">
+                        <label>Arbeidstimer denne måneden (valgfritt)</label>
+                        <input type="number" step="0.5" id="maanedslonnTimer" class="input-field" placeholder="f.eks. 160">
+                    </div>
+                    <div class="info-badge" style="display:block; text-align:center; margin-top:8px;">
+                        💡 Hvis du fyller inn timer, beregnes timelønn automatisk
+                    </div>
+                </div>
             </div>
             
-            <!-- Høyre: Registrer timelønn for valgt økt -->
+            <!-- Høyre: Registrer lønn -->
             <div>
                 <div class="card-glass">
-                    <div class="card-title">💵 Registrer timelønn for valgt økt</div>
-                    <div id="valgtØktInfo" style="background:#1e293b; border-radius:20px; padding:16px; margin-bottom:20px;">
-                        <div style="color:#64748b; text-align:center;">Ingen økt valgt</div>
-                    </div>
-                    <div class="form-row">
-                        <div><label>TIMELØNN (kr per time)</label><input type="number" id="timelonnInput" class="input-field" placeholder="f.eks. 350" step="5"></div>
-                        <div><label>BONUS (valgfritt)</label><input type="number" id="bonusInput" class="input-field" placeholder="0" step="100"></div>
+                    <div class="card-title">💵 Registrer lønn</div>
+                    <div id="valgtInfo" style="background:#1e293b; border-radius:20px; padding:16px; margin-bottom:20px;">
+                        <div style="color:#64748b; text-align:center;">
+                            <span id="valgtInfoTekst">Velg timelønn eller månedslønn</span>
+                        </div>
                     </div>
                     
-                    <!-- Prosjekt/mappe -->
+                    <!-- Felles felt -->
                     <div class="form-group">
                         <label>📁 PROSJEKT / MAPPE</label>
                         <div class="flex-between">
@@ -167,10 +216,27 @@
                                 <option value="">Eller velg eksisterende</option>
                             </select>
                         </div>
-                        <small style="color:#64748b;">Skriv et prosjektnavn - alle timer med samme navn summeres sammen</small>
+                        <small style="color:#64748b;">Skriv et prosjektnavn - alle lønninger med samme navn summeres sammen</small>
                     </div>
                     
-                    <!-- Utbetalingsdato - valgfri -->
+                    <!-- Spesifikke felt for timelønn -->
+                    <div id="timelonnFelt">
+                        <div class="form-row">
+                            <div><label>TIMELØNN (kr per time)</label><input type="number" id="timelonnInput" class="input-field" placeholder="f.eks. 350" step="5"></div>
+                            <div><label>BONUS (valgfritt)</label><input type="number" id="bonusInput" class="input-field" placeholder="0" step="100"></div>
+                        </div>
+                    </div>
+                    
+                    <!-- Spesifikke felt for månedslønn -->
+                    <div id="maanedslonnFelt" style="display:none;">
+                        <div class="form-row">
+                            <div><label>MÅNEDSBELØP (NOK)</label><input type="number" id="maanedsbelopInput" class="input-field" placeholder="f.eks. 45000"></div>
+                            <div><label>ANTALL TIMER (valgfritt)</label><input type="number" step="0.5" id="maanedsTimerInput" class="input-field" placeholder="f.eks. 160"></div>
+                        </div>
+                        <div class="info-badge" id="beregnetTimelonnInfo" style="display:block; text-align:center; margin-top:8px;"></div>
+                    </div>
+                    
+                    <!-- Utbetalingsdato -->
                     <div class="form-group">
                         <label>📅 Velg utbetalingsdato</label>
                         <input type="date" id="utbetalingsDatoInput" class="input-field">
@@ -191,7 +257,7 @@
                     </div>
                     
                     <div class="flex-between">
-                        <button id="registrerLønnBtn" class="btn-success">💾 Registrer timelønn</button>
+                        <button id="registrerLønnBtn" class="btn-success">💾 Registrer lønn</button>
                         <button id="clearSelectedBtn" class="btn-outline">Tøm valg</button>
                     </div>
                 </div>
@@ -246,13 +312,14 @@
                             <th data-sort="dato">📅 Dato ↕</th>
                             <th>📁 Prosjekt</th>
                             <th>📝 Beskrivelse</th>
-                            <th>⏱️ Timer</th>
-                            <th>💰 Timelønn</th>
+                            <th>🕐 Timer</th>
+                            <th>💰 Sats</th>
                             <th>🎁 Bonus</th>
                             <th>💵 Totalt</th>
                             <th>📆 Utbetalingsdato</th>
                             <th>📌 Status</th>
-                            <th></th><th></th><th></th>
+                            <th>🏷️ Type</th>
+                            <th></th><th></th>
                         </tr>
                     </thead>
                     <tbody id="lonnTableBody"></tbody>
@@ -277,10 +344,17 @@
     <div id="editModal" class="modal">
         <div class="modal-content">
             <div class="modal-header">
-                <span>✏️ Rediger timelønn</span>
+                <span>✏️ Rediger lønn</span>
                 <span class="modal-close">&times;</span>
             </div>
-            <div class="form-group"><label>Timelønn (kr)</label><input type="number" id="editTimelonn" class="input-field"></div>
+            <div class="form-group"><label>Type</label>
+                <select id="editType" class="input-field">
+                    <option value="timelonn">Timelønn</option>
+                    <option value="maanedslonn">Månedslønn</option>
+                </select>
+            </div>
+            <div class="form-group"><label>Sats (kr/time eller månedsbeløp)</label><input type="number" id="editSats" class="input-field"></div>
+            <div class="form-group"><label>Timer (kun for timelønn)</label><input type="number" step="0.5" id="editTimer" class="input-field"></div>
             <div class="form-group"><label>Bonus (kr)</label><input type="number" id="editBonus" class="input-field"></div>
             <div class="form-group"><label>Prosjekt / Mappe</label><input type="text" id="editProsjekt" class="input-field"></div>
             <div class="form-group"><label>Utbetalingsdato</label><input type="date" id="editUtbetalingsDato" class="input-field"></div>
@@ -292,6 +366,7 @@
         </div>
     </div>
     
+    <script src="database.js"></script>
     <script>
         const currentUser = sessionStorage.getItem('workbench_currentUser');
         if (!currentUser) { window.location.href = 'index.html'; }
@@ -300,6 +375,7 @@
         let valgtØkt = null;
         let standardTimelønn = 0;
         let currentSort = { column: 'dato', direction: 'desc' };
+        let currentLonnType = 'timelonn';
         
         function loadData() {
             const raw = localStorage.getItem(`workbench_${currentUser}`);
@@ -333,10 +409,29 @@
         
         function formatNOK(verdi) { return verdi.toLocaleString('nb-NO') + ' kr'; }
         
-        function updateWalletSaldo(nySaldo) {
-            const data = loadData();
-            data.saldo = nySaldo;
-            saveData(data);
+        // Vis/skjul seksjoner basert på lønnstype
+        function updateLonnTypeVisning() {
+            const lonnType = document.querySelector('input[name="lonnType"]:checked').value;
+            currentLonnType = lonnType;
+            
+            if (lonnType === 'timelonn') {
+                document.getElementById('timelonnSeksjon').style.display = 'block';
+                document.getElementById('maanedslonnSeksjon').style.display = 'none';
+                document.getElementById('timelonnFelt').style.display = 'block';
+                document.getElementById('maanedslonnFelt').style.display = 'none';
+                document.getElementById('valgtInfoTekst').innerHTML = 'Velg en økt fra listen til venstre for å registrere timelønn';
+                document.getElementById('valgtInfo').style.background = '#1e293b';
+            } else {
+                document.getElementById('timelonnSeksjon').style.display = 'none';
+                document.getElementById('maanedslonnSeksjon').style.display = 'block';
+                document.getElementById('timelonnFelt').style.display = 'none';
+                document.getElementById('maanedslonnFelt').style.display = 'block';
+                document.getElementById('valgtInfoTekst').innerHTML = 'Fyll ut månedsbeløp for å registrere månedslønn';
+                document.getElementById('valgtInfo').style.background = '#1e3a5f';
+                
+                // Sett dagens dato som default for månedslønn
+                document.getElementById('maanedslonnMaaned').value = new Date().toISOString().slice(0, 7);
+            }
         }
         
         // Utbetal en spesifikk lønn
@@ -354,7 +449,7 @@
             data.walletHistory.push({
                 id: Date.now(),
                 dato: new Date().toISOString().slice(0, 10),
-                beskrivelse: `${lonn.prosjekt || 'Arbeid'}: ${lonn.beskrivelse || 'Arbeid'} (${lonn.dato})`,
+                beskrivelse: `${lonn.prosjekt || 'Arbeid'}: ${lonn.beskrivelse || lonn.tittel || 'Lønn'} (${lonn.dato})`,
                 belop: lonn.total,
                 type: "inntekt"
             });
@@ -375,7 +470,6 @@
             return Array.from(prosjekter).sort();
         }
         
-        // Oppdater prosjektlister
         function updateProsjektLister() {
             const prosjekter = getUnikeProsjekter();
             const select = document.getElementById('eksisterendeProsjekt');
@@ -396,7 +490,6 @@
             });
         }
         
-        // Oppdater månedsfilter
         function updateMånedFilter() {
             const liste = loadTimelønnData();
             const måneder = new Set();
@@ -407,7 +500,6 @@
             select.innerHTML = '<option value="">Alle måneder</option>' + Array.from(måneder).sort().reverse().map(m => `<option value="${m}">${m}</option>`).join('');
         }
         
-        // Render månedssummering per prosjekt
         function renderMånedsummering() {
             const liste = loadTimelønnData();
             const månedFilter = document.getElementById('månedFilter').value;
@@ -417,17 +509,16 @@
             if (månedFilter) filtrert = filtrert.filter(l => l.dato && l.dato.startsWith(månedFilter));
             if (prosjektFilter) filtrert = filtrert.filter(l => l.prosjekt === prosjektFilter);
             
-            // Summer per måned og prosjekt
             const summer = {};
             filtrert.forEach(l => {
-                const måned = l.dato.substring(0, 7);
+                const måned = l.dato ? l.dato.substring(0, 7) : (l.maaned || 'Ukjent');
                 const prosjekt = l.prosjekt || 'Uten prosjekt';
                 const key = `${måned}|${prosjekt}`;
                 if (!summer[key]) {
                     summer[key] = { måned, prosjekt, total: 0, timer: 0, antall: 0 };
                 }
                 summer[key].total += l.total;
-                summer[key].timer += l.timer;
+                summer[key].timer += l.timer || 0;
                 summer[key].antall++;
             });
             
@@ -454,7 +545,7 @@
                         <span>${s.timer.toFixed(1)} timer</span>
                     </div>
                     <div class="flex-between">
-                        <span>📊 Snitt per økt:</span>
+                        <span>📊 Snitt per registrering:</span>
                         <span>${formatNOK(s.total / s.antall)}</span>
                     </div>
                 </div>
@@ -496,46 +587,53 @@
                     const beskrivelse = card.getAttribute('data-beskrivelse');
                     valgtØkt = { id, dato, timer, beskrivelse };
                     renderØktListe();
-                    updateValgtØktInfo();
+                    updateValgtInfo();
                 });
             });
         }
         
-        function updateValgtØktInfo() {
-            const container = document.getElementById('valgtØktInfo');
-            if (!valgtØkt) {
-                container.innerHTML = '<div style="color:#64748b; text-align:center;">Ingen økt valgt. Klikk på en økt fra listen til venstre.</div>';
-                return;
+        function updateValgtInfo() {
+            const container = document.getElementById('valgtInfo');
+            const lonnType = document.querySelector('input[name="lonnType"]:checked').value;
+            
+            if (lonnType === 'timelonn') {
+                if (!valgtØkt) {
+                    container.innerHTML = '<div style="color:#64748b; text-align:center;">Ingen økt valgt. Klikk på en økt fra listen til venstre.</div>';
+                    container.style.background = '#1e293b';
+                } else {
+                    container.innerHTML = `
+                        <div style="color:#3b82f6; font-weight:600;">✓ Valgt økt for timelønn</div>
+                        <div class="flex-between" style="margin-top:8px;">
+                            <span>📅 ${valgtØkt.dato}</span>
+                            <span>⏱️ ${valgtØkt.timer} timer</span>
+                        </div>
+                        <div style="color:#94a3b8; font-size:0.8rem;">${valgtØkt.beskrivelse || 'Arbeid'}</div>
+                    `;
+                    container.style.background = '#1e3a5f';
+                }
+            } else {
+                const maaned = document.getElementById('maanedslonnMaaned').value;
+                const belop = document.getElementById('maanedslonnBelop').value;
+                container.innerHTML = `
+                    <div style="color:#3b82f6; font-weight:600;">✓ Månedslønn</div>
+                    <div class="flex-between" style="margin-top:8px;">
+                        <span>📅 ${maaned || 'Velg måned'}</span>
+                        <span>💰 ${belop ? formatNOK(parseFloat(belop)) : 'Skriv inn beløp'}</span>
+                    </div>
+                    <div style="color:#94a3b8; font-size:0.8rem;">Månedslønn registreres direkte</div>
+                `;
+                container.style.background = '#1e3a5f';
             }
-            container.innerHTML = `
-                <div style="color:#3b82f6; font-weight:600;">✓ Valgt økt</div>
-                <div class="flex-between" style="margin-top:8px;">
-                    <span>📅 ${valgtØkt.dato}</span>
-                    <span>⏱️ ${valgtØkt.timer} timer</span>
-                </div>
-                <div style="color:#94a3b8; font-size:0.8rem;">${valgtØkt.beskrivelse || 'Arbeid'}</div>
-            `;
         }
         
-        // Registrer timelønn
-        function registrerTimelønn() {
-            if (!valgtØkt) {
-                alert('Vennligst velg en økt fra listen til venstre');
-                return;
-            }
-            
-            const timelønn = parseFloat(document.getElementById('timelonnInput').value);
-            const bonus = parseFloat(document.getElementById('bonusInput').value) || 0;
+        // Registrer lønn (både timelønn og månedslønn)
+        function registrerLønn() {
+            const lonnType = document.querySelector('input[name="lonnType"]:checked').value;
             const prosjekt = document.getElementById('prosjektInput').value.trim() || 
                               document.getElementById('eksisterendeProsjekt').value || 'Arbeid';
             const kommentar = document.getElementById('lonnKommentar').value.trim();
             const utbetalingsType = document.querySelector('input[name="utbetalingsType"]:checked').value;
             let utbetalingsDato = document.getElementById('utbetalingsDatoInput').value;
-            
-            if (isNaN(timelønn) || timelønn <= 0) {
-                alert('Vennligst skriv inn gyldig timelønn');
-                return;
-            }
             
             if (utbetalingsType === 'now') {
                 utbetalingsDato = new Date().toISOString().slice(0, 10);
@@ -544,71 +642,151 @@
                 return;
             }
             
-            const totalLønn = (valgtØkt.timer * timelønn) + bonus;
             const erUtbetalt = (utbetalingsType === 'now');
             
-            const timelønnListe = loadTimelønnData();
-            const eksisterendeIndex = timelønnListe.findIndex(l => l.øktId === valgtØkt.id);
-            
-            const nyLønn = {
-                id: eksisterendeIndex !== -1 ? timelønnListe[eksisterendeIndex].id : Date.now(),
-                øktId: valgtØkt.id,
-                dato: valgtØkt.dato,
-                timer: valgtØkt.timer,
-                beskrivelse: valgtØkt.beskrivelse,
-                prosjekt: prosjekt,
-                timelønn: timelønn,
-                bonus: bonus,
-                total: totalLønn,
-                kommentar: kommentar,
-                utbetalingsDato: utbetalingsDato,
-                utbetalt: erUtbetalt,
-                registrert: new Date().toISOString()
-            };
-            
-            if (erUtbetalt) {
-                const data = loadData();
-                if (!data.walletHistory) data.walletHistory = [];
-                data.walletHistory.push({
+            if (lonnType === 'timelonn') {
+                // TIMELØNN
+                if (!valgtØkt) {
+                    alert('Vennligst velg en økt fra listen til venstre');
+                    return;
+                }
+                
+                const timelønn = parseFloat(document.getElementById('timelonnInput').value);
+                const bonus = parseFloat(document.getElementById('bonusInput').value) || 0;
+                
+                if (isNaN(timelønn) || timelønn <= 0) {
+                    alert('Vennligst skriv inn gyldig timelønn');
+                    return;
+                }
+                
+                const totalLønn = (valgtØkt.timer * timelønn) + bonus;
+                const timelønnListe = loadTimelønnData();
+                const eksisterendeIndex = timelønnListe.findIndex(l => l.øktId === valgtØkt.id && l.type === 'timelonn');
+                
+                const nyLønn = {
+                    id: eksisterendeIndex !== -1 ? timelønnListe[eksisterendeIndex].id : Date.now(),
+                    type: 'timelonn',
+                    øktId: valgtØkt.id,
+                    dato: valgtØkt.dato,
+                    timer: valgtØkt.timer,
+                    beskrivelse: valgtØkt.beskrivelse,
+                    prosjekt: prosjekt,
+                    timelønn: timelønn,
+                    bonus: bonus,
+                    total: totalLønn,
+                    kommentar: kommentar,
+                    utbetalingsDato: utbetalingsDato,
+                    utbetalt: erUtbetalt,
+                    registrert: new Date().toISOString()
+                };
+                
+                if (erUtbetalt) {
+                    const data = loadData();
+                    if (!data.walletHistory) data.walletHistory = [];
+                    data.walletHistory.push({
+                        id: Date.now(),
+                        dato: new Date().toISOString().slice(0, 10),
+                        beskrivelse: `${prosjekt}: ${valgtØkt.beskrivelse || 'Arbeid'} (${valgtØkt.dato})`,
+                        belop: totalLønn,
+                        type: "inntekt"
+                    });
+                    data.saldo = (data.saldo || 0) + totalLønn;
+                    saveData(data);
+                    alert(`✓ ${formatNOK(totalLønn)} er lagt til i lommeboken din!`);
+                } else {
+                    alert(`✓ Timelønn registrert! ${formatNOK(totalLønn)} vil bli utbetalt ${utbetalingsDato}`);
+                }
+                
+                if (eksisterendeIndex !== -1) {
+                    timelønnListe[eksisterendeIndex] = nyLønn;
+                } else {
+                    timelønnListe.push(nyLønn);
+                }
+                
+                saveTimelønnData(timelønnListe);
+                
+            } else {
+                // MÅNEDSLØNN
+                const maaned = document.getElementById('maanedslonnMaaned').value;
+                const maanedsbeløp = parseFloat(document.getElementById('maanedslonnBelop').value);
+                const maanedsTimer = parseFloat(document.getElementById('maanedslonnTimer').value) || 0;
+                
+                if (!maaned) {
+                    alert('Vennligst velg måned');
+                    return;
+                }
+                if (isNaN(maanedsbeløp) || maanedsbeløp <= 0) {
+                    alert('Vennligst skriv inn gyldig månedsbeløp');
+                    return;
+                }
+                
+                const beregnetTimelønn = maanedsTimer > 0 ? maanedsbeløp / maanedsTimer : 0;
+                const timelønnListe = loadTimelønnData();
+                
+                const nyLønn = {
                     id: Date.now(),
-                    dato: new Date().toISOString().slice(0, 10),
-                    beskrivelse: `${prosjekt}: ${valgtØkt.beskrivelse || 'Arbeid'} (${valgtØkt.dato})`,
-                    belop: totalLønn,
-                    type: "inntekt"
-                });
-                data.saldo = (data.saldo || 0) + totalLønn;
-                saveData(data);
-                alert(`✓ ${formatNOK(totalLønn)} er lagt til i lommeboken din!`);
-            } else {
-                alert(`✓ Lønn registrert! ${formatNOK(totalLønn)} vil bli utbetalt ${utbetalingsDato}`);
-            }
-            
-            if (eksisterendeIndex !== -1) {
-                timelønnListe[eksisterendeIndex] = nyLønn;
-            } else {
+                    type: 'maanedslonn',
+                    dato: `${maaned}-01`,
+                    maaned: maaned,
+                    timer: maanedsTimer,
+                    beløp: maanedsbeløp,
+                    beregnetTimelønn: beregnetTimelønn,
+                    beskrivelse: `Månedslønn ${maaned}`,
+                    prosjekt: prosjekt,
+                    total: maanedsbeløp,
+                    kommentar: kommentar,
+                    utbetalingsDato: utbetalingsDato,
+                    utbetalt: erUtbetalt,
+                    registrert: new Date().toISOString()
+                };
+                
+                if (erUtbetalt) {
+                    const data = loadData();
+                    if (!data.walletHistory) data.walletHistory = [];
+                    data.walletHistory.push({
+                        id: Date.now(),
+                        dato: new Date().toISOString().slice(0, 10),
+                        beskrivelse: `${prosjekt}: Månedslønn ${maaned}`,
+                        belop: maanedsbeløp,
+                        type: "inntekt"
+                    });
+                    data.saldo = (data.saldo || 0) + maanedsbeløp;
+                    saveData(data);
+                    alert(`✓ ${formatNOK(maanedsbeløp)} er lagt til i lommeboken din!`);
+                } else {
+                    alert(`✓ Månedslønn registrert! ${formatNOK(maanedsbeløp)} vil bli utbetalt ${utbetalingsDato}`);
+                    if (maanedsTimer > 0) {
+                        alert(`📊 Basert på ${maanedsTimer} timer gir dette en timelønn på ${formatNOK(beregnetTimelønn)}/t`);
+                    }
+                }
+                
                 timelønnListe.push(nyLønn);
+                saveTimelønnData(timelønnListe);
+                
+                // Tøm månedslønn felter
+                document.getElementById('maanedslonnBelop').value = '';
+                document.getElementById('maanedslonnTimer').value = '';
             }
             
-            saveTimelønnData(timelønnListe);
             renderLonnTable();
             updateStats();
             updateProsjektLister();
             updateMånedFilter();
             renderMånedsummering();
             
+            // Tilbakestill skjema
             document.getElementById('timelonnInput').value = '';
             document.getElementById('bonusInput').value = '';
             document.getElementById('lonnKommentar').value = '';
             document.getElementById('prosjektInput').value = '';
-            document.getElementById('utbetalingsDatoInput').value = '';
+            document.getElementById('utbetalingsDatoInput').value = new Date().toISOString().slice(0, 10);
         }
         
-        // Sortering
         function sortData(data, column, direction) {
             return [...data].sort((a, b) => {
                 let aVal = a[column] || '', bVal = b[column] || '';
                 if (column === 'total') { aVal = a.total; bVal = b.total; }
-                if (column === 'timer') { aVal = a.timer; bVal = b.timer; }
+                if (column === 'timer') { aVal = a.timer || 0; bVal = b.timer || 0; }
                 if (typeof aVal === 'number') {
                     return direction === 'asc' ? aVal - bVal : bVal - aVal;
                 }
@@ -616,7 +794,6 @@
             });
         }
         
-        // Vis alle registrerte lønninger
         function renderLonnTable() {
             let timelønnListe = loadTimelønnData();
             const søk = document.getElementById('søkInput').value.toLowerCase();
@@ -638,7 +815,7 @@
             
             const tbody = document.getElementById('lonnTableBody');
             if (filtrert.length === 0) {
-                tbody.innerHTML = '<tr><td colspan="12" style="text-align:center; padding:40px;">Ingen lønninger registrert</td></tr>';
+                tbody.innerHTML = '<tr><td colspan="13" style="text-align:center; padding:40px;">Ingen lønninger registrert</td></tr>';
                 return;
             }
             
@@ -646,18 +823,22 @@
                 const isUtbetalt = l.utbetalt === true;
                 const statusClass = isUtbetalt ? 'status-utbetalt' : 'status-venter';
                 const statusText = isUtbetalt ? '✅ Utbetalt' : `⏳ Venter (${l.utbetalingsDato || 'Ikke satt'})`;
+                const lonnTypeTekst = l.type === 'maanedslonn' ? '📅 Månedslønn' : '⏱️ Timelønn';
+                const lonnTypeBadge = l.type === 'maanedslonn' ? 'status-utbetalt' : 'status-venter';
+                const satsTekst = l.type === 'maanedslonn' ? formatNOK(l.beløp) + '/mnd' : formatNOK(l.timelønn) + '/t';
                 
                 return `
                     <tr>
-                        <td>${l.dato}</td>
+                        <td>${l.dato ? l.dato.substring(0, 10) : l.maaned || '-'}</td>
                         <td><span class="prosjekt-tag">📁 ${l.prosjekt || 'Arbeid'}</span></td>
                         <td style="max-width:150px;">${l.beskrivelse || '-'}</td>
-                        <td>${l.timer} h</td>
-                        <td>${formatNOK(l.timelønn)}/t</td>
-                        <td>${formatNOK(l.bonus)}</td>
+                        <td>${l.timer ? l.timer + ' h' : '-'}</td>
+                        <td>${satsTekst}</td>
+                        <td>${l.bonus ? formatNOK(l.bonus) : '-'}</td>
                         <td style="color:#4ade80; font-weight:600;">${formatNOK(l.total)}</td>
                         <td>${l.utbetalingsDato || '-'}</td>
                         <td><span class="status-badge ${statusClass}">${statusText}</span></td>
+                        <td><span class="lonn-type-badge" style="background:${l.type === 'maanedslonn' ? '#8b5cf6' : '#10b981'}">${lonnTypeTekst}</span></td>
                         <td>${!isUtbetalt ? `<button class="action-btn utbetal-lonn" data-id="${l.id}">💸 Utbetal</button>` : '-'}</td>
                         <td><button class="action-btn edit-lonn" data-id="${l.id}">✏️ Rediger</button></td>
                         <td><button class="action-btn delete-lonn" data-id="${l.id}" style="color:#f87171;">🗑️ Slett</button></td>
@@ -665,7 +846,6 @@
                 `;
             }).join('');
             
-            // Utbetal knapp
             document.querySelectorAll('.utbetal-lonn').forEach(btn => {
                 btn.addEventListener('click', (e) => {
                     const id = parseInt(btn.getAttribute('data-id'));
@@ -677,7 +857,6 @@
                 });
             });
             
-            // Rediger
             document.querySelectorAll('.edit-lonn').forEach(btn => {
                 btn.addEventListener('click', (e) => {
                     const id = parseInt(btn.getAttribute('data-id'));
@@ -686,7 +865,6 @@
                 });
             });
             
-            // Slett
             document.querySelectorAll('.delete-lonn').forEach(btn => {
                 btn.addEventListener('click', (e) => {
                     const id = parseInt(btn.getAttribute('data-id'));
@@ -701,11 +879,12 @@
             });
         }
         
-        // Rediger modal
         let editTarget = null;
         function openEditModal(lonn) {
             editTarget = lonn;
-            document.getElementById('editTimelonn').value = lonn.timelønn;
+            document.getElementById('editType').value = lonn.type || 'timelonn';
+            document.getElementById('editSats').value = lonn.type === 'maanedslonn' ? lonn.beløp : lonn.timelønn;
+            document.getElementById('editTimer').value = lonn.timer || 0;
             document.getElementById('editBonus').value = lonn.bonus || 0;
             document.getElementById('editProsjekt').value = lonn.prosjekt || '';
             document.getElementById('editUtbetalingsDato').value = lonn.utbetalingsDato || '';
@@ -720,26 +899,40 @@
         
         function saveEdit() {
             if (!editTarget) return;
-            const nyTimelønn = parseFloat(document.getElementById('editTimelonn').value);
+            const nyType = document.getElementById('editType').value;
+            const nySats = parseFloat(document.getElementById('editSats').value);
+            const nyTimer = parseFloat(document.getElementById('editTimer').value) || 0;
             const nyBonus = parseFloat(document.getElementById('editBonus').value) || 0;
             const nyProsjekt = document.getElementById('editProsjekt').value;
             const nyUtbetalingsDato = document.getElementById('editUtbetalingsDato').value;
             const nyKommentar = document.getElementById('editKommentar').value;
             
-            if (isNaN(nyTimelønn) || nyTimelønn <= 0) {
-                alert('Ugyldig timelønn');
+            if (isNaN(nySats) || nySats <= 0) {
+                alert('Ugyldig sats');
                 return;
             }
             
             const liste = loadTimelønnData();
             const index = liste.findIndex(l => l.id === editTarget.id);
             if (index !== -1) {
-                liste[index].timelønn = nyTimelønn;
+                if (nyType === 'timelonn') {
+                    liste[index].type = 'timelonn';
+                    liste[index].timelønn = nySats;
+                    liste[index].timer = nyTimer || editTarget.timer;
+                    liste[index].total = (liste[index].timer * nySats) + nyBonus;
+                } else {
+                    liste[index].type = 'maanedslonn';
+                    liste[index].beløp = nySats;
+                    liste[index].total = nySats;
+                    liste[index].timer = nyTimer;
+                    if (nyTimer > 0) {
+                        liste[index].beregnetTimelønn = nySats / nyTimer;
+                    }
+                }
                 liste[index].bonus = nyBonus;
                 liste[index].prosjekt = nyProsjekt;
                 liste[index].utbetalingsDato = nyUtbetalingsDato;
                 liste[index].kommentar = nyKommentar;
-                liste[index].total = (liste[index].timer * nyTimelønn) + nyBonus;
                 saveTimelønnData(liste);
                 renderLonnTable();
                 updateStats();
@@ -750,13 +943,12 @@
             closeEditModal();
         }
         
-        // Oppdater statistikk
         function updateStats() {
             const timelønnListe = loadTimelønnData();
             const totalOpptjent = timelønnListe.reduce((sum, l) => sum + l.total, 0);
             const totalUtbetalt = timelønnListe.filter(l => l.utbetalt === true).reduce((sum, l) => sum + l.total, 0);
             const totalVenter = totalOpptjent - totalUtbetalt;
-            const totalTimer = timelønnListe.reduce((sum, l) => sum + l.timer, 0);
+            const totalTimer = timelønnListe.reduce((sum, l) => sum + (l.timer || 0), 0);
             const unikeProsjekter = new Set(timelønnListe.map(l => l.prosjekt)).size;
             
             document.getElementById('statsGrid').innerHTML = `
@@ -765,14 +957,13 @@
                 <div class="stat-card"><div class="stat-number">${formatNOK(totalVenter)}</div><div class="stat-label">Venter</div></div>
                 <div class="stat-card"><div class="stat-number">${totalTimer.toFixed(1)} t</div><div class="stat-label">Timer</div></div>
                 <div class="stat-card"><div class="stat-number">${unikeProsjekter}</div><div class="stat-label">Prosjekter</div></div>
-                <div class="stat-card"><div class="stat-number">${timelønnListe.length}</div><div class="stat-label">Økter</div></div>
+                <div class="stat-card"><div class="stat-number">${timelønnListe.length}</div><div class="stat-label">Registreringer</div></div>
             `;
             document.getElementById('totalOpptjentSpan').innerHTML = formatNOK(totalOpptjent);
             document.getElementById('totalUtbetaltSpan').innerHTML = formatNOK(totalUtbetalt);
             document.getElementById('totalVenterSpan').innerHTML = formatNOK(totalVenter);
         }
         
-        // Sett standard timelønn
         function setStandardTimelønn() {
             const verdi = prompt('Sett standard timelønn (kr per time):', standardTimelønn || 300);
             if (verdi && !isNaN(parseFloat(verdi))) {
@@ -812,7 +1003,6 @@
             `;
         }
         
-        // Sortering headers
         function setupSorting() {
             document.querySelectorAll('.data-table th[data-sort]').forEach(th => {
                 th.addEventListener('click', () => {
@@ -828,10 +1018,31 @@
             });
         }
         
-        // Event listeners
-        document.getElementById('registrerLønnBtn').addEventListener('click', registrerTimelønn);
-        document.getElementById('clearSelectedBtn').addEventListener('click', () => { valgtØkt = null; renderØktListe(); updateValgtØktInfo(); });
-        document.getElementById('refreskListeBtn').addEventListener('click', () => { renderØktListe(); renderLonnTable(); updateStats(); updateProsjektLister(); updateMånedFilter(); renderMånedsummering(); });
+        // Event listeners for lønnstype
+        document.querySelectorAll('input[name="lonnType"]').forEach(radio => {
+            radio.addEventListener('change', () => {
+                updateLonnTypeVisning();
+                updateValgtInfo();
+            });
+        });
+        
+        document.getElementById('maanedslonnMaaned').addEventListener('change', () => updateValgtInfo());
+        document.getElementById('maanedslonnBelop').addEventListener('input', () => updateValgtInfo());
+        
+        document.getElementById('registrerLønnBtn').addEventListener('click', registrerLønn);
+        document.getElementById('clearSelectedBtn').addEventListener('click', () => { 
+            valgtØkt = null; 
+            renderØktListe(); 
+            updateValgtInfo(); 
+        });
+        document.getElementById('refreskListeBtn').addEventListener('click', () => { 
+            renderØktListe(); 
+            renderLonnTable(); 
+            updateStats(); 
+            updateProsjektLister(); 
+            updateMånedFilter(); 
+            renderMånedsummering(); 
+        });
         document.getElementById('standardTimelønnBtn').addEventListener('click', setStandardTimelønn);
         document.getElementById('slettAlleLonnerBtn').addEventListener('click', slettAlleLønninger);
         document.getElementById('beregnBtn').addEventListener('click', beregnLønn);
@@ -856,7 +1067,7 @@
         
         document.getElementById('logoutBtn').addEventListener('click', () => { sessionStorage.removeItem('workbench_currentUser'); window.location.href = 'index.html'; });
         
-        // Sett dagens dato som default for utbetalingsdato
+        // Sett dagens dato som default
         document.getElementById('utbetalingsDatoInput').value = new Date().toISOString().slice(0, 10);
         
         // Initialiser
@@ -865,10 +1076,12 @@
             document.getElementById('standardLønnInfo').innerHTML = `✓ Standard timelønn: ${formatNOK(standardTimelønn)}/t`;
             document.getElementById('timelonnInput').value = standardTimelønn;
         }
+        
+        updateLonnTypeVisning();
         renderØktListe();
         renderLonnTable();
         updateStats();
-        updateValgtØktInfo();
+        updateValgtInfo();
         updateProsjektLister();
         updateMånedFilter();
         renderMånedsummering();

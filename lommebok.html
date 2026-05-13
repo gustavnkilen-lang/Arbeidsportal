@@ -2,128 +2,629 @@
 <html lang="no">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>WorkBench Pro - Lommebok</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+    <title>WorkBench Pro - Full Økonomi | Lommebok + Budsjett + Sparekonto</title>
     <style>
-        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Inter', system-ui, sans-serif; }
-        body { background: #0a0f1a; min-height: 100vh; padding: 20px; }
-        .app-wrapper { max-width: 1200px; margin: 0 auto; }
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Inter', system-ui, -apple-system, sans-serif;
+        }
+
+        body {
+            background: #0a0f1a;
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .app-wrapper {
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        /* header */
         .pro-header {
             background: linear-gradient(135deg, #0f172a 0%, #111827 100%);
-            border-radius: 24px;
+            border-radius: 28px;
             padding: 20px 32px;
-            margin-bottom: 24px;
+            margin-bottom: 28px;
             display: flex;
             justify-content: space-between;
             align-items: center;
             flex-wrap: wrap;
             gap: 16px;
+            box-shadow: 0 8px 20px rgba(0,0,0,0.3);
+            border: 1px solid #1e2a3a;
         }
-        .logo-area h1 { color: white; font-size: 1.6rem; }
-        .user-area { display: flex; align-items: center; gap: 16px; background: #1e293b; padding: 8px 20px; border-radius: 60px; }
-        .user-name { color: #e2e8f0; font-weight: 500; }
-        .home-btn { background: #3b82f6; color: white; text-decoration: none; padding: 6px 16px; border-radius: 30px; }
-        .logout-btn { background: #dc2626; border: none; padding: 6px 16px; border-radius: 30px; color: white; cursor: pointer; }
-        .page-title { margin-bottom: 28px; }
-        .page-title h2 { color: white; font-size: 1.8rem; }
-        .saldo-card { background: linear-gradient(135deg, #1e3a5f, #0f2b44); border-radius: 28px; padding: 28px 32px; margin-bottom: 24px; text-align: center; border: 1px solid #3b82f6; }
-        .saldo-label { font-size: 0.8rem; text-transform: uppercase; color: #94a3b8; margin-bottom: 12px; }
-        .saldo-value { font-size: 3rem; font-weight: 800; color: #4ade80; }
-        .card-glass { background: #111827; border-radius: 28px; padding: 1.6rem; margin-bottom: 1.8rem; border: 1px solid #1f2a3e; }
-        .card-title { font-size: 1.2rem; font-weight: 600; color: #e2e8f0; margin-bottom: 1.2rem; border-left: 4px solid #3b82f6; padding-left: 16px; }
-        .form-row { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 16px; margin-bottom: 20px; }
-        .input-field { background: #1e293b; border: 1px solid #334155; border-radius: 18px; padding: 12px 16px; color: white; width: 100%; }
-        label { font-size: 0.7rem; font-weight: 600; color: #94a3b8; display: block; margin-bottom: 6px; text-transform: uppercase; }
-        .btn-primary { background: #3b82f6; border: none; border-radius: 40px; padding: 12px 24px; font-weight: 600; color: white; cursor: pointer; }
-        .data-table { width: 100%; border-collapse: collapse; }
-        .data-table th { text-align: left; padding: 12px 8px; color: #94a3b8; border-bottom: 1px solid #1f2a3e; }
-        .data-table td { padding: 12px 8px; color: #e2e8f0; border-bottom: 1px solid #1e293b; }
-        .action-btn { background: none; border: none; color: #f97316; cursor: pointer; }
-        .scroll-table { max-height: 400px; overflow-y: auto; }
-        select.input-field { background: #1e293b; }
+
+        .logo-area h1 {
+            color: white;
+            font-size: 1.6rem;
+            letter-spacing: -0.3px;
+            background: linear-gradient(135deg, #fff, #94a3b8);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+        }
+
+        .user-area {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            background: #1e293b;
+            padding: 8px 20px;
+            border-radius: 60px;
+        }
+
+        .user-name {
+            color: #e2e8f0;
+            font-weight: 500;
+        }
+
+        .home-btn, .logout-btn {
+            text-decoration: none;
+            padding: 6px 18px;
+            border-radius: 40px;
+            font-weight: 500;
+            font-size: 0.85rem;
+            transition: all 0.2s;
+            cursor: pointer;
+            border: none;
+        }
+
+        .home-btn {
+            background: #3b82f6;
+            color: white;
+        }
+
+        .logout-btn {
+            background: #dc2626;
+            color: white;
+        }
+
+        .page-title {
+            margin-bottom: 24px;
+        }
+
+        .page-title h2 {
+            color: white;
+            font-size: 1.9rem;
+            font-weight: 700;
+        }
+
+        .page-title p {
+            color: #94a3b8;
+            margin-top: 6px;
+        }
+
+        /* grid layout for 3 kolonner */
+        .dashboard-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(340px, 1fr));
+            gap: 24px;
+            margin-bottom: 28px;
+        }
+
+        .card-glass {
+            background: #111827;
+            border-radius: 28px;
+            padding: 1.5rem;
+            border: 1px solid #1f2a3e;
+            transition: all 0.2s;
+            box-shadow: 0 6px 14px rgba(0,0,0,0.3);
+        }
+
+        .card-title {
+            font-size: 1.2rem;
+            font-weight: 600;
+            color: #e2e8f0;
+            margin-bottom: 1.2rem;
+            border-left: 4px solid #3b82f6;
+            padding-left: 16px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .saldo-principal {
+            background: linear-gradient(135deg, #0a2b3e, #071725);
+            border-radius: 28px;
+            padding: 24px 32px;
+            margin-bottom: 28px;
+            text-align: center;
+            border: 1px solid #3b82f6;
+            box-shadow: 0 8px 24px rgba(0,0,0,0.3);
+        }
+
+        .saldo-label {
+            font-size: 0.8rem;
+            text-transform: uppercase;
+            color: #94a3b8;
+            letter-spacing: 2px;
+            margin-bottom: 10px;
+        }
+
+        .saldo-value {
+            font-size: 3rem;
+            font-weight: 800;
+            color: #4ade80;
+        }
+
+        .sub-saldo {
+            font-size: 0.9rem;
+            color: #cbd5e1;
+            margin-top: 8px;
+        }
+
+        .input-field {
+            background: #1e293b;
+            border: 1px solid #334155;
+            border-radius: 18px;
+            padding: 12px 16px;
+            color: white;
+            width: 100%;
+            outline: none;
+            transition: 0.2s;
+        }
+
+        .input-field:focus {
+            border-color: #3b82f6;
+        }
+
+        .form-row {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+            gap: 14px;
+            margin-bottom: 18px;
+        }
+
+        label {
+            font-size: 0.7rem;
+            font-weight: 600;
+            color: #94a3b8;
+            display: block;
+            margin-bottom: 6px;
+            text-transform: uppercase;
+        }
+
+        .btn-primary {
+            background: #3b82f6;
+            border: none;
+            border-radius: 40px;
+            padding: 12px 24px;
+            font-weight: 600;
+            color: white;
+            cursor: pointer;
+            transition: 0.2s;
+            width: 100%;
+        }
+
+        .btn-primary:hover {
+            background: #2563eb;
+        }
+
+        .btn-secondary {
+            background: #2d3a5e;
+            border: none;
+            border-radius: 40px;
+            padding: 10px 18px;
+            font-weight: 500;
+            color: white;
+            cursor: pointer;
+            font-size: 0.8rem;
+        }
+
+        .data-table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        .data-table th {
+            text-align: left;
+            padding: 12px 6px;
+            color: #94a3b8;
+            border-bottom: 1px solid #1f2a3e;
+        }
+
+        .data-table td {
+            padding: 12px 6px;
+            color: #e2e8f0;
+            border-bottom: 1px solid #1e293b;
+        }
+
+        .scroll-table {
+            max-height: 320px;
+            overflow-y: auto;
+        }
+
+        .action-btn {
+            background: none;
+            border: none;
+            color: #f97316;
+            cursor: pointer;
+            font-size: 0.8rem;
+        }
+
+        .delete-budget {
+            color: #ef4444;
+        }
+
+        .budget-summary {
+            background: #1e293b;
+            border-radius: 20px;
+            padding: 12px;
+            margin-top: 12px;
+        }
+
+        .budget-item {
+            display: flex;
+            justify-content: space-between;
+            padding: 8px 0;
+            border-bottom: 1px solid #2d3a5e;
+        }
+
+        .green-text {
+            color: #4ade80;
+        }
+
+        .red-text {
+            color: #f87171;
+        }
+
+        .flex-between {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .save-goal {
+            background: #0f2b2f;
+            border-radius: 20px;
+            padding: 12px;
+            margin-top: 16px;
+        }
+
+        hr {
+            border-color: #1f2a3e;
+            margin: 12px 0;
+        }
+
+        @media (max-width: 760px) {
+            .saldo-value {
+                font-size: 2.2rem;
+            }
+        }
     </style>
 </head>
 <body>
-    <div class="app-wrapper">
-        <div class="pro-header">
-            <div class="logo-area"><h1>WORKBENCH PRO</h1></div>
-            <div class="user-area"><span class="user-name" id="currentUserDisplay"></span><a href="dashboard.html" class="home-btn">Hjem</a><button id="logoutBtn" class="logout-btn">Logg ut</button></div>
-        </div>
-        <div class="page-title"><h2>Lommebok</h2><p>Hold oversikt over saldo, utgifter og inntekter</p></div>
-        <div class="saldo-card" id="saldoCard"><div class="saldo-label">NÅVÆRENDE SALDO</div><div class="saldo-value" id="saldoValue">0 kr</div></div>
+<div class="app-wrapper">
+    <div class="pro-header">
+        <div class="logo-area"><h1>⚡ WORKBENCH PRO</h1></div>
+        <div class="user-area"><span class="user-name" id="currentUserDisplay"></span><a href="dashboard.html" class="home-btn">Hjem</a><button id="logoutBtn" class="logout-btn">Logg ut</button></div>
+    </div>
+    <div class="page-title"><h2>💰 Full oversikt</h2><p>Lommebok + månedsbudsjett + sparekonto (sparemål)</p></div>
+
+    <!-- HOVEDKORT: total likviditet (lommebok + sparekonto) -->
+    <div class="saldo-principal">
+        <div class="saldo-label">💰 TOTALT TILGJENGELIG (Lommebok + Sparekonto)</div>
+        <div class="saldo-value" id="totalFormueValue">0 kr</div>
+        <div class="sub-saldo" id="splitSaldoInfo">Lommebok: 0 kr | Sparekonto: 0 kr</div>
+    </div>
+
+    <!-- 3 kolonner: Lommebok, Budsjettstyring, Sparekonto -->
+    <div class="dashboard-grid">
+        <!-- SEKSJON 1: Lommebok & transaksjoner -->
         <div class="card-glass">
-            <div class="card-title">Legg til transaksjon</div>
+            <div class="card-title">💳 Lommebok <span style="font-size:0.75rem;">Saldo</span></div>
+            <div style="background:#1e293b; border-radius: 20px; padding: 14px; margin-bottom: 18px; text-align:center;">
+                <div style="color:#a0aec0; font-size:0.7rem;">NÅVÆRENDE SALDO</div>
+                <div style="font-size: 2rem; font-weight: bold; color: #4ade80;" id="walletSaldoDisplay">0 kr</div>
+            </div>
+            <div class="card-title" style="font-size: 1rem;">➕ Legg til transaksjon</div>
             <div class="form-row">
                 <div><label>BESKRIVELSE</label><input type="text" id="transBeskrivelse" class="input-field" placeholder="Mat, regning"></div>
                 <div><label>BELØP</label><input type="number" id="transBelop" class="input-field" placeholder="0"></div>
-                <div><label>TYPE</label><select id="transType" class="input-field"><option value="utgift">Utgift (minus)</option><option value="inntekt">Inntekt (pluss)</option></select></div>
+                <div><label>TYPE</label><select id="transType" class="input-field"><option value="utgift">Utgift (-)</option><option value="inntekt">Inntekt (+)</option></select></div>
                 <div><label>DATO</label><input type="date" id="transDato" class="input-field"></div>
             </div>
             <button id="leggTilTransaksjonBtn" class="btn-primary">Legg til i lommebok</button>
-        </div>
-        <div class="card-glass">
-            <div class="card-title">Transaksjonshistorikk</div>
+            <div class="card-title" style="margin-top: 24px;">📜 Historie</div>
             <div class="scroll-table"><table class="data-table"><thead><tr><th>DATO</th><th>BESKRIVELSE</th><th>BELØP</th><th></th></tr></thead><tbody id="walletTableBody"></tbody></table></div>
         </div>
+
+        <!-- SEKSJON 2: BUDSJETT (månedlige kategorier) -->
+        <div class="card-glass">
+            <div class="card-title">📊 Månedsbudsjett <span style="font-size:0.7rem;">(forbruk per kategori)</span></div>
+            <div class="form-row">
+                <div><label>KATEGORI</label><input type="text" id="budgetCategory" class="input-field" placeholder="f.eks Mat, Transport"></div>
+                <div><label>BUDSJETT (mnd)</label><input type="number" id="budgetLimit" class="input-field" placeholder="beløp"></div>
+            </div>
+            <button id="addBudgetBtn" class="btn-primary" style="background:#4f46e5;">➕ Legg til budsjettramme</button>
+            
+            <div class="budget-summary" id="budgetListContainer">
+                <div style="color:#94a3b8; font-size:0.75rem; text-align:center;">Ingen budsjetter enda</div>
+            </div>
+            <div style="margin-top: 12px; font-size: 0.7rem; color:#94a3b8;">* Basert på lommebok-utgifter denne måneden</div>
+        </div>
+
+        <!-- SEKSJON 3: SPAREKONTO + MÅL -->
+        <div class="card-glass">
+            <div class="card-title">🏦 Sparekonto & Sparemål</div>
+            <div style="background:#1e293b; border-radius: 24px; padding: 16px; margin-bottom: 18px;">
+                <div class="flex-between"><span style="color:#cbd5e1;">✨ Sparekonto saldo:</span><strong id="spareAccountDisplay" style="font-size:1.5rem; color:#facc15;">0 kr</strong></div>
+                <div class="flex-between" style="margin-top: 10px;"><span style="color:#cbd5e1;">🎯 Sparemål (ønsket beløp):</span><strong id="spareGoalDisplay" style="color:#b9e0ff;">0 kr</strong></div>
+                <div class="progress-bar-bg" style="background:#334155; border-radius: 20px; height: 10px; margin: 12px 0;"><div id="spareProgressFill" style="width:0%; background:#3b82f6; height:10px; border-radius:20px;"></div></div>
+                <div id="goalMessage" style="font-size:0.7rem; color:#a5f3c3;"></div>
+            </div>
+            <div class="form-row">
+                <div><label>OVERFØR TIL SPAREKONTO</label><input type="number" id="overforSpareBelop" class="input-field" placeholder="Beløp"></div>
+                <div><label>TA UT FRA SPAREKONTO</label><input type="number" id="uttakSpareBelop" class="input-field" placeholder="Beløp"></div>
+            </div>
+            <div style="display: flex; gap: 12px; margin-bottom: 16px;">
+                <button id="overforTilSpareBtn" class="btn-secondary" style="flex:1;">➡️ Overfør til sparekonto</button>
+                <button id="uttakFraSpareBtn" class="btn-secondary" style="flex:1; background:#b45309;">⬅️ Ta ut fra sparekonto</button>
+            </div>
+            <div class="form-row">
+                <div><label>SETT NYTT SPAREMÅL (målbeløp)</label><input type="number" id="setSpareGoalInput" class="input-field" placeholder="Ønsket sum"></div>
+            </div>
+            <button id="setSpareGoalBtn" class="btn-primary" style="background:#0f5c5f;">🎯 Oppdater sparemål</button>
+            <hr>
+            <div style="font-size:0.7rem; color:#94a3b8;">Sparekonto er separat fra lommebok. Overfør midler for å sette av penger.</div>
+        </div>
     </div>
-    <script>
-        const currentUser = sessionStorage.getItem('workbench_currentUser');
-        if (!currentUser) { window.location.href = 'index.html'; }
-        document.getElementById('currentUserDisplay').innerText = currentUser;
-        
-        function loadData() {
-            const raw = localStorage.getItem(`workbench_${currentUser}`);
-            return raw ? JSON.parse(raw) : { timerLogg: [], fravær: [], månedslønn: [], walletHistory: [], saldo: 0 };
-        }
-        function saveData(data) { localStorage.setItem(`workbench_${currentUser}`, JSON.stringify(data)); }
-        function formatNOK(verdi) { return verdi.toLocaleString('nb-NO') + ' kr'; }
-        
-        function renderAll() {
-            const data = loadData();
-            const saldo = data.saldo || 0;
-            document.getElementById('saldoValue').innerHTML = formatNOK(saldo);
-            document.getElementById('saldoValue').style.color = saldo >= 0 ? '#4ade80' : '#f87171';
-            
-            const tbody = document.getElementById('walletTableBody');
-            const sorted = [...(data.walletHistory || [])].sort((a,b) => b.dato.localeCompare(a.dato));
-            tbody.innerHTML = sorted.map(w => `<tr><td>${w.dato}</td><td>${w.beskrivelse} ${w.type === 'utgift' ? '(utgift)' : '(inntekt)'}</td><td style="${w.type === 'utgift' ? 'color:#f87171' : 'color:#4ade80'}">${w.type === 'utgift' ? '-' : '+'} ${formatNOK(w.belop)}</td><td><button class="action-btn delete-trans" data-id="${w.id}">Slett</button></td>`).join('');
-            if (sorted.length === 0) tbody.innerHTML = '<tr><td colspan="4" style="text-align:center;">Ingen transaksjoner</td></tr>';
-            
-            document.querySelectorAll('.delete-trans').forEach(btn => {
-                btn.addEventListener('click', () => {
-                    const id = parseFloat(btn.getAttribute('data-id'));
-                    let d = loadData();
-                    const trans = d.walletHistory.find(t => t.id === id);
-                    if (trans) {
-                        if (trans.type === 'utgift') d.saldo += trans.belop;
-                        else d.saldo -= trans.belop;
-                        d.walletHistory = d.walletHistory.filter(t => t.id !== id);
-                        saveData(d);
-                        renderAll();
-                    }
-                });
-            });
-        }
-        
-        document.getElementById('leggTilTransaksjonBtn').addEventListener('click', () => {
-            const beskrivelse = document.getElementById('transBeskrivelse').value;
-            const belop = parseFloat(document.getElementById('transBelop').value);
-            const type = document.getElementById('transType').value;
-            const dato = document.getElementById('transDato').value;
-            if (!beskrivelse || isNaN(belop) || belop <= 0) { alert("Fyll ut beskrivelse og gyldig beløp"); return; }
-            let data = loadData();
-            const endring = type === 'utgift' ? -belop : belop;
-            data.saldo = (data.saldo || 0) + endring;
-            data.walletHistory.push({ id: Date.now(), dato: dato, beskrivelse: beskrivelse, belop: belop, type: type });
-            saveData(data);
-            renderAll();
-            document.getElementById('transBeskrivelse').value = '';
-            document.getElementById('transBelop').value = '';
+</div>
+
+<script>
+    // ---------- BRUKER ----------
+    const currentUser = sessionStorage.getItem('workbench_currentUser');
+    if (!currentUser) { window.location.href = 'index.html'; }
+    document.getElementById('currentUserDisplay').innerText = currentUser;
+
+    // ---------- DATA STRUCTURE ----------
+    function getDefaultData() {
+        return {
+            walletHistory: [],      // transaksjoner {id, dato, beskrivelse, belop, type}
+            saldo: 0,              // lommebok saldo
+            sparekonto: 0,         // sparekonto saldo
+            spareGoal: 0,          // sparemål
+            budgets: []            // [{ kategori: "Mat", limit: 3000, id }]
+        };
+    }
+
+    function loadData() {
+        const raw = localStorage.getItem(`workbench_${currentUser}`);
+        if (!raw) return getDefaultData();
+        const parsed = JSON.parse(raw);
+        // sikre at nye felter finnes
+        if (!parsed.sparekonto && parsed.sparekonto !== 0) parsed.sparekonto = 0;
+        if (!parsed.spareGoal && parsed.spareGoal !== 0) parsed.spareGoal = 0;
+        if (!parsed.budgets) parsed.budgets = [];
+        if (!parsed.walletHistory) parsed.walletHistory = [];
+        if (parsed.saldo === undefined) parsed.saldo = 0;
+        return parsed;
+    }
+
+    function saveData(data) {
+        localStorage.setItem(`workbench_${currentUser}`, JSON.stringify(data));
+    }
+
+    function formatNOK(verdi) { return verdi.toLocaleString('nb-NO') + ' kr'; }
+
+    // Regn ut totale utgifter for denne måneden per kategori (kun fra lommebok)
+    function getCurrentMonthExpenses(data) {
+        const now = new Date();
+        const currentYear = now.getFullYear();
+        const currentMonth = now.getMonth();
+        const expensesByCategory = {};
+
+        data.walletHistory.forEach(trans => {
+            if (trans.type === 'utgift') {
+                const transDate = new Date(trans.dato);
+                if (transDate.getFullYear() === currentYear && transDate.getMonth() === currentMonth) {
+                    const cat = extractCategory(trans.beskrivelse);
+                    expensesByCategory[cat] = (expensesByCategory[cat] || 0) + trans.belop;
+                }
+            }
         });
+        return expensesByCategory;
+    }
+
+    // enkel mapping: kan tilpasses, men vi lager logikk for å matche beskrivelse med kategori keyword
+    function extractCategory(description) {
+        const lowerDesc = description.toLowerCase();
+        if (lowerDesc.includes('mat') || lowerDesc.includes('dagligvare')) return 'Mat';
+        if (lowerDesc.includes('transport') || lowerDesc.includes('buss') || lowerDesc.includes('drivstoff')) return 'Transport';
+        if (lowerDesc.includes('strøm') || lowerDesc.includes('vann') || lowerDesc.includes('regning')) return 'Regninger';
+        if (lowerDesc.includes('underholdning') || lowerDesc.includes('kino')) return 'Underholdning';
+        if (lowerDesc.includes('klær')) return 'Klær';
+        return 'Andre';
+    }
+
+    // render Budsjett-seksjonen
+    function renderBudgets(data) {
+        const container = document.getElementById('budgetListContainer');
+        const currentMonthExp = getCurrentMonthExpenses(data);
+        const budgets = data.budgets || [];
+
+        if (budgets.length === 0) {
+            container.innerHTML = `<div style="color:#94a3b8; font-size:0.8rem; text-align:center;">📌 Legg til budsjettposter (Mat, Transport, etc)</div>`;
+            return;
+        }
+
+        let html = `<div style="font-size:0.7rem; font-weight:600; padding-bottom:5px;">Kategori &nbsp;&nbsp; Budsjett / Forbruk</div>`;
+        budgets.forEach(b => {
+            const spent = currentMonthExp[b.kategori] || 0;
+            const limit = b.limit;
+            const percent = limit > 0 ? (spent / limit) * 100 : 0;
+            const isOver = spent > limit;
+            html += `
+                <div class="budget-item">
+                    <div><strong>${b.kategori}</strong></div>
+                    <div>${formatNOK(spent)} / ${formatNOK(limit)} <span style="color:${isOver ? '#f87171' : '#4ade80'};">(${Math.min(percent, 999).toFixed(0)}%)</span></div>
+                    <div><button class="action-btn delete-budget" data-id="${b.id}">🗑️</button></div>
+                </div>
+            `;
+        });
+        container.innerHTML = html;
+        document.querySelectorAll('.delete-budget').forEach(btn => {
+            btn.addEventListener('click', (e) => {
+                const id = parseFloat(btn.getAttribute('data-id'));
+                let d = loadData();
+                d.budgets = d.budgets.filter(b => b.id !== id);
+                saveData(d);
+                fullRender();
+            });
+        });
+    }
+
+    // Legg til budsjett
+    document.getElementById('addBudgetBtn')?.addEventListener('click', () => {
+        const kategori = document.getElementById('budgetCategory').value.trim();
+        const limit = parseFloat(document.getElementById('budgetLimit').value);
+        if (!kategori || isNaN(limit) || limit <= 0) { alert("Fyll ut kategori og gyldig budsjettbeløp"); return; }
+        let data = loadData();
+        data.budgets.push({ id: Date.now(), kategori: kategori, limit: limit });
+        saveData(data);
+        document.getElementById('budgetCategory').value = '';
+        document.getElementById('budgetLimit').value = '';
+        fullRender();
+    });
+
+    // SPAREKONTO funksjoner
+    function overforTilSpare() {
+        let belop = parseFloat(document.getElementById('overforSpareBelop').value);
+        if (isNaN(belop) || belop <= 0) { alert("Skriv inn et positivt beløp."); return; }
+        let data = loadData();
+        if (data.saldo < belop) { alert(`Du har bare ${formatNOK(data.saldo)} i lommeboken. Overføring mislyktes.`); return; }
+        data.saldo -= belop;
+        data.sparekonto += belop;
+        // Legg til notat som transaksjon i lommebok for sporbarhet (valgfritt)
+        data.walletHistory.push({
+            id: Date.now(),
+            dato: new Date().toISOString().slice(0,10),
+            beskrivelse: `Overført til sparekonto`,
+            belop: belop,
+            type: 'utgift'
+        });
+        saveData(data);
+        document.getElementById('overforSpareBelop').value = '';
+        fullRender();
+    }
+
+    function uttakFraSpare() {
+        let belop = parseFloat(document.getElementById('uttakSpareBelop').value);
+        if (isNaN(belop) || belop <= 0) { alert("Skriv inn et gyldig beløp."); return; }
+        let data = loadData();
+        if (data.sparekonto < belop) { alert(`Sparekonto har kun ${formatNOK(data.sparekonto)}`); return; }
+        data.sparekonto -= belop;
+        data.saldo += belop;
+        data.walletHistory.push({
+            id: Date.now(),
+            dato: new Date().toISOString().slice(0,10),
+            beskrivelse: `Uttak fra sparekonto`,
+            belop: belop,
+            type: 'inntekt'
+        });
+        saveData(data);
+        document.getElementById('uttakSpareBelop').value = '';
+        fullRender();
+    }
+
+    function setSpareGoal() {
+        let mål = parseFloat(document.getElementById('setSpareGoalInput').value);
+        if (isNaN(mål) || mål < 0) { alert("Gyldig sparemål"); return; }
+        let data = loadData();
+        data.spareGoal = mål;
+        saveData(data);
+        fullRender();
+    }
+
+    // Transaksjon lommebok
+    document.getElementById('leggTilTransaksjonBtn').addEventListener('click', () => {
+        const beskrivelse = document.getElementById('transBeskrivelse').value.trim();
+        const belop = parseFloat(document.getElementById('transBelop').value);
+        const type = document.getElementById('transType').value;
+        const dato = document.getElementById('transDato').value;
+        if (!beskrivelse || isNaN(belop) || belop <= 0) { alert("Beskrivelse og positivt beløp"); return; }
+        let data = loadData();
+        const endring = type === 'utgift' ? -belop : belop;
+        if (type === 'utgift' && (data.saldo + endring < 0)) { alert("Ikke nok saldo i lommebok!"); return; }
+        data.saldo += endring;
+        data.walletHistory.push({ id: Date.now(), dato: dato, beskrivelse: beskrivelse, belop: belop, type: type });
+        saveData(data);
+        fullRender();
+        document.getElementById('transBeskrivelse').value = '';
+        document.getElementById('transBelop').value = '';
+    });
+
+    // Slett transaksjon (eksisterende logikk med revers)
+    function attachDeleteTransactionHandler() {
+        document.querySelectorAll('.delete-trans').forEach(btn => {
+            btn.removeEventListener('click', window._delHandler);
+            const handler = (e) => {
+                const id = parseFloat(btn.getAttribute('data-id'));
+                let d = loadData();
+                const trans = d.walletHistory.find(t => t.id === id);
+                if (trans) {
+                    if (trans.type === 'utgift') d.saldo += trans.belop;
+                    else d.saldo -= trans.belop;
+                    d.walletHistory = d.walletHistory.filter(t => t.id !== id);
+                    saveData(d);
+                    fullRender();
+                }
+            };
+            btn.addEventListener('click', handler);
+            window._delHandler = handler;
+        });
+    }
+
+    // Full render: oppdater lommeboktabell, saldo, sparekonto, budsjett, totalformue
+    function fullRender() {
+        const data = loadData();
+        // lommebok saldo visning
+        const walletSaldo = data.saldo || 0;
+        document.getElementById('walletSaldoDisplay').innerHTML = formatNOK(walletSaldo);
+        // sparekonto info
+        const spareSaldo = data.sparekonto || 0;
+        const spareGoalVal = data.spareGoal || 0;
+        document.getElementById('spareAccountDisplay').innerHTML = formatNOK(spareSaldo);
+        document.getElementById('spareGoalDisplay').innerHTML = formatNOK(spareGoalVal);
+        const progressPercent = spareGoalVal > 0 ? (spareSaldo / spareGoalVal) * 100 : 0;
+        document.getElementById('spareProgressFill').style.width = `${Math.min(progressPercent, 100)}%`;
+        const goalMsg = spareGoalVal > 0 ? (spareSaldo >= spareGoalVal ? "✅ Sparemål oppnådd! 🎉" : `Gjenstår: ${formatNOK(spareGoalVal - spareSaldo)}`) : "Sett et sparemål for å følge fremgang.";
+        document.getElementById('goalMessage').innerHTML = goalMsg;
+
+        // total formue (lommebok + sparekonto)
+        const totalFormue = walletSaldo + spareSaldo;
+        document.getElementById('totalFormueValue').innerHTML = formatNOK(totalFormue);
+        document.getElementById('splitSaldoInfo').innerHTML = `Lommebok: ${formatNOK(walletSaldo)}  |  Sparekonto: ${formatNOK(spareSaldo)}`;
+
+        // transaksjonstabell
+        const tbody = document.getElementById('walletTableBody');
+        const sorted = [...(data.walletHistory || [])].sort((a,b) => b.dato.localeCompare(a.dato));
+        tbody.innerHTML = sorted.map(w => `
+            <tr>
+                <td>${w.dato}</td>
+                <td>${w.beskrivelse} ${w.type === 'utgift' ? '🔻' : '🔺'}</td>
+                <td style="${w.type === 'utgift' ? 'color:#f87171' : 'color:#4ade80'}">${w.type === 'utgift' ? '-' : '+'} ${formatNOK(w.belop)}</td>
+                <td><button class="action-btn delete-trans" data-id="${w.id}">Slett</button></td>
+            </tr>
+        `).join('');
+        if (sorted.length === 0) tbody.innerHTML = '<tr><td colspan="4" style="text-align:center;">Ingen transaksjoner</td></tr>';
         
-        document.getElementById('logoutBtn').addEventListener('click', () => { sessionStorage.removeItem('workbench_currentUser'); window.location.href = 'index.html'; });
-        document.getElementById('transDato').value = new Date().toISOString().slice(0,10);
-        renderAll();
-    </script>
+        attachDeleteTransactionHandler();
+        renderBudgets(data);
+    }
+
+    // event listeners for sparemodul
+    document.getElementById('overforTilSpareBtn')?.addEventListener('click', overforTilSpare);
+    document.getElementById('uttakFraSpareBtn')?.addEventListener('click', uttakFraSpare);
+    document.getElementById('setSpareGoalBtn')?.addEventListener('click', setSpareGoal);
+    document.getElementById('logoutBtn').addEventListener('click', () => { sessionStorage.removeItem('workbench_currentUser'); window.location.href = 'index.html'; });
+    document.getElementById('transDato').value = new Date().toISOString().slice(0,10);
+    
+    fullRender();
+</script>
 </body>
 </html>

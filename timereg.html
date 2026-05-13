@@ -7,7 +7,7 @@
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Inter', system-ui, sans-serif; }
         body { background: #0a0f1a; min-height: 100vh; padding: 20px; }
-        .app-wrapper { max-width: 1200px; margin: 0 auto; }
+        .app-wrapper { max-width: 1400px; margin: 0 auto; }
         .pro-header {
             background: linear-gradient(135deg, #0f172a 0%, #111827 100%);
             border-radius: 24px;
@@ -28,6 +28,7 @@
         .page-title { margin-bottom: 28px; }
         .page-title h2 { color: white; font-size: 1.8rem; }
         .page-title p { color: #94a3b8; margin-top: 6px; }
+        
         .card-glass { background: #111827; border-radius: 28px; padding: 1.6rem; margin-bottom: 1.8rem; border: 1px solid #1f2a3e; }
         .card-title { font-size: 1.2rem; font-weight: 600; color: #e2e8f0; margin-bottom: 1.2rem; border-left: 4px solid #3b82f6; padding-left: 16px; }
         .form-row { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 16px; margin-bottom: 20px; }
@@ -36,13 +37,63 @@
         label { font-size: 0.7rem; font-weight: 600; color: #94a3b8; display: block; margin-bottom: 6px; text-transform: uppercase; }
         .btn-primary { background: #3b82f6; border: none; border-radius: 40px; padding: 12px 24px; font-weight: 600; color: white; cursor: pointer; font-size: 0.9rem; }
         .btn-primary:hover { background: #2563eb; transform: translateY(-1px); }
+        .btn-outline { background: transparent; border: 1px solid #475569; border-radius: 40px; padding: 8px 16px; font-weight: 600; color: #cbd5e1; cursor: pointer; font-size: 0.8rem; }
+        .btn-outline:hover { background: #1e293b; border-color: #3b82f6; }
+        .btn-success { background: #10b981; border: none; border-radius: 40px; padding: 8px 16px; font-weight: 600; color: white; cursor: pointer; font-size: 0.8rem; }
+        .btn-warning { background: #f59e0b; border: none; border-radius: 40px; padding: 8px 16px; font-weight: 600; color: white; cursor: pointer; font-size: 0.8rem; }
+        
         .data-table { width: 100%; border-collapse: collapse; }
-        .data-table th { text-align: left; padding: 12px 8px; color: #94a3b8; font-size: 0.75rem; border-bottom: 1px solid #1f2a3e; }
+        .data-table th { text-align: left; padding: 12px 8px; color: #94a3b8; font-size: 0.75rem; border-bottom: 1px solid #1f2a3e; cursor: pointer; }
+        .data-table th:hover { color: #3b82f6; }
         .data-table td { padding: 12px 8px; color: #e2e8f0; font-size: 0.85rem; border-bottom: 1px solid #1e293b; }
         .action-btn { background: none; border: none; color: #f97316; cursor: pointer; font-size: 0.75rem; padding: 4px 8px; border-radius: 12px; }
         .action-btn:hover { background: #1e293b; }
         .scroll-table { max-height: 400px; overflow-y: auto; }
-        .empty-row { text-align: center; padding: 20px; color: #64748b; }
+        
+        .stats-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 16px; margin-bottom: 20px; }
+        .stat-card { background: linear-gradient(145deg, #1e293b, #0f172a); border-radius: 20px; padding: 16px; text-align: center; }
+        .stat-number { font-size: 1.5rem; font-weight: 700; color: #3b82f6; }
+        .stat-label { font-size: 0.7rem; color: #94a3b8; margin-top: 6px; }
+        
+        .filter-bar { display: flex; gap: 12px; margin-bottom: 20px; flex-wrap: wrap; align-items: flex-end; }
+        .filter-input { flex: 1; background: #1e293b; border: 1px solid #334155; border-radius: 40px; padding: 10px 16px; color: white; }
+        
+        .flex-between { display: flex; justify-content: space-between; align-items: center; gap: 12px; flex-wrap: wrap; }
+        
+        .info-badge { background: #1e293b; padding: 6px 12px; border-radius: 30px; font-size: 0.7rem; color: #94a3b8; display: inline-flex; align-items: center; gap: 6px; }
+        
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.8);
+            z-index: 1000;
+            justify-content: center;
+            align-items: center;
+        }
+        .modal.active { display: flex; }
+        .modal-content {
+            background: #111827;
+            border-radius: 28px;
+            padding: 32px;
+            max-width: 500px;
+            width: 90%;
+            border: 1px solid #3b82f6;
+        }
+        .modal-header { display: flex; justify-content: space-between; margin-bottom: 20px; color: white; font-size: 1.3rem; }
+        .modal-close { cursor: pointer; font-size: 1.5rem; }
+        
+        .uke-velger { display: flex; gap: 8px; align-items: center; flex-wrap: wrap; }
+        .uke-knapp { background: #1e293b; border: 1px solid #334155; border-radius: 30px; padding: 6px 12px; color: #94a3b8; cursor: pointer; font-size: 0.7rem; }
+        .uke-knapp:hover { background: #2d3a4e; border-color: #3b82f6; }
+        .uke-knapp.active { background: #3b82f6; color: white; border-color: #3b82f6; }
+        
+        .rediger-felt { margin-bottom: 16px; }
+        .rediger-felt label { font-size: 0.7rem; color: #94a3b8; display: block; margin-bottom: 6px; }
+        .rediger-felt input { width: 100%; }
     </style>
 </head>
 <body>
@@ -50,54 +101,132 @@
         <div class="pro-header">
             <div class="logo-area">
                 <h1>WORKBENCH PRO</h1>
-                <p>timelogg | fravær | finans | lommebok</p>
+                <p>timelogg | statistikk | ukeblikk | eksport</p>
             </div>
             <div class="user-area">
                 <span class="user-name" id="currentUserDisplay"></span>
                 <a href="dashboard.html" class="home-btn">Hjem</a>
+                <a href="lonn.html" class="home-btn" style="background:#4a6a85;">Lønn</a>
                 <button id="logoutBtn" class="logout-btn">Logg ut</button>
             </div>
         </div>
         
         <div class="page-title">
             <h2>Timeregistrering</h2>
-            <p>Registrer arbeidstimer med start- og sluttidspunkt</p>
+            <p>Registrer arbeidstimer | Se statistikk | Eksporter data</p>
         </div>
         
-        <div class="card-glass">
-            <div class="card-title">Registrer arbeidstid</div>
-            <div class="form-row">
-                <div>
-                    <label>DATO</label>
-                    <input type="date" id="timerDato" class="input-field">
+        <!-- Statistikk kort -->
+        <div class="stats-grid" id="statsGrid"></div>
+        
+        <div class="log-grid" style="display: grid; grid-template-columns: 1fr 1fr; gap: 24px;">
+            <!-- Venstre: Registrer ny time -->
+            <div>
+                <div class="card-glass">
+                    <div class="card-title">📝 Registrer arbeidstid</div>
+                    <div class="form-row">
+                        <div><label>DATO</label><input type="date" id="timerDato" class="input-field"></div>
+                        <div><label>START (kl.)</label><input type="time" id="startTid" class="input-field" value="08:00"></div>
+                        <div><label>SLUTT (kl.)</label><input type="time" id="sluttTid" class="input-field" value="16:00"></div>
+                        <div><label>BESKRIVELSE</label><input type="text" id="timerBeskrivelse" class="input-field" placeholder="Prosjekt / oppgave"></div>
+                    </div>
+                    <div class="form-row">
+                        <div><label>PROSJEKT / KATEGORI</label>
+                            <select id="timerProsjekt" class="input-field">
+                                <option value="">-- Velg prosjekt --</option>
+                                <option value="Utvikling">💻 Utvikling</option>
+                                <option value="Møte">🤝 Møte</option>
+                                <option value="Admin">📋 Admin</option>
+                                <option value="Kundemøte">👥 Kundemøte</option>
+                                <option value="Dokumentasjon">📄 Dokumentasjon</option>
+                                <option value="Annet">📌 Annet</option>
+                            </select>
+                        </div>
+                        <div><label>OVERTID</label>
+                            <select id="timerOvertid" class="input-field">
+                                <option value="nei">Nei</option>
+                                <option value="50">50% overtid</option>
+                                <option value="100">100% overtid</option>
+                            </select>
+                        </div>
+                    </div>
+                    <button id="leggTilTimerBtn" class="btn-primary">+ Legg til timelogg</button>
                 </div>
-                <div>
-                    <label>START (kl.)</label>
-                    <input type="time" id="startTid" class="input-field" value="08:00">
-                </div>
-                <div>
-                    <label>SLUTT (kl.)</label>
-                    <input type="time" id="sluttTid" class="input-field" value="16:00">
-                </div>
-                <div>
-                    <label>BESKRIVELSE</label>
-                    <input type="text" id="timerBeskrivelse" class="input-field" placeholder="Prosjekt / oppgave">
+                
+                <!-- Hurtigregistrering -->
+                <div class="card-glass">
+                    <div class="card-title">⚡ Hurtigregistrering</div>
+                    <div class="flex-between">
+                        <button id="hurtig1h" class="btn-outline">1 time</button>
+                        <button id="hurtig2h" class="btn-outline">2 timer</button>
+                        <button id="hurtig4h" class="btn-outline">4 timer</button>
+                        <button id="hurtig7_5h" class="btn-outline">7.5 timer</button>
+                        <button id="hurtig8h" class="btn-outline">8 timer</button>
+                    </div>
+                    <div class="flex-between" style="margin-top: 12px;">
+                        <button id="hurtigLunsj" class="btn-outline">🥪 Lunsj (1t)</button>
+                        <button id="hurtigPause" class="btn-outline">☕ Pause (15min)</button>
+                        <button id="hurtigIdag" class="btn-outline">📅 Hent dagens dato</button>
+                    </div>
                 </div>
             </div>
-            <button id="leggTilTimerBtn" class="btn-primary">+ Legg til timelogg</button>
+            
+            <!-- Høyre: Filter og ukevisning -->
+            <div>
+                <div class="card-glass">
+                    <div class="card-title">🔍 Filtrer timer</div>
+                    <div class="filter-bar">
+                        <input type="text" id="sokFilter" class="filter-input" placeholder="Søk i beskrivelse...">
+                        <input type="date" id="datoFilter" class="filter-input" style="width: auto;">
+                        <select id="prosjektFilter" class="filter-input" style="width: auto;">
+                            <option value="">Alle prosjekter</option>
+                            <option value="Utvikling">Utvikling</option>
+                            <option value="Møte">Møte</option>
+                            <option value="Admin">Admin</option>
+                            <option value="Kundemøte">Kundemøte</option>
+                            <option value="Dokumentasjon">Dokumentasjon</option>
+                            <option value="Annet">Annet</option>
+                        </select>
+                        <button id="clearFilterBtn" class="btn-outline">Tøm filter</button>
+                    </div>
+                </div>
+                
+                <!-- Ukevelger -->
+                <div class="card-glass">
+                    <div class="card-title">📅 Ukesvisning</div>
+                    <div class="uke-velger" id="ukeVelger">
+                        <button id="forrigeUke" class="uke-knapp">◀ Forrige uke</button>
+                        <span id="ukeInfo" class="info-badge">Denne uken</span>
+                        <button id="nesteUke" class="uke-knapp">Neste uke ▶</button>
+                        <button id="denneUkenBtn" class="uke-knapp">📅 Denne uken</button>
+                    </div>
+                    <div id="ukeStatistikk" style="margin-top: 16px;"></div>
+                </div>
+            </div>
         </div>
         
+        <!-- Timelogg historikk -->
         <div class="card-glass">
-            <div class="card-title">Timelogg historikk</div>
+            <div class="card-title">📋 Timelogg historikk</div>
+            <div class="flex-between" style="margin-bottom: 16px;">
+                <div class="info-badge">📊 Totalt timer: <span id="totalTimerSpan">0</span> timer</div>
+                <div>
+                    <button id="eksporterBtn" class="btn-success">📥 Eksporter til CSV</button>
+                    <button id="slettAlleBtn" class="btn-warning" style="margin-left: 8px;">🗑️ Slett alle</button>
+                </div>
+            </div>
             <div class="scroll-table">
                 <table class="data-table">
                     <thead>
                         <tr>
-                            <th>DATO</th>
-                            <th>START</th>
-                            <th>SLUTT</th>
-                            <th>TIMER</th>
-                            <th>BESKRIVELSE</th>
+                            <th data-sort="dato">📅 DATO ↕</th>
+                            <th data-sort="startKl">⏰ START</th>
+                            <th data-sort="sluttKl">⏰ SLUTT</th>
+                            <th data-sort="totalTimer">⏱️ TIMER</th>
+                            <th data-sort="prosjekt">📁 PROSJEKT</th>
+                            <th data-sort="beskrivelse">📝 BESKRIVELSE</th>
+                            <th data-sort="overtid">⭐ OVERTID</th>
+                            <th></th>
                             <th></th>
                         </tr>
                     </thead>
@@ -106,7 +235,58 @@
             </div>
         </div>
     </div>
+    
+    <!-- Modal for redigering -->
+    <div id="editModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <span>✏️ Rediger timelogg</span>
+                <span class="modal-close">&times;</span>
+            </div>
+            <div class="rediger-felt">
+                <label>Dato</label>
+                <input type="date" id="editDato" class="input-field">
+            </div>
+            <div class="rediger-felt">
+                <label>Start tid</label>
+                <input type="time" id="editStart" class="input-field">
+            </div>
+            <div class="rediger-felt">
+                <label>Slutt tid</label>
+                <input type="time" id="editSlutt" class="input-field">
+            </div>
+            <div class="rediger-felt">
+                <label>Prosjekt</label>
+                <select id="editProsjekt" class="input-field">
+                    <option value="">-- Velg prosjekt --</option>
+                    <option value="Utvikling">💻 Utvikling</option>
+                    <option value="Møte">🤝 Møte</option>
+                    <option value="Admin">📋 Admin</option>
+                    <option value="Kundemøte">👥 Kundemøte</option>
+                    <option value="Dokumentasjon">📄 Dokumentasjon</option>
+                    <option value="Annet">📌 Annet</option>
+                </select>
+            </div>
+            <div class="rediger-felt">
+                <label>Beskrivelse</label>
+                <input type="text" id="editBeskrivelse" class="input-field">
+            </div>
+            <div class="rediger-felt">
+                <label>Overtid</label>
+                <select id="editOvertid" class="input-field">
+                    <option value="nei">Nei</option>
+                    <option value="50">50% overtid</option>
+                    <option value="100">100% overtid</option>
+                </select>
+            </div>
+            <div class="flex-between" style="margin-top: 20px;">
+                <button id="saveEditBtn" class="btn-primary">💾 Lagre endringer</button>
+                <button id="cancelEditBtn" class="btn-outline">Avbryt</button>
+            </div>
+        </div>
+    </div>
 
+    <script src="database.js"></script>
     <script>
         // Sjekk innlogging
         const currentUser = sessionStorage.getItem('workbench_currentUser');
@@ -115,13 +295,16 @@
         }
         document.getElementById('currentUserDisplay').innerText = currentUser;
         
+        let currentSort = { column: 'dato', direction: 'desc' };
+        let currentUkeOffset = 0;
+        let redigerTarget = null;
+        
         // Hjelpefunksjoner for data
         function loadData() {
             const raw = localStorage.getItem(`workbench_${currentUser}`);
             if (raw) {
                 return JSON.parse(raw);
             } else {
-                // Initialiser tom data hvis ikke finnes
                 const emptyData = {
                     timerLogg: [],
                     fravær: [],
@@ -138,7 +321,6 @@
             localStorage.setItem(`workbench_${currentUser}`, JSON.stringify(data));
         }
         
-        // Beregn timer mellom start og slutt
         function beregnTimer(start, slutt) {
             if (!start || !slutt) return 0;
             const [sh, sm] = start.split(':').map(Number);
@@ -148,75 +330,218 @@
             return parseFloat(timer.toFixed(2));
         }
         
-        // Vis alle timer i tabellen
+        function beregnOvertid(timer, overtidType) {
+            if (overtidType === '50') return timer * 0.5;
+            if (overtidType === '100') return timer;
+            return 0;
+        }
+        
+        function getUkeDatoer(offset) {
+            const today = new Date();
+            const currentDay = today.getDay();
+            const daysToMonday = currentDay === 0 ? 6 : currentDay - 1;
+            const monday = new Date(today);
+            monday.setDate(today.getDate() - daysToMonday + (offset * 7));
+            const sunday = new Date(monday);
+            sunday.setDate(monday.getDate() + 6);
+            return { monday, sunday };
+        }
+        
+        function formatDate(date) {
+            return date.toISOString().slice(0, 10);
+        }
+        
+        function updateUkeInfo() {
+            const { monday, sunday } = getUkeDatoer(currentUkeOffset);
+            document.getElementById('ukeInfo').innerHTML = `📅 ${formatDate(monday)} - ${formatDate(sunday)}`;
+            return { monday, sunday };
+        }
+        
+        function updateStats() {
+            const data = loadData();
+            const timerListe = data.timerLogg || [];
+            const totalTimer = timerListe.reduce((sum, t) => sum + t.totalTimer, 0);
+            const denneMåned = new Date().toISOString().slice(0, 7);
+            const denneMånedTimer = timerListe.filter(t => t.dato.startsWith(denneMåned)).reduce((sum, t) => sum + t.totalTimer, 0);
+            const denneUke = (() => {
+                const { monday, sunday } = getUkeDatoer(0);
+                return timerListe.filter(t => t.dato >= formatDate(monday) && t.dato <= formatDate(sunday)).reduce((sum, t) => sum + t.totalTimer, 0);
+            })();
+            const antallDager = new Set(timerListe.map(t => t.dato)).size;
+            
+            document.getElementById('statsGrid').innerHTML = `
+                <div class="stat-card"><div class="stat-number">${totalTimer.toFixed(1)}</div><div class="stat-label">Totalt timer</div></div>
+                <div class="stat-card"><div class="stat-number">${denneMånedTimer.toFixed(1)}</div><div class="stat-label">Denne måned</div></div>
+                <div class="stat-card"><div class="stat-number">${denneUke.toFixed(1)}</div><div class="stat-label">Denne uke</div></div>
+                <div class="stat-card"><div class="stat-number">${antallDager}</div><div class="stat-label">Arbeidsdager</div></div>
+                <div class="stat-card"><div class="stat-number">${timerListe.length}</div><div class="stat-label">Registreringer</div></div>
+            `;
+            document.getElementById('totalTimerSpan').innerText = totalTimer.toFixed(1);
+        }
+        
+        function updateUkeStatistikk() {
+            const data = loadData();
+            const timerListe = data.timerLogg || [];
+            const { monday, sunday } = getUkeDatoer(currentUkeOffset);
+            const ukeTimer = timerListe.filter(t => t.dato >= formatDate(monday) && t.dato <= formatDate(sunday));
+            const totalUkeTimer = ukeTimer.reduce((sum, t) => sum + t.totalTimer, 0);
+            const perDag = {};
+            ukeTimer.forEach(t => { perDag[t.dato] = (perDag[t.dato] || 0) + t.totalTimer; });
+            
+            let dagHtml = '';
+            for (let i = 0; i < 7; i++) {
+                const dag = new Date(monday);
+                dag.setDate(monday.getDate() + i);
+                const datoStr = formatDate(dag);
+                const timer = perDag[datoStr] || 0;
+                const ukedag = ['Man', 'Tir', 'Ons', 'Tor', 'Fre', 'Lør', 'Søn'][i];
+                dagHtml += `<div class="info-badge" style="background: ${timer > 0 ? '#1e3a5f' : '#1e293b'}">${ukedag} ${datoStr.slice(5)}: ${timer.toFixed(1)}t</div>`;
+            }
+            
+            document.getElementById('ukeStatistikk').innerHTML = `
+                <div class="flex-between" style="margin-bottom: 12px;">
+                    <span class="info-badge">⏱️ Uke total: ${totalUkeTimer.toFixed(1)} timer</span>
+                    <span class="info-badge">📊 Snitt per dag: ${(totalUkeTimer / 7).toFixed(1)} timer</span>
+                </div>
+                <div style="display: flex; gap: 8px; flex-wrap: wrap;">${dagHtml}</div>
+            `;
+        }
+        
         function renderTimerTable() {
             const data = loadData();
-            const tbody = document.getElementById('timerTableBody');
-            const timerListe = data.timerLogg || [];
+            let timerListe = data.timerLogg || [];
+            const sok = document.getElementById('sokFilter').value.toLowerCase();
+            const datoFilter = document.getElementById('datoFilter').value;
+            const prosjektFilter = document.getElementById('prosjektFilter').value;
             
+            if (sok) {
+                timerListe = timerListe.filter(t => (t.beskrivelse && t.beskrivelse.toLowerCase().includes(sok)));
+            }
+            if (datoFilter) {
+                timerListe = timerListe.filter(t => t.dato === datoFilter);
+            }
+            if (prosjektFilter) {
+                timerListe = timerListe.filter(t => t.prosjekt === prosjektFilter);
+            }
+            
+            timerListe = [...timerListe].sort((a, b) => {
+                let aVal = a[currentSort.column] || '';
+                let bVal = b[currentSort.column] || '';
+                if (currentSort.column === 'totalTimer') {
+                    aVal = a.totalTimer;
+                    bVal = b.totalTimer;
+                }
+                if (typeof aVal === 'number') {
+                    return currentSort.direction === 'asc' ? aVal - bVal : bVal - aVal;
+                }
+                return currentSort.direction === 'asc' ? String(aVal).localeCompare(String(bVal)) : String(bVal).localeCompare(String(aVal));
+            });
+            
+            const tbody = document.getElementById('timerTableBody');
             if (timerListe.length === 0) {
-                tbody.innerHTML = '<tr><td colspan="6" style="text-align:center; padding: 32px; color: #64748b;">Ingen timer registrert enda</td></tr>';
+                tbody.innerHTML = '<td><td colspan="9" style="text-align:center; padding: 32px; color: #64748b;">Ingen timer registrert</td></tr>';
                 return;
             }
             
-            // Sorter nyeste først
-            const sortert = [...timerListe].sort((a, b) => b.dato.localeCompare(a.dato));
+            tbody.innerHTML = timerListe.map(t => {
+                const overtidTekst = t.overtid === '50' ? '50%' : (t.overtid === '100' ? '100%' : '-');
+                return `
+                    <tr>
+                        <td>${t.dato}</td>
+                        <td>${t.startKl}</td>
+                        <td>${t.sluttKl}</td>
+                        <td>${t.totalTimer} h</td>
+                        <td><span class="info-badge" style="background:#1e293b;">${t.prosjekt || '-'}</span></td>
+                        <td>${t.beskrivelse || '-'}</td>
+                        <td>${overtidTekst}</td>
+                        <td><button class="action-btn redigerTimer" data-id="${t.id}">✏️ Rediger</button></td>
+                        <td><button class="action-btn slettTimer" data-id="${t.id}">🗑️ Slett</button></td>
+                    </tr>
+                `;
+            }).join('');
             
-            tbody.innerHTML = sortert.map(t => `
-                <tr>
-                    <td>${t.dato}</td>
-                    <td>${t.startKl}</td>
-                    <td>${t.sluttKl}</td>
-                    <td>${t.totalTimer} h</td>
-                    <td>${t.beskrivelse || '-'}</td>
-                    <td><button class="action-btn slettTimer" data-id="${t.id}">Slett</button></td>
-                </tr>
-            `).join('');
-            
-            // Legg til slett eventer
             document.querySelectorAll('.slettTimer').forEach(btn => {
+                btn.addEventListener('click', function() {
+                    if (confirm('Er du sikker på at du vil slette denne timeloggen?')) {
+                        const id = parseInt(this.getAttribute('data-id'));
+                        const data = loadData();
+                        data.timerLogg = data.timerLogg.filter(t => t.id !== id);
+                        saveData(data);
+                        renderTimerTable();
+                        updateStats();
+                        updateUkeStatistikk();
+                    }
+                });
+            });
+            
+            document.querySelectorAll('.redigerTimer').forEach(btn => {
                 btn.addEventListener('click', function() {
                     const id = parseInt(this.getAttribute('data-id'));
                     const data = loadData();
-                    data.timerLogg = data.timerLogg.filter(t => t.id !== id);
-                    saveData(data);
-                    renderTimerTable();
+                    const logg = data.timerLogg.find(t => t.id === id);
+                    if (logg) openEditModal(logg);
                 });
             });
         }
         
-        // Sett dagens dato som standard
-        document.getElementById('timerDato').value = new Date().toISOString().slice(0, 10);
+        function openEditModal(logg) {
+            redigerTarget = logg;
+            document.getElementById('editDato').value = logg.dato;
+            document.getElementById('editStart').value = logg.startKl;
+            document.getElementById('editSlutt').value = logg.sluttKl;
+            document.getElementById('editProsjekt').value = logg.prosjekt || '';
+            document.getElementById('editBeskrivelse').value = logg.beskrivelse || '';
+            document.getElementById('editOvertid').value = logg.overtid || 'nei';
+            document.getElementById('editModal').classList.add('active');
+        }
         
-        // Legg til timer knapp
+        function closeEditModal() {
+            document.getElementById('editModal').classList.remove('active');
+            redigerTarget = null;
+        }
+        
+        function saveEdit() {
+            if (!redigerTarget) return;
+            const data = loadData();
+            const index = data.timerLogg.findIndex(t => t.id === redigerTarget.id);
+            if (index !== -1) {
+                const nyStart = document.getElementById('editStart').value;
+                const nySlutt = document.getElementById('editSlutt').value;
+                const nyTimer = beregnTimer(nyStart, nySlutt);
+                data.timerLogg[index] = {
+                    ...data.timerLogg[index],
+                    dato: document.getElementById('editDato').value,
+                    startKl: nyStart,
+                    sluttKl: nySlutt,
+                    totalTimer: nyTimer,
+                    prosjekt: document.getElementById('editProsjekt').value,
+                    beskrivelse: document.getElementById('editBeskrivelse').value,
+                    overtid: document.getElementById('editOvertid').value
+                };
+                saveData(data);
+                renderTimerTable();
+                updateStats();
+                updateUkeStatistikk();
+            }
+            closeEditModal();
+        }
+        
+        // Legg til timer
         document.getElementById('leggTilTimerBtn').addEventListener('click', function() {
             const dato = document.getElementById('timerDato').value;
             const startTid = document.getElementById('startTid').value;
             const sluttTid = document.getElementById('sluttTid').value;
             const beskrivelse = document.getElementById('timerBeskrivelse').value.trim();
+            const prosjekt = document.getElementById('timerProsjekt').value;
+            const overtid = document.getElementById('timerOvertid').value;
             
-            // Validering
-            if (!dato) {
-                alert('Vennligst velg en dato');
-                return;
-            }
-            if (!startTid) {
-                alert('Vennligst velg starttid');
-                return;
-            }
-            if (!sluttTid) {
-                alert('Vennligst velg slutttid');
-                return;
-            }
+            if (!dato) { alert('Vennligst velg en dato'); return; }
+            if (!startTid) { alert('Vennligst velg starttid'); return; }
+            if (!sluttTid) { alert('Vennligst velg slutttid'); return; }
             
             const timer = beregnTimer(startTid, sluttTid);
+            if (timer <= 0) { alert('Sluttid må være etter starttid'); return; }
             
-            if (timer <= 0) {
-                alert('Sluttid må være etter starttid');
-                return;
-            }
-            
-            // Lagre data
             const data = loadData();
             const nyLogg = {
                 id: Date.now(),
@@ -224,26 +549,145 @@
                 startKl: startTid,
                 sluttKl: sluttTid,
                 totalTimer: timer,
-                beskrivelse: beskrivelse || 'Arbeid'
+                beskrivelse: beskrivelse || 'Arbeid',
+                prosjekt: prosjekt || '',
+                overtid: overtid,
+                created: new Date().toISOString()
             };
             
             data.timerLogg.push(nyLogg);
             saveData(data);
             
-            // Tøm beskrivelse feltet
             document.getElementById('timerBeskrivelse').value = '';
-            
-            // Oppdater tabellen
             renderTimerTable();
+            updateStats();
+            updateUkeStatistikk();
             
-            // Vis bekreftelse
             const btn = document.getElementById('leggTilTimerBtn');
             const originalText = btn.innerText;
             btn.innerText = '✓ Lagret!';
-            setTimeout(() => {
-                btn.innerText = originalText;
-            }, 1500);
+            setTimeout(() => { btn.innerText = originalText; }, 1500);
         });
+        
+        // Hurtigregistrering
+        const hurtigTimer = [1, 2, 4, 7.5, 8];
+        hurtigTimer.forEach(t => {
+            const btn = document.getElementById(`hurtig${t}h`.replace('.', '_'));
+            if (btn) {
+                btn.addEventListener('click', () => {
+                    const start = '08:00';
+                    const slutt = `${Math.floor(8 + t)}:${(t % 1) * 60}`.replace(/\.\d+/, '');
+                    document.getElementById('startTid').value = start;
+                    document.getElementById('sluttTid').value = slutt;
+                });
+            }
+        });
+        document.getElementById('hurtig7_5h')?.addEventListener('click', () => {
+            document.getElementById('startTid').value = '08:00';
+            document.getElementById('sluttTid').value = '15:30';
+        });
+        document.getElementById('hurtigLunsj')?.addEventListener('click', () => {
+            document.getElementById('startTid').value = '12:00';
+            document.getElementById('sluttTid').value = '13:00';
+        });
+        document.getElementById('hurtigPause')?.addEventListener('click', () => {
+            const start = document.getElementById('startTid').value;
+            if (start) {
+                const [h, m] = start.split(':').map(Number);
+                let sluttMin = m + 15;
+                let sluttH = h;
+                if (sluttMin >= 60) { sluttH++; sluttMin -= 60; }
+                document.getElementById('sluttTid').value = `${String(sluttH).padStart(2, '0')}:${String(sluttMin).padStart(2, '0')}`;
+            }
+        });
+        document.getElementById('hurtigIdag')?.addEventListener('click', () => {
+            document.getElementById('timerDato').value = new Date().toISOString().slice(0, 10);
+        });
+        
+        // Eksporter til CSV
+        document.getElementById('eksporterBtn')?.addEventListener('click', () => {
+            const data = loadData();
+            const timerListe = data.timerLogg || [];
+            if (timerListe.length === 0) {
+                alert('Ingen data å eksportere');
+                return;
+            }
+            let csv = 'Dato,Start,Slutt,Timer,Beskrivelse,Prosjekt,Overtid\n';
+            timerListe.forEach(t => {
+                csv += `"${t.dato}","${t.startKl}","${t.sluttKl}",${t.totalTimer},"${t.beskrivelse || ''}","${t.prosjekt || ''}","${t.overtid || ''}"\n`;
+            });
+            const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
+            const link = document.createElement('a');
+            const url = URL.createObjectURL(blob);
+            link.href = url;
+            link.setAttribute('download', `timelogg_${currentUser}_${new Date().toISOString().slice(0, 19)}.csv`);
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+            URL.revokeObjectURL(url);
+        });
+        
+        // Slett alle timer
+        document.getElementById('slettAlleBtn')?.addEventListener('click', () => {
+            if (confirm('⚠️ ADVARSEL: Dette sletter ALLE dine timer. Kan ikke angres. Fortsett?')) {
+                const data = loadData();
+                data.timerLogg = [];
+                saveData(data);
+                renderTimerTable();
+                updateStats();
+                updateUkeStatistikk();
+                alert('Alle timer er slettet');
+            }
+        });
+        
+        // Filtrering
+        document.getElementById('sokFilter')?.addEventListener('input', () => renderTimerTable());
+        document.getElementById('datoFilter')?.addEventListener('change', () => renderTimerTable());
+        document.getElementById('prosjektFilter')?.addEventListener('change', () => renderTimerTable());
+        document.getElementById('clearFilterBtn')?.addEventListener('click', () => {
+            document.getElementById('sokFilter').value = '';
+            document.getElementById('datoFilter').value = '';
+            document.getElementById('prosjektFilter').value = '';
+            renderTimerTable();
+        });
+        
+        // Uke navigasjon
+        document.getElementById('forrigeUke')?.addEventListener('click', () => {
+            currentUkeOffset--;
+            updateUkeInfo();
+            updateUkeStatistikk();
+        });
+        document.getElementById('nesteUke')?.addEventListener('click', () => {
+            currentUkeOffset++;
+            updateUkeInfo();
+            updateUkeStatistikk();
+        });
+        document.getElementById('denneUkenBtn')?.addEventListener('click', () => {
+            currentUkeOffset = 0;
+            updateUkeInfo();
+            updateUkeStatistikk();
+        });
+        
+        // Sortering
+        document.querySelectorAll('.data-table th[data-sort]').forEach(th => {
+            th.addEventListener('click', () => {
+                const column = th.getAttribute('data-sort');
+                if (currentSort.column === column) {
+                    currentSort.direction = currentSort.direction === 'asc' ? 'desc' : 'asc';
+                } else {
+                    currentSort.column = column;
+                    currentSort.direction = 'asc';
+                }
+                renderTimerTable();
+            });
+        });
+        
+        // Modal events
+        document.querySelectorAll('.modal-close, #cancelEditBtn').forEach(btn => {
+            btn.addEventListener('click', closeEditModal);
+        });
+        document.getElementById('saveEditBtn')?.addEventListener('click', saveEdit);
+        document.getElementById('editModal')?.addEventListener('click', (e) => { if (e.target === document.getElementById('editModal')) closeEditModal(); });
         
         // Logg ut
         document.getElementById('logoutBtn').addEventListener('click', function() {
@@ -251,8 +695,12 @@
             window.location.href = 'index.html';
         });
         
-        // Last inn timer ved sidevisning
+        // Initialiser
+        document.getElementById('timerDato').value = new Date().toISOString().slice(0, 10);
         renderTimerTable();
+        updateStats();
+        updateUkeInfo();
+        updateUkeStatistikk();
     </script>
 </body>
 </html>
