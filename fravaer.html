@@ -7,7 +7,7 @@
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Inter', system-ui, sans-serif; }
         body { background: #0a0f1a; min-height: 100vh; padding: 20px; }
-        .app-wrapper { max-width: 1200px; margin: 0 auto; }
+        .app-wrapper { max-width: 1400px; margin: 0 auto; }
         .pro-header {
             background: linear-gradient(135deg, #0f172a 0%, #111827 100%);
             border-radius: 24px;
@@ -27,84 +27,670 @@
         .logout-btn { background: #dc2626; border: none; padding: 6px 16px; border-radius: 30px; color: white; cursor: pointer; }
         .page-title { margin-bottom: 28px; }
         .page-title h2 { color: white; font-size: 1.8rem; }
+        .page-title p { color: #94a3b8; margin-top: 6px; }
+        
         .card-glass { background: #111827; border-radius: 28px; padding: 1.6rem; margin-bottom: 1.8rem; border: 1px solid #1f2a3e; }
         .card-title { font-size: 1.2rem; font-weight: 600; color: #e2e8f0; margin-bottom: 1.2rem; border-left: 4px solid #3b82f6; padding-left: 16px; }
         .form-row { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 16px; margin-bottom: 20px; }
         .input-field { background: #1e293b; border: 1px solid #334155; border-radius: 18px; padding: 12px 16px; color: white; width: 100%; }
+        .input-field:focus { outline: none; border-color: #3b82f6; }
         label { font-size: 0.7rem; font-weight: 600; color: #94a3b8; display: block; margin-bottom: 6px; text-transform: uppercase; }
+        
         .btn-primary { background: #3b82f6; border: none; border-radius: 40px; padding: 12px 24px; font-weight: 600; color: white; cursor: pointer; }
+        .btn-primary:hover { background: #2563eb; transform: translateY(-1px); }
+        .btn-outline { background: transparent; border: 1px solid #475569; border-radius: 40px; padding: 8px 16px; font-weight: 600; color: #cbd5e1; cursor: pointer; font-size: 0.8rem; }
+        .btn-outline:hover { background: #1e293b; border-color: #3b82f6; }
+        .btn-success { background: #10b981; border: none; border-radius: 40px; padding: 8px 16px; font-weight: 600; color: white; cursor: pointer; }
+        .btn-warning { background: #f59e0b; border: none; border-radius: 40px; padding: 8px 16px; font-weight: 600; color: white; cursor: pointer; }
+        .btn-danger { background: #dc2626; border: none; border-radius: 40px; padding: 8px 16px; font-weight: 600; color: white; cursor: pointer; }
+        
         .data-table { width: 100%; border-collapse: collapse; }
-        .data-table th { text-align: left; padding: 12px 8px; color: #94a3b8; border-bottom: 1px solid #1f2a3e; }
-        .data-table td { padding: 12px 8px; color: #e2e8f0; border-bottom: 1px solid #1e293b; }
-        .action-btn { background: none; border: none; color: #f97316; cursor: pointer; }
+        .data-table th { text-align: left; padding: 12px 8px; color: #94a3b8; border-bottom: 1px solid #1f2a3e; cursor: pointer; font-size: 0.75rem; }
+        .data-table th:hover { color: #3b82f6; }
+        .data-table td { padding: 12px 8px; color: #e2e8f0; border-bottom: 1px solid #1e293b; font-size: 0.85rem; }
+        .action-btn { background: none; border: none; color: #f97316; cursor: pointer; font-size: 0.75rem; padding: 4px 8px; border-radius: 12px; }
+        .action-btn:hover { background: #1e293b; }
         .scroll-table { max-height: 400px; overflow-y: auto; }
+        
+        .stats-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 16px; margin-bottom: 20px; }
+        .stat-card { background: linear-gradient(145deg, #1e293b, #0f172a); border-radius: 20px; padding: 16px; text-align: center; }
+        .stat-number { font-size: 1.5rem; font-weight: 700; color: #3b82f6; }
+        .stat-label { font-size: 0.7rem; color: #94a3b8; margin-top: 6px; }
+        
+        .filter-bar { display: flex; gap: 12px; margin-bottom: 20px; flex-wrap: wrap; align-items: flex-end; }
+        .filter-input { flex: 1; background: #1e293b; border: 1px solid #334155; border-radius: 40px; padding: 10px 16px; color: white; min-width: 120px; }
+        
+        .kategori-tags { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 16px; }
+        .kategori-tag { background: #1e293b; padding: 6px 14px; border-radius: 30px; font-size: 0.7rem; color: #94a3b8; cursor: pointer; transition: all 0.2s; }
+        .kategori-tag:hover { background: #2d3a4e; color: white; }
+        .kategori-tag.active { background: #3b82f6; color: white; }
+        
+        .flex-between { display: flex; justify-content: space-between; align-items: center; gap: 12px; flex-wrap: wrap; }
+        .info-badge { background: #1e293b; padding: 6px 12px; border-radius: 30px; font-size: 0.7rem; color: #94a3b8; display: inline-flex; align-items: center; gap: 6px; }
+        
+        .mappe-container { margin-bottom: 20px; }
+        .mappe-header { background: #1e293b; border-radius: 16px; padding: 12px 16px; cursor: pointer; display: flex; justify-content: space-between; align-items: center; margin-bottom: 4px; transition: all 0.2s; }
+        .mappe-header:hover { background: #2d3a4e; }
+        .mappe-navn { font-weight: 600; color: #3b82f6; }
+        .mappe-stats { display: flex; gap: 16px; }
+        .mappe-timer { color: #f59e0b; font-weight: 600; }
+        .mappe-chevron { transition: transform 0.2s; }
+        .mappe-chevron.open { transform: rotate(90deg); }
+        .mappe-innhold { display: none; padding-left: 20px; margin-top: 8px; }
+        .mappe-innhold.open { display: block; }
+        
+        .fravær-item { background: #1e293b; border-radius: 12px; padding: 12px; margin-bottom: 8px; border-left: 3px solid #f59e0b; }
+        
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.8);
+            z-index: 1000;
+            justify-content: center;
+            align-items: center;
+        }
+        .modal.active { display: flex; }
+        .modal-content {
+            background: #111827;
+            border-radius: 28px;
+            padding: 32px;
+            max-width: 500px;
+            width: 90%;
+            border: 1px solid #3b82f6;
+        }
+        .modal-header { display: flex; justify-content: space-between; margin-bottom: 20px; color: white; font-size: 1.3rem; }
+        .modal-close { cursor: pointer; font-size: 1.5rem; }
+        .rediger-felt { margin-bottom: 16px; }
+        .rediger-felt label { font-size: 0.7rem; color: #94a3b8; display: block; margin-bottom: 6px; }
+        .rediger-felt input, .rediger-felt select { width: 100%; }
     </style>
 </head>
 <body>
     <div class="app-wrapper">
         <div class="pro-header">
-            <div class="logo-area"><h1>WORKBENCH PRO</h1><p>timelogg | fravær | finans | lommebok</p></div>
-            <div class="user-area"><span class="user-name" id="currentUserDisplay"></span><a href="dashboard.html" class="home-btn">Hjem</a><button id="logoutBtn" class="logout-btn">Logg ut</button></div>
-        </div>
-        <div class="page-title"><h2>Fravær</h2><p>Registrer fravær og årsak</p></div>
-        <div class="card-glass">
-            <div class="card-title">Registrer fravær</div>
-            <div class="form-row">
-                <div><label>DATO</label><input type="date" id="fravDato" class="input-field"></div>
-                <div><label>TIMER FRAVÆR</label><input type="number" step="0.5" id="fravTimer" class="input-field" placeholder="7.5"></div>
-                <div><label>ÅRSAK</label><input type="text" id="fravArsak" class="input-field" placeholder="sykdom, omsorg"></div>
+            <div class="logo-area"><h1>WORKBENCH PRO</h1><p>fravær | statistikk | kategorier | mappevisning</p></div>
+            <div class="user-area">
+                <span class="user-name" id="currentUserDisplay"></span>
+                <a href="dashboard.html" class="home-btn">Hjem</a>
+                <a href="timereg.html" class="home-btn" style="background:#4a6a85;">Timer</a>
+                <button id="logoutBtn" class="logout-btn">Logg ut</button>
             </div>
-            <button id="leggFraværBtn" class="btn-primary">Registrer fravær</button>
         </div>
+        
+        <div class="page-title">
+            <h2>📊 Fravær</h2>
+            <p>Registrer fravær | Se statistikk | Grupper etter kategori</p>
+        </div>
+        
+        <!-- Statistikk kort -->
+        <div class="stats-grid" id="statsGrid"></div>
+        
+        <div class="log-grid" style="display: grid; grid-template-columns: 1fr 1fr; gap: 24px;">
+            <!-- Venstre: Registrer nytt fravær -->
+            <div>
+                <div class="card-glass">
+                    <div class="card-title">📝 Registrer fravær</div>
+                    <div class="form-row">
+                        <div><label>DATO</label><input type="date" id="fravDato" class="input-field"></div>
+                        <div><label>TIMER FRAVÆR</label><input type="number" step="0.5" id="fravTimer" class="input-field" placeholder="7.5"></div>
+                        <div><label>KATEGORI</label>
+                            <select id="fravKategori" class="input-field">
+                                <option value="Sykdom">🤒 Sykdom</option>
+                                <option value="Omsorg">👶 Omsorg</option>
+                                <option value="Ferier">🏖️ Ferier</option>
+                                <option value="Avspasering">⏰ Avspasering</option>
+                                <option value="Kurs">📚 Kurs</option>
+                                <option value="Annet">📌 Annet</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div><label>ÅRSAK (detaljert)</label><input type="text" id="fravArsak" class="input-field" placeholder="f.eks. Influensa, Barnehage stengt"></div>
+                        <div><label>DOKUMENTERT?</label>
+                            <select id="fravDokumentert" class="input-field">
+                                <option value="nei">Nei</option>
+                                <option value="ja">Ja (legeerklæring)</option>
+                                <option value="egenmelding">Egenmelding</option>
+                            </select>
+                        </div>
+                    </div>
+                    <button id="leggFraværBtn" class="btn-primary">+ Registrer fravær</button>
+                </div>
+                
+                <!-- Hurtigregistrering -->
+                <div class="card-glass">
+                    <div class="card-title">⚡ Hurtigregistrering</div>
+                    <div class="flex-between">
+                        <button id="hurtigSyk" class="btn-outline">🤒 Sykdom (8t)</button>
+                        <button id="hurtigHalvSyk" class="btn-outline">🤒 Halv syk (4t)</button>
+                        <button id="hurtigOmsorg" class="btn-outline">👶 Omsorg (8t)</button>
+                        <button id="hurtigAvspasering" class="btn-outline">⏰ Avspasering (8t)</button>
+                    </div>
+                    <div class="flex-between" style="margin-top: 12px;">
+                        <button id="hurtigIdag" class="btn-outline">📅 Sett dagens dato</button>
+                        <button id="hurtigFullUke" class="btn-outline">📆 Full uke (40t)</button>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Høyre: Filter og statistikk -->
+            <div>
+                <div class="card-glass">
+                    <div class="card-title">🔍 Filtrer fravær</div>
+                    <div class="filter-bar">
+                        <input type="text" id="sokFilter" class="filter-input" placeholder="Søk i årsak...">
+                        <input type="date" id="datoFilter" class="filter-input" style="width: auto;">
+                        <select id="kategoriFilter" class="filter-input" style="width: auto;">
+                            <option value="">Alle kategorier</option>
+                            <option value="Sykdom">🤒 Sykdom</option>
+                            <option value="Omsorg">👶 Omsorg</option>
+                            <option value="Ferier">🏖️ Ferier</option>
+                            <option value="Avspasering">⏰ Avspasering</option>
+                            <option value="Kurs">📚 Kurs</option>
+                            <option value="Annet">📌 Annet</option>
+                        </select>
+                        <button id="clearFilterBtn" class="btn-outline">Tøm filter</button>
+                    </div>
+                </div>
+                
+                <!-- Kategori tags for rask filtrering -->
+                <div class="card-glass">
+                    <div class="card-title">🏷️ Filtrer etter kategori</div>
+                    <div class="kategori-tags" id="kategoriTags"></div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Visningsmodus knapper -->
+        <div class="flex-between" style="margin-bottom: 16px;">
+            <div class="info-badge">📊 Total fravær: <span id="totalFraværSpan">0</span> timer</div>
+            <div>
+                <button id="listeVisningBtn" class="btn-outline">📋 Listevisning</button>
+                <button id="mappeVisningBtn" class="btn-outline">📁 Mappevisning (etter kategori)</button>
+                <button id="slettAlleBtn" class="btn-danger" style="margin-left: 8px;">🗑️ Slett alle</button>
+            </div>
+        </div>
+        
+        <!-- Fraværsliste (dynamisk) -->
         <div class="card-glass">
-            <div class="card-title">Fraværsoversikt</div>
-            <div class="scroll-table"><table class="data-table"><thead><tr><th>DATO</th><th>TIMER</th><th>ÅRSAK</th><th></th></tr></thead><tbody id="fraværTableBody"></tbody></table></div>
+            <div class="card-title">📋 Fraværsoversikt</div>
+            <div id="fraværContainer"></div>
         </div>
     </div>
+    
+    <!-- Modal for redigering -->
+    <div id="editModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <span>✏️ Rediger fravær</span>
+                <span class="modal-close">&times;</span>
+            </div>
+            <div class="rediger-felt">
+                <label>Dato</label>
+                <input type="date" id="editDato" class="input-field">
+            </div>
+            <div class="rediger-felt">
+                <label>Timer fravær</label>
+                <input type="number" step="0.5" id="editTimer" class="input-field">
+            </div>
+            <div class="rediger-felt">
+                <label>Kategori</label>
+                <select id="editKategori" class="input-field">
+                    <option value="Sykdom">🤒 Sykdom</option>
+                    <option value="Omsorg">👶 Omsorg</option>
+                    <option value="Ferier">🏖️ Ferier</option>
+                    <option value="Avspasering">⏰ Avspasering</option>
+                    <option value="Kurs">📚 Kurs</option>
+                    <option value="Annet">📌 Annet</option>
+                </select>
+            </div>
+            <div class="rediger-felt">
+                <label>Årsak</label>
+                <input type="text" id="editArsak" class="input-field">
+            </div>
+            <div class="rediger-felt">
+                <label>Dokumentert</label>
+                <select id="editDokumentert" class="input-field">
+                    <option value="nei">Nei</option>
+                    <option value="ja">Ja (legeerklæring)</option>
+                    <option value="egenmelding">Egenmelding</option>
+                </select>
+            </div>
+            <div class="flex-between" style="margin-top: 20px;">
+                <button id="saveEditBtn" class="btn-primary">💾 Lagre endringer</button>
+                <button id="cancelEditBtn" class="btn-outline">Avbryt</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="database.js"></script>
     <script>
         const currentUser = sessionStorage.getItem('workbench_currentUser');
         if (!currentUser) { window.location.href = 'index.html'; }
         document.getElementById('currentUserDisplay').innerText = currentUser;
         
+        let currentView = 'liste'; // 'liste' eller 'mappe'
+        let currentSort = { column: 'dato', direction: 'desc' };
+        let kategoriFilter = '';
+        let redigerTarget = null;
+        
         function loadData() {
             const raw = localStorage.getItem(`workbench_${currentUser}`);
             return raw ? JSON.parse(raw) : { timerLogg: [], fravær: [], månedslønn: [], walletHistory: [], saldo: 0 };
         }
+        
         function saveData(data) { localStorage.setItem(`workbench_${currentUser}`, JSON.stringify(data)); }
         
-        function renderFravær() {
+        function getUnikeKategorier() {
             const data = loadData();
-            const tbody = document.getElementById('fraværTableBody');
-            const sorted = [...(data.fravær || [])].sort((a,b) => b.dato.localeCompare(a.dato));
-            tbody.innerHTML = sorted.map(f => `<tr><td>${f.dato}</td><td>${f.timerFravær} h</td><td>${f.årsak}</td><td><button class="action-btn delete-fravær" data-id="${f.id}">Slett</button></td></tr>`).join('');
-            if (sorted.length === 0) tbody.innerHTML = '<tr><td colspan="4" style="text-align:center;">Ingen fravær registrert</td></tr>';
-            document.querySelectorAll('.delete-fravær').forEach(btn => {
-                btn.addEventListener('click', () => {
-                    const id = parseFloat(btn.getAttribute('data-id'));
-                    let d = loadData();
-                    d.fravær = d.fravær.filter(f => f.id !== id);
-                    saveData(d);
+            const fraværListe = data.fravær || [];
+            const kategorier = new Set();
+            fraværListe.forEach(f => { if (f.kategori) kategorier.add(f.kategori); });
+            return Array.from(kategorier).sort();
+        }
+        
+        function updateStats() {
+            const data = loadData();
+            const fraværListe = data.fravær || [];
+            const totalTimer = fraværListe.reduce((sum, f) => sum + f.timerFravær, 0);
+            const antallFravær = fraværListe.length;
+            const unikeDager = new Set(fraværListe.map(f => f.dato)).size;
+            const sykdomTimer = fraværListe.filter(f => f.kategori === 'Sykdom').reduce((sum, f) => sum + f.timerFravær, 0);
+            const denneMåned = new Date().toISOString().slice(0, 7);
+            const denneMånedTimer = fraværListe.filter(f => f.dato.startsWith(denneMåned)).reduce((sum, f) => sum + f.timerFravær, 0);
+            
+            document.getElementById('statsGrid').innerHTML = `
+                <div class="stat-card"><div class="stat-number">${totalTimer.toFixed(1)}</div><div class="stat-label">Totalt fravær (timer)</div></div>
+                <div class="stat-card"><div class="stat-number">${antallFravær}</div><div class="stat-label">Antall fravær</div></div>
+                <div class="stat-card"><div class="stat-number">${unikeDager}</div><div class="stat-label">Fraværsdager</div></div>
+                <div class="stat-card"><div class="stat-number">${sykdomTimer.toFixed(1)}</div><div class="stat-label">Sykdom (timer)</div></div>
+                <div class="stat-card"><div class="stat-number">${denneMånedTimer.toFixed(1)}</div><div class="stat-label">Denne måned</div></div>
+            `;
+            document.getElementById('totalFraværSpan').innerText = totalTimer.toFixed(1);
+        }
+        
+        function updateKategoriTags() {
+            const kategorier = getUnikeKategorier();
+            const container = document.getElementById('kategoriTags');
+            if (kategorier.length === 0) {
+                container.innerHTML = '<span class="info-badge">Ingen kategorier registrert ennå</span>';
+                return;
+            }
+            container.innerHTML = kategorier.map(kat => `
+                <div class="kategori-tag ${kategoriFilter === kat ? 'active' : ''}" data-kategori="${kat}">
+                    📁 ${kat}
+                </div>
+            `).join('');
+            
+            document.querySelectorAll('.kategori-tag').forEach(tag => {
+                tag.addEventListener('click', () => {
+                    kategoriFilter = tag.getAttribute('data-kategori');
+                    updateKategoriTags();
                     renderFravær();
                 });
             });
         }
         
+        function getFiltrerteFravær() {
+            const data = loadData();
+            let fraværListe = [...(data.fravær || [])];
+            const sok = document.getElementById('sokFilter')?.value.toLowerCase() || '';
+            const datoFilter = document.getElementById('datoFilter')?.value || '';
+            const katFilter = document.getElementById('kategoriFilter')?.value || '';
+            
+            if (sok) {
+                fraværListe = fraværListe.filter(f => f.årsak && f.årsak.toLowerCase().includes(sok));
+            }
+            if (datoFilter) {
+                fraværListe = fraværListe.filter(f => f.dato === datoFilter);
+            }
+            if (katFilter) {
+                fraværListe = fraværListe.filter(f => f.kategori === katFilter);
+            }
+            if (kategoriFilter) {
+                fraværListe = fraværListe.filter(f => f.kategori === kategoriFilter);
+            }
+            
+            fraværListe.sort((a, b) => {
+                let aVal = a[currentSort.column] || '';
+                let bVal = b[currentSort.column] || '';
+                if (currentSort.column === 'timerFravær') {
+                    aVal = a.timerFravær;
+                    bVal = b.timerFravær;
+                }
+                if (typeof aVal === 'number') {
+                    return currentSort.direction === 'asc' ? aVal - bVal : bVal - aVal;
+                }
+                return currentSort.direction === 'asc' ? String(aVal).localeCompare(String(bVal)) : String(bVal).localeCompare(String(aVal));
+            });
+            
+            return fraværListe;
+        }
+        
+        function renderListeVisning(filtrerte) {
+            if (filtrerte.length === 0) {
+                return '<div style="text-align:center; padding:40px; color:#64748b;">Ingen fravær registrert</div>';
+            }
+            
+            return `
+                <div class="scroll-table">
+                    <table class="data-table">
+                        <thead>
+                            <tr>
+                                <th data-sort="dato">📅 DATO ↕</th>
+                                <th data-sort="timerFravær">⏱️ TIMER ↕</th>
+                                <th data-sort="kategori">📁 KATEGORI</th>
+                                <th data-sort="årsak">📝 ÅRSAK</th>
+                                <th>📋 DOKUMENTERT</th>
+                                <th></th>
+                                <th></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            ${filtrerte.map(f => {
+                                const dokumentertTekst = f.dokumentert === 'ja' ? '✅ Legeerklæring' : (f.dokumentert === 'egenmelding' ? '📝 Egenmelding' : '❌ Nei');
+                                return `
+                                    <tr>
+                                        <td>${f.dato}</td>
+                                        <td>${f.timerFravær} h</td>
+                                        <td><span class="info-badge">${f.kategori || 'Annet'}</span></td>
+                                        <td>${f.årsak || '-'}</td>
+                                        <td>${dokumentertTekst}</td>
+                                        <td><button class="action-btn redigerFravær" data-id="${f.id}">✏️ Rediger</button></td>
+                                        <td><button class="action-btn delete-fravær" data-id="${f.id}">🗑️ Slett</button></td>
+                                    </tr>
+                                `;
+                            }).join('')}
+                        </tbody>
+                    </table>
+                </div>
+            `;
+        }
+        
+        function renderMappeVisning(filtrerte) {
+            if (filtrerte.length === 0) {
+                return '<div style="text-align:center; padding:40px; color:#64748b;">Ingen fravær registrert</div>';
+            }
+            
+            // Grupper etter kategori
+            const groups = {};
+            filtrerte.forEach(f => {
+                const kategori = f.kategori || 'Annet';
+                if (!groups[kategori]) groups[kategori] = [];
+                groups[kategori].push(f);
+            });
+            
+            let html = '';
+            Object.keys(groups).sort().forEach(kategori => {
+                const items = groups[kategori];
+                const totalTimer = items.reduce((sum, f) => sum + f.timerFravær, 0);
+                const mappeId = `mappe_${kategori.replace(/\s/g, '_')}`;
+                
+                html += `
+                    <div class="mappe-container">
+                        <div class="mappe-header" data-mappe="${mappeId}">
+                            <div>
+                                <span class="mappe-navn">📁 ${kategori}</span>
+                                <span class="info-badge" style="margin-left: 12px;">${items.length} registreringer</span>
+                            </div>
+                            <div class="mappe-stats">
+                                <span class="mappe-timer">⏱️ ${totalTimer.toFixed(1)} timer totalt</span>
+                                <span class="mappe-chevron">▶</span>
+                            </div>
+                        </div>
+                        <div class="mappe-innhold" id="${mappeId}">
+                            ${items.map(f => `
+                                <div class="fravær-item">
+                                    <div class="flex-between" style="margin-bottom: 8px;">
+                                        <span><strong>📅 ${f.dato}</strong></span>
+                                        <span class="info-badge">⏱️ ${f.timerFravær} timer</span>
+                                    </div>
+                                    <div style="margin-bottom: 6px;">📝 ${f.årsak || 'Ingen årsak oppgitt'}</div>
+                                    <div class="flex-between">
+                                        <span class="info-badge">${f.dokumentert === 'ja' ? '✅ Legeerklæring' : (f.dokumentert === 'egenmelding' ? '📝 Egenmelding' : '❌ Ikke dokumentert')}</span>
+                                        <div>
+                                            <button class="action-btn redigerFravær" data-id="${f.id}">✏️ Rediger</button>
+                                            <button class="action-btn delete-fravær" data-id="${f.id}">🗑️ Slett</button>
+                                        </div>
+                                    </div>
+                                </div>
+                            `).join('')}
+                        </div>
+                    </div>
+                `;
+            });
+            
+            return html;
+        }
+        
+        function renderFravær() {
+            const filtrerte = getFiltrerteFravær();
+            const container = document.getElementById('fraværContainer');
+            
+            if (currentView === 'liste') {
+                container.innerHTML = renderListeVisning(filtrerte);
+                // Legg til sortering eventer
+                document.querySelectorAll('.data-table th[data-sort]').forEach(th => {
+                    th.addEventListener('click', () => {
+                        const column = th.getAttribute('data-sort');
+                        if (currentSort.column === column) {
+                            currentSort.direction = currentSort.direction === 'asc' ? 'desc' : 'asc';
+                        } else {
+                            currentSort.column = column;
+                            currentSort.direction = 'asc';
+                        }
+                        renderFravær();
+                    });
+                });
+            } else {
+                container.innerHTML = renderMappeVisning(filtrerte);
+                // Legg til mappe toggle eventer
+                document.querySelectorAll('.mappe-header').forEach(header => {
+                    header.addEventListener('click', () => {
+                        const mappeId = header.getAttribute('data-mappe');
+                        const innhold = document.getElementById(mappeId);
+                        const chevron = header.querySelector('.mappe-chevron');
+                        if (innhold) {
+                            innhold.classList.toggle('open');
+                            chevron.classList.toggle('open');
+                        }
+                    });
+                });
+            }
+            
+            // Legg til slett eventer
+            document.querySelectorAll('.delete-fravær').forEach(btn => {
+                btn.addEventListener('click', () => {
+                    if (confirm('Er du sikker på at du vil slette dette fraværet?')) {
+                        const id = parseInt(btn.getAttribute('data-id'));
+                        let data = loadData();
+                        data.fravær = data.fravær.filter(f => f.id !== id);
+                        saveData(data);
+                        renderFravær();
+                        updateStats();
+                        updateKategoriTags();
+                    }
+                });
+            });
+            
+            // Legg til rediger eventer
+            document.querySelectorAll('.redigerFravær').forEach(btn => {
+                btn.addEventListener('click', () => {
+                    const id = parseInt(btn.getAttribute('data-id'));
+                    const data = loadData();
+                    const fravær = data.fravær.find(f => f.id === id);
+                    if (fravær) openEditModal(fravær);
+                });
+            });
+        }
+        
+        function openEditModal(fravær) {
+            redigerTarget = fravær;
+            document.getElementById('editDato').value = fravær.dato;
+            document.getElementById('editTimer').value = fravær.timerFravær;
+            document.getElementById('editKategori').value = fravær.kategori || 'Annet';
+            document.getElementById('editArsak').value = fravær.årsak || '';
+            document.getElementById('editDokumentert').value = fravær.dokumentert || 'nei';
+            document.getElementById('editModal').classList.add('active');
+        }
+        
+        function closeEditModal() {
+            document.getElementById('editModal').classList.remove('active');
+            redigerTarget = null;
+        }
+        
+        function saveEdit() {
+            if (!redigerTarget) return;
+            const data = loadData();
+            const index = data.fravær.findIndex(f => f.id === redigerTarget.id);
+            if (index !== -1) {
+                data.fravær[index] = {
+                    ...data.fravær[index],
+                    dato: document.getElementById('editDato').value,
+                    timerFravær: parseFloat(document.getElementById('editTimer').value),
+                    kategori: document.getElementById('editKategori').value,
+                    årsak: document.getElementById('editArsak').value,
+                    dokumentert: document.getElementById('editDokumentert').value
+                };
+                saveData(data);
+                renderFravær();
+                updateStats();
+                updateKategoriTags();
+            }
+            closeEditModal();
+        }
+        
+        // Legg til fravær
         document.getElementById('leggFraværBtn').addEventListener('click', () => {
             const dato = document.getElementById('fravDato').value;
             const timer = parseFloat(document.getElementById('fravTimer').value);
-            const arsak = document.getElementById('fravArsak').value || "Ikke oppgitt";
-            if (!dato || isNaN(timer) || timer <= 0) { alert("Fyll ut gyldig dato og timer"); return; }
+            const kategori = document.getElementById('fravKategori').value;
+            const arsak = document.getElementById('fravArsak').value.trim();
+            const dokumentert = document.getElementById('fravDokumentert').value;
+            
+            if (!dato || isNaN(timer) || timer <= 0) {
+                alert("Fyll ut gyldig dato og timer");
+                return;
+            }
+            
             let data = loadData();
-            data.fravær.push({ id: Date.now(), dato: dato, timerFravær: timer, årsak: arsak });
+            data.fravær.push({
+                id: Date.now(),
+                dato: dato,
+                timerFravær: timer,
+                kategori: kategori,
+                årsak: arsak || (kategori === 'Sykdom' ? 'Sykdom' : 'Fravær'),
+                dokumentert: dokumentert,
+                created: new Date().toISOString()
+            });
             saveData(data);
+            
             renderFravær();
+            updateStats();
+            updateKategoriTags();
+            
             document.getElementById('fravArsak').value = '';
             document.getElementById('fravTimer').value = '';
+            document.getElementById('fravDato').value = new Date().toISOString().slice(0, 10);
+            
+            const btn = document.getElementById('leggFraværBtn');
+            const originalText = btn.innerText;
+            btn.innerText = '✓ Lagret!';
+            setTimeout(() => { btn.innerText = originalText; }, 1500);
         });
         
-        document.getElementById('logoutBtn').addEventListener('click', () => { sessionStorage.removeItem('workbench_currentUser'); window.location.href = 'index.html'; });
-        document.getElementById('fravDato').value = new Date().toISOString().slice(0,10);
+        // Hurtigregistrering
+        document.getElementById('hurtigSyk')?.addEventListener('click', () => {
+            document.getElementById('fravTimer').value = 8;
+            document.getElementById('fravKategori').value = 'Sykdom';
+            document.getElementById('fravArsak').value = 'Sykdom';
+        });
+        document.getElementById('hurtigHalvSyk')?.addEventListener('click', () => {
+            document.getElementById('fravTimer').value = 4;
+            document.getElementById('fravKategori').value = 'Sykdom';
+            document.getElementById('fravArsak').value = 'Halv dag syk';
+        });
+        document.getElementById('hurtigOmsorg')?.addEventListener('click', () => {
+            document.getElementById('fravTimer').value = 8;
+            document.getElementById('fravKategori').value = 'Omsorg';
+            document.getElementById('fravArsak').value = 'Omsorg for barn';
+        });
+        document.getElementById('hurtigAvspasering')?.addEventListener('click', () => {
+            document.getElementById('fravTimer').value = 8;
+            document.getElementById('fravKategori').value = 'Avspasering';
+            document.getElementById('fravArsak').value = 'Avspasering';
+        });
+        document.getElementById('hurtigIdag')?.addEventListener('click', () => {
+            document.getElementById('fravDato').value = new Date().toISOString().slice(0, 10);
+        });
+        document.getElementById('hurtigFullUke')?.addEventListener('click', () => {
+            document.getElementById('fravTimer').value = 40;
+            document.getElementById('fravKategori').value = 'Ferier';
+            document.getElementById('fravArsak').value = 'Ferie';
+        });
+        
+        // Filtrering
+        document.getElementById('sokFilter')?.addEventListener('input', () => renderFravær());
+        document.getElementById('datoFilter')?.addEventListener('change', () => renderFravær());
+        document.getElementById('kategoriFilter')?.addEventListener('change', () => {
+            kategoriFilter = '';
+            updateKategoriTags();
+            renderFravær();
+        });
+        document.getElementById('clearFilterBtn')?.addEventListener('click', () => {
+            document.getElementById('sokFilter').value = '';
+            document.getElementById('datoFilter').value = '';
+            document.getElementById('kategoriFilter').value = '';
+            kategoriFilter = '';
+            updateKategoriTags();
+            renderFravær();
+        });
+        
+        // Visningsmodus
+        document.getElementById('listeVisningBtn')?.addEventListener('click', () => {
+            currentView = 'liste';
+            renderFravær();
+        });
+        document.getElementById('mappeVisningBtn')?.addEventListener('click', () => {
+            currentView = 'mappe';
+            renderFravær();
+        });
+        
+        // Slett alle
+        document.getElementById('slettAlleBtn')?.addEventListener('click', () => {
+            if (confirm('⚠️ ADVARSEL: Dette sletter ALLE fravær. Kan ikke angres. Fortsett?')) {
+                let data = loadData();
+                data.fravær = [];
+                saveData(data);
+                renderFravær();
+                updateStats();
+                updateKategoriTags();
+                alert('Alle fravær er slettet');
+            }
+        });
+        
+        // Modal events
+        document.querySelectorAll('.modal-close, #cancelEditBtn').forEach(btn => {
+            btn.addEventListener('click', closeEditModal);
+        });
+        document.getElementById('saveEditBtn')?.addEventListener('click', saveEdit);
+        document.getElementById('editModal')?.addEventListener('click', (e) => { if (e.target === document.getElementById('editModal')) closeEditModal(); });
+        
+        // Logg ut
+        document.getElementById('logoutBtn').addEventListener('click', () => {
+            sessionStorage.removeItem('workbench_currentUser');
+            window.location.href = 'index.html';
+        });
+        
+        // Initialiser
+        document.getElementById('fravDato').value = new Date().toISOString().slice(0, 10);
         renderFravær();
+        updateStats();
+        updateKategoriTags();
     </script>
 </body>
 </html>
