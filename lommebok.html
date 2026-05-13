@@ -42,7 +42,7 @@
             color: white;
             font-size: 1.6rem;
             letter-spacing: -0.3px;
-            background: linear-gradient(135deg, #fff, #94a3b8);
+            background: linear-gradient(135deg, #fff, #cbd5e6);
             -webkit-background-clip: text;
             background-clip: text;
             color: transparent;
@@ -58,7 +58,7 @@
         }
 
         .user-name {
-            color: #e2e8f0;
+            color: #f1f5f9;
             font-weight: 500;
         }
 
@@ -94,7 +94,7 @@
         }
 
         .page-title p {
-            color: #94a3b8;
+            color: #cbd5e6;
             margin-top: 6px;
         }
 
@@ -118,7 +118,7 @@
         .card-title {
             font-size: 1.2rem;
             font-weight: 600;
-            color: #e2e8f0;
+            color: #f8fafc;
             margin-bottom: 1.2rem;
             border-left: 4px solid #3b82f6;
             padding-left: 16px;
@@ -140,7 +140,7 @@
         .saldo-label {
             font-size: 0.8rem;
             text-transform: uppercase;
-            color: #94a3b8;
+            color: #b9c7da;
             letter-spacing: 2px;
             margin-bottom: 10px;
         }
@@ -153,7 +153,7 @@
 
         .sub-saldo {
             font-size: 0.9rem;
-            color: #cbd5e1;
+            color: #e2e8f0;
             margin-top: 8px;
         }
 
@@ -167,7 +167,9 @@
             outline: none;
             transition: 0.2s;
         }
-
+        .input-field::placeholder {
+            color: #8a99b0;
+        }
         .input-field:focus {
             border-color: #3b82f6;
         }
@@ -182,7 +184,7 @@
         label {
             font-size: 0.7rem;
             font-weight: 600;
-            color: #94a3b8;
+            color: #cbd5e6;
             display: block;
             margin-bottom: 6px;
             text-transform: uppercase;
@@ -210,9 +212,12 @@
             border-radius: 40px;
             padding: 10px 18px;
             font-weight: 500;
-            color: white;
+            color: #f1f5f9;
             cursor: pointer;
             font-size: 0.8rem;
+        }
+        .btn-secondary:hover {
+            background: #405682;
         }
 
         .data-table {
@@ -223,7 +228,7 @@
         .data-table th {
             text-align: left;
             padding: 12px 6px;
-            color: #94a3b8;
+            color: #cbd5e6;
             border-bottom: 1px solid #1f2a3e;
         }
 
@@ -247,7 +252,7 @@
         }
 
         .delete-budget {
-            color: #ef4444;
+            color: #f97316;
         }
 
         .budget-summary {
@@ -261,7 +266,10 @@
             display: flex;
             justify-content: space-between;
             padding: 8px 0;
-            border-bottom: 1px solid #2d3a5e;
+            border-bottom: 1px solid #334155;
+        }
+        .budget-item strong {
+            color: #f1f5f9;
         }
 
         .green-text {
@@ -288,6 +296,10 @@
         hr {
             border-color: #1f2a3e;
             margin: 12px 0;
+        }
+        select.input-field option {
+            background: #1e293b;
+            color: white;
         }
 
         @media (max-width: 760px) {
@@ -316,9 +328,9 @@
     <div class="dashboard-grid">
         <!-- SEKSJON 1: Lommebok & transaksjoner -->
         <div class="card-glass">
-            <div class="card-title">💳 Lommebok <span style="font-size:0.75rem;">Saldo</span></div>
+            <div class="card-title">💳 Lommebok <span style="font-size:0.75rem; color:#cbd5e6;">Saldo</span></div>
             <div style="background:#1e293b; border-radius: 20px; padding: 14px; margin-bottom: 18px; text-align:center;">
-                <div style="color:#a0aec0; font-size:0.7rem;">NÅVÆRENDE SALDO</div>
+                <div style="color:#cbd5e6; font-size:0.7rem;">NÅVÆRENDE SALDO</div>
                 <div style="font-size: 2rem; font-weight: bold; color: #4ade80;" id="walletSaldoDisplay">0 kr</div>
             </div>
             <div class="card-title" style="font-size: 1rem;">➕ Legg til transaksjon</div>
@@ -335,7 +347,7 @@
 
         <!-- SEKSJON 2: BUDSJETT (månedlige kategorier) -->
         <div class="card-glass">
-            <div class="card-title">📊 Månedsbudsjett <span style="font-size:0.7rem;">(forbruk per kategori)</span></div>
+            <div class="card-title">📊 Månedsbudsjett <span style="font-size:0.7rem; color:#cbd5e6;">(forbruk per kategori)</span></div>
             <div class="form-row">
                 <div><label>KATEGORI</label><input type="text" id="budgetCategory" class="input-field" placeholder="f.eks Mat, Transport"></div>
                 <div><label>BUDSJETT (mnd)</label><input type="number" id="budgetLimit" class="input-field" placeholder="beløp"></div>
@@ -343,19 +355,19 @@
             <button id="addBudgetBtn" class="btn-primary" style="background:#4f46e5;">➕ Legg til budsjettramme</button>
             
             <div class="budget-summary" id="budgetListContainer">
-                <div style="color:#94a3b8; font-size:0.75rem; text-align:center;">Ingen budsjetter enda</div>
+                <div style="color:#cbd5e6; font-size:0.75rem; text-align:center;">Ingen budsjetter enda</div>
             </div>
-            <div style="margin-top: 12px; font-size: 0.7rem; color:#94a3b8;">* Basert på lommebok-utgifter denne måneden</div>
+            <div style="margin-top: 12px; font-size: 0.7rem; color:#cbd5e6;">* Basert på lommebok-utgifter denne måneden</div>
         </div>
 
         <!-- SEKSJON 3: SPAREKONTO + MÅL -->
         <div class="card-glass">
             <div class="card-title">🏦 Sparekonto & Sparemål</div>
             <div style="background:#1e293b; border-radius: 24px; padding: 16px; margin-bottom: 18px;">
-                <div class="flex-between"><span style="color:#cbd5e1;">✨ Sparekonto saldo:</span><strong id="spareAccountDisplay" style="font-size:1.5rem; color:#facc15;">0 kr</strong></div>
-                <div class="flex-between" style="margin-top: 10px;"><span style="color:#cbd5e1;">🎯 Sparemål (ønsket beløp):</span><strong id="spareGoalDisplay" style="color:#b9e0ff;">0 kr</strong></div>
+                <div class="flex-between"><span style="color:#e2e8f0;">✨ Sparekonto saldo:</span><strong id="spareAccountDisplay" style="font-size:1.5rem; color:#facc15;">0 kr</strong></div>
+                <div class="flex-between" style="margin-top: 10px;"><span style="color:#e2e8f0;">🎯 Sparemål (ønsket beløp):</span><strong id="spareGoalDisplay" style="color:#b9e2ff;">0 kr</strong></div>
                 <div class="progress-bar-bg" style="background:#334155; border-radius: 20px; height: 10px; margin: 12px 0;"><div id="spareProgressFill" style="width:0%; background:#3b82f6; height:10px; border-radius:20px;"></div></div>
-                <div id="goalMessage" style="font-size:0.7rem; color:#a5f3c3;"></div>
+                <div id="goalMessage" style="font-size:0.7rem; color:#bef3d0;"></div>
             </div>
             <div class="form-row">
                 <div><label>OVERFØR TIL SPAREKONTO</label><input type="number" id="overforSpareBelop" class="input-field" placeholder="Beløp"></div>
@@ -370,7 +382,7 @@
             </div>
             <button id="setSpareGoalBtn" class="btn-primary" style="background:#0f5c5f;">🎯 Oppdater sparemål</button>
             <hr>
-            <div style="font-size:0.7rem; color:#94a3b8;">Sparekonto er separat fra lommebok. Overfør midler for å sette av penger.</div>
+            <div style="font-size:0.7rem; color:#cbd5e6;">Sparekonto er separat fra lommebok. Overfør midler for å sette av penger.</div>
         </div>
     </div>
 </div>
@@ -448,11 +460,11 @@
         const budgets = data.budgets || [];
 
         if (budgets.length === 0) {
-            container.innerHTML = `<div style="color:#94a3b8; font-size:0.8rem; text-align:center;">📌 Legg til budsjettposter (Mat, Transport, etc)</div>`;
+            container.innerHTML = `<div style="color:#cbd5e6; font-size:0.8rem; text-align:center;">📌 Legg til budsjettposter (Mat, Transport, etc)</div>`;
             return;
         }
 
-        let html = `<div style="font-size:0.7rem; font-weight:600; padding-bottom:5px;">Kategori &nbsp;&nbsp; Budsjett / Forbruk</div>`;
+        let html = `<div style="font-size:0.7rem; font-weight:600; padding-bottom:5px; color:#e2e8f0;">Kategori &nbsp;&nbsp; Budsjett / Forbruk</div>`;
         budgets.forEach(b => {
             const spent = currentMonthExp[b.kategori] || 0;
             const limit = b.limit;
@@ -460,8 +472,8 @@
             const isOver = spent > limit;
             html += `
                 <div class="budget-item">
-                    <div><strong>${b.kategori}</strong></div>
-                    <div>${formatNOK(spent)} / ${formatNOK(limit)} <span style="color:${isOver ? '#f87171' : '#4ade80'};">(${Math.min(percent, 999).toFixed(0)}%)</span></div>
+                    <div><strong style="color:#f1f5f9;">${b.kategori}</strong></div>
+                    <div style="color:#e2e8f0;">${formatNOK(spent)} / ${formatNOK(limit)} <span style="color:${isOver ? '#f87171' : '#4ade80'};">(${Math.min(percent, 999).toFixed(0)}%)</span></div>
                     <div><button class="action-btn delete-budget" data-id="${b.id}">🗑️</button></div>
                 </div>
             `;
@@ -611,7 +623,7 @@
                 <td><button class="action-btn delete-trans" data-id="${w.id}">Slett</button></td>
             </tr>
         `).join('');
-        if (sorted.length === 0) tbody.innerHTML = '<tr><td colspan="4" style="text-align:center;">Ingen transaksjoner</td></tr>';
+        if (sorted.length === 0) tbody.innerHTML = '<tr><td colspan="4" style="text-align:center; color:#cbd5e6;">Ingen transaksjoner</td></tr>';
         
         attachDeleteTransactionHandler();
         renderBudgets(data);
