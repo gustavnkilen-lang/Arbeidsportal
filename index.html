@@ -4,18 +4,77 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>WorkBench Pro - Logg inn</title>
-    <link rel="stylesheet" href="style.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Inter', system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+        }
+        body {
+            background: linear-gradient(135deg, #0a0f1a 0%, #0f172a 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+        .auth-container { width: 100%; max-width: 500px; }
+        .auth-card {
+            background: #111827;
+            border-radius: 32px;
+            padding: 32px;
+            border: 1px solid #1e293b;
+            box-shadow: 0 25px 40px -12px rgba(0,0,0,0.5);
+        }
+        .auth-header { text-align: center; margin-bottom: 28px; }
+        .auth-header h1 { color: white; font-size: 1.8rem; }
+        .auth-header p { color: #94a3b8; font-size: 0.85rem; margin-top: 6px; }
+        .auth-section h3 { color: #e2e8f0; font-size: 1.1rem; margin-bottom: 16px; }
+        .auth-divider { height: 1px; background: #1e293b; margin: 24px 0; }
+        .auth-message { margin-bottom: 20px; }
+        .form-group { margin-bottom: 16px; }
+        label { font-size: 0.7rem; font-weight: 600; color: #94a3b8; display: block; margin-bottom: 6px; text-transform: uppercase; }
+        .input-field {
+            background: #1e293b;
+            border: 1px solid #334155;
+            border-radius: 18px;
+            padding: 12px 16px;
+            color: white;
+            font-size: 0.9rem;
+            width: 100%;
+        }
+        .btn-primary {
+            background: #3b82f6;
+            border: none;
+            border-radius: 40px;
+            padding: 12px 24px;
+            font-weight: 600;
+            color: white;
+            cursor: pointer;
+            width: 100%;
+        }
+        .btn-secondary {
+            background: #4a6a85;
+            border: none;
+            border-radius: 40px;
+            padding: 12px 24px;
+            font-weight: 600;
+            color: white;
+            cursor: pointer;
+            width: 100%;
+        }
+        .btn-primary:hover, .btn-secondary:hover { opacity: 0.9; transform: translateY(-1px); }
+    </style>
 </head>
-<body class="auth-body">
+<body>
     <div class="auth-container">
         <div class="auth-card">
             <div class="auth-header">
                 <h1>WORKBENCH PRO</h1>
                 <p>Arbeidsportal | Timelogg | Lønn | Lommebok</p>
             </div>
-            
             <div id="authMessage" class="auth-message"></div>
-            
             <div class="auth-section">
                 <h3>Logg inn</h3>
                 <div class="form-group">
@@ -26,11 +85,9 @@
                     <label>Passord</label>
                     <input type="password" id="loginPassword" class="input-field" placeholder="••••••">
                 </div>
-                <button id="loginBtn" class="btn-primary btn-full">Logg inn</button>
+                <button id="loginBtn" class="btn-primary">Logg inn</button>
             </div>
-            
             <div class="auth-divider"></div>
-            
             <div class="auth-section">
                 <h3>Opprett ny konto</h3>
                 <div class="form-group">
@@ -45,12 +102,72 @@
                     <label>Gjenta passord</label>
                     <input type="password" id="regPasswordConfirm" class="input-field" placeholder="gjenta passord">
                 </div>
-                <button id="registerBtn" class="btn-secondary btn-full">Opprett konto</button>
+                <button id="registerBtn" class="btn-secondary">Opprett konto</button>
             </div>
         </div>
     </div>
-    
-    <script src="data.js"></script>
-    <script src="auth.js"></script>
+    <script>
+        // Hjelpefunksjoner
+        function getUsers() {
+            const raw = localStorage.getItem('workbench_users');
+            return raw ? JSON.parse(raw) : {};
+        }
+        function saveUsers(users) { localStorage.setItem('workbench_users', JSON.stringify(users)); }
+        function getDefaultWorkData() {
+            return { timerLogg: [], fravær: [], månedslønn: [], walletHistory: [], saldo: 0 };
+        }
+        
+        // Registrer bruker
+        function registerUser(username, password, confirmPassword) {
+            if (!username.trim()) return { success: false, message: 'Brukernavn kan ikke være tomt' };
+            if (!password) return { success: false, message: 'Passord kan ikke være tomt' };
+            if (password !== confirmPassword) return { success: false, message: 'Passordene er ikke like' };
+            const users = getUsers();
+            if (users[username]) return { success: false, message: 'Brukernavn er allerede tatt' };
+            users[username] = { password: password, created: new Date().toISOString() };
+            saveUsers(users);
+            localStorage.setItem(`workbench_${username}`, JSON.stringify(getDefaultWorkData()));
+            return { success: true, message: 'Bruker opprettet! Du kan nå logge inn.' };
+        }
+        
+        // Logg inn
+        function loginUser(username, password) {
+            const users = getUsers();
+            if (!users[username]) return { success: false, message: 'Brukernavn finnes ikke' };
+            if (users[username].password !== password) return { success: false, message: 'Feil passord' };
+            sessionStorage.setItem('workbench_currentUser', username);
+            return { success: true, message: 'Innlogging vellykket' };
+        }
+        
+        // Event listeners
+        document.getElementById('loginBtn').addEventListener('click', () => {
+            const username = document.getElementById('loginUsername').value.trim();
+            const password = document.getElementById('loginPassword').value;
+            const result = loginUser(username, password);
+            const msgDiv = document.getElementById('authMessage');
+            if (result.success) {
+                window.location.href = 'dashboard.html';
+            } else {
+                msgDiv.innerHTML = `<div style="background:#450a0a; padding:12px; border-radius:16px; color:#f87171;">${result.message}</div>`;
+            }
+        });
+        
+        document.getElementById('registerBtn').addEventListener('click', () => {
+            const username = document.getElementById('regUsername').value.trim();
+            const password = document.getElementById('regPassword').value;
+            const confirm = document.getElementById('regPasswordConfirm').value;
+            const result = registerUser(username, password, confirm);
+            const msgDiv = document.getElementById('authMessage');
+            if (result.success) {
+                msgDiv.innerHTML = `<div style="background:#064e3b; padding:12px; border-radius:16px; color:#4ade80;">${result.message}</div>`;
+                document.getElementById('regUsername').value = '';
+                document.getElementById('regPassword').value = '';
+                document.getElementById('regPasswordConfirm').value = '';
+                document.getElementById('loginUsername').value = username;
+            } else {
+                msgDiv.innerHTML = `<div style="background:#450a0a; padding:12px; border-radius:16px; color:#f87171;">${result.message}</div>`;
+            }
+        });
+    </script>
 </body>
 </html>

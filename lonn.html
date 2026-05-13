@@ -4,52 +4,121 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>WorkBench Pro - Lønn</title>
-    <link rel="stylesheet" href="style.css">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Inter', system-ui, sans-serif; }
+        body { background: #0a0f1a; min-height: 100vh; padding: 20px; }
+        .app-wrapper { max-width: 1200px; margin: 0 auto; }
+        .pro-header {
+            background: linear-gradient(135deg, #0f172a 0%, #111827 100%);
+            border-radius: 24px;
+            padding: 20px 32px;
+            margin-bottom: 24px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 16px;
+        }
+        .logo-area h1 { color: white; font-size: 1.6rem; }
+        .user-area { display: flex; align-items: center; gap: 16px; background: #1e293b; padding: 8px 20px; border-radius: 60px; }
+        .user-name { color: #e2e8f0; font-weight: 500; }
+        .home-btn { background: #3b82f6; color: white; text-decoration: none; padding: 6px 16px; border-radius: 30px; }
+        .logout-btn { background: #dc2626; border: none; padding: 6px 16px; border-radius: 30px; color: white; cursor: pointer; }
+        .page-title { margin-bottom: 28px; }
+        .page-title h2 { color: white; font-size: 1.8rem; }
+        .card-glass { background: #111827; border-radius: 28px; padding: 1.6rem; margin-bottom: 1.8rem; border: 1px solid #1f2a3e; }
+        .card-title { font-size: 1.2rem; font-weight: 600; color: #e2e8f0; margin-bottom: 1.2rem; border-left: 4px solid #3b82f6; padding-left: 16px; }
+        .form-row { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 16px; margin-bottom: 20px; }
+        .input-field { background: #1e293b; border: 1px solid #334155; border-radius: 18px; padding: 12px 16px; color: white; width: 100%; }
+        label { font-size: 0.7rem; font-weight: 600; color: #94a3b8; display: block; margin-bottom: 6px; text-transform: uppercase; }
+        .btn-primary { background: #3b82f6; border: none; border-radius: 40px; padding: 12px 24px; font-weight: 600; color: white; cursor: pointer; }
+        .btn-outline { background: transparent; border: 1px solid #475569; border-radius: 40px; padding: 12px 24px; font-weight: 600; color: #cbd5e1; cursor: pointer; }
+        .flex-between { display: flex; justify-content: space-between; gap: 12px; flex-wrap: wrap; }
+        .data-table { width: 100%; border-collapse: collapse; }
+        .data-table th { text-align: left; padding: 12px 8px; color: #94a3b8; border-bottom: 1px solid #1f2a3e; }
+        .data-table td { padding: 12px 8px; color: #e2e8f0; border-bottom: 1px solid #1e293b; }
+        .action-btn { background: none; border: none; color: #f97316; cursor: pointer; }
+        .scroll-table { max-height: 400px; overflow-y: auto; }
+    </style>
 </head>
-<body class="dashboard-body">
+<body>
     <div class="app-wrapper">
         <div class="pro-header">
-            <div class="logo-area">
-                <h1>WORKBENCH PRO</h1>
-                <p>timelogg | fravær | finans | lommebok</p>
-            </div>
-            <div class="user-area">
-                <span class="user-name" id="currentUserDisplay"></span>
-                <a href="dashboard.html" class="home-btn">🏠 Hjem</a>
-                <button id="logoutBtn" class="logout-btn">Logg ut</button>
-            </div>
+            <div class="logo-area"><h1>WORKBENCH PRO</h1></div>
+            <div class="user-area"><span class="user-name" id="currentUserDisplay"></span><a href="dashboard.html" class="home-btn">Hjem</a><button id="logoutBtn" class="logout-btn">Logg ut</button></div>
         </div>
-        
-        <div class="page-title">
-            <h2>Lønn</h2>
-            <p>Registrer månedslønn og overfør til lommebok</p>
-        </div>
-        
+        <div class="page-title"><h2>Lønn</h2><p>Registrer månedslønn og overfør til lommebok</p></div>
         <div class="card-glass">
-            <div class="card-title">Registrer månedslønn (brutto)</div>
+            <div class="card-title">Registrer månedslønn</div>
             <div class="form-row">
                 <div><label>MÅNED</label><input type="month" id="lonnMaaned" class="input-field"></div>
                 <div><label>BELØP (NOK)</label><input type="number" id="lonnBelop" class="input-field" placeholder="38500"></div>
                 <div><label>KOMMENTAR</label><input type="text" id="lonnKommentar" class="input-field" placeholder="fastlønn, bonus"></div>
             </div>
-            <div class="flex-between">
-                <button id="regLonnBtn" class="btn-primary">Registrer lønn</button>
-                <button id="overforTilLommebokBtn" class="btn-outline">+ Overfør til lommebok</button>
-            </div>
+            <div class="flex-between"><button id="regLonnBtn" class="btn-primary">Registrer lønn</button><button id="overforTilLommebokBtn" class="btn-outline">Overfør til lommebok</button></div>
         </div>
-        
         <div class="card-glass">
             <div class="card-title">Lønnshistorikk</div>
-            <div class="scroll-table">
-                <table class="data-table">
-                    <thead><tr><th>MÅNED</th><th>BELØP</th><th>KOMMENTAR</th><th></th></tr></thead>
-                    <tbody id="lonnTableBody"></tbody>
-                </table>
-            </div>
+            <div class="scroll-table"><table class="data-table"><thead><tr><th>MÅNED</th><th>BELØP</th><th>KOMMENTAR</th><th></th></tr></thead><tbody id="lonnTableBody"></tbody></table></div>
         </div>
     </div>
-    
-    <script src="data.js"></script>
-    <script src="lonn.js"></script>
+    <script>
+        const currentUser = sessionStorage.getItem('workbench_currentUser');
+        if (!currentUser) { window.location.href = 'index.html'; }
+        document.getElementById('currentUserDisplay').innerText = currentUser;
+        
+        function loadData() {
+            const raw = localStorage.getItem(`workbench_${currentUser}`);
+            return raw ? JSON.parse(raw) : { timerLogg: [], fravær: [], månedslønn: [], walletHistory: [], saldo: 0 };
+        }
+        function saveData(data) { localStorage.setItem(`workbench_${currentUser}`, JSON.stringify(data)); }
+        function formatNOK(verdi) { return verdi.toLocaleString('nb-NO') + ' kr'; }
+        
+        function renderLonn() {
+            const data = loadData();
+            const tbody = document.getElementById('lonnTableBody');
+            const sorted = [...(data.månedslønn || [])].sort((a,b) => b.måned.localeCompare(a.måned));
+            tbody.innerHTML = sorted.map(l => `<tr><td>${l.måned}</td><td>${formatNOK(l.beløp)}</td><td>${l.kommentar || '-'}</td><td><button class="action-btn delete-lonn" data-month="${l.måned}">Slett</button></td>`).join('');
+            if (sorted.length === 0) tbody.innerHTML = '<tr><td colspan="4" style="text-align:center;">Ingen lønn registrert</td></tr>';
+            document.querySelectorAll('.delete-lonn').forEach(btn => {
+                btn.addEventListener('click', () => {
+                    const month = btn.getAttribute('data-month');
+                    let d = loadData();
+                    d.månedslønn = d.månedslønn.filter(m => m.måned !== month);
+                    saveData(d);
+                    renderLonn();
+                });
+            });
+        }
+        
+        document.getElementById('regLonnBtn').addEventListener('click', () => {
+            const måned = document.getElementById('lonnMaaned').value;
+            const beløp = parseFloat(document.getElementById('lonnBelop').value);
+            const kommentar = document.getElementById('lonnKommentar').value || "";
+            if (!måned || isNaN(beløp) || beløp <= 0) { alert("Fyll ut måned og gyldig beløp"); return; }
+            let data = loadData();
+            const existing = data.månedslønn.findIndex(m => m.måned === måned);
+            if (existing !== -1) data.månedslønn[existing] = { måned, beløp, kommentar };
+            else data.månedslønn.push({ måned, beløp, kommentar });
+            saveData(data);
+            renderLonn();
+            document.getElementById('lonnBelop').value = '';
+        });
+        
+        document.getElementById('overforTilLommebokBtn').addEventListener('click', () => {
+            const måned = document.getElementById('lonnMaaned').value;
+            let data = loadData();
+            const lonnPost = data.månedslønn.find(m => m.måned === måned);
+            if (!lonnPost) { alert("Registrer først lønn for denne måneden"); return; }
+            data.saldo = (data.saldo || 0) + lonnPost.beløp;
+            data.walletHistory.push({ id: Date.now(), dato: new Date().toISOString().slice(0,10), beskrivelse: `Lønn ${måned}`, belop: lonnPost.beløp, type: "inntekt" });
+            saveData(data);
+            alert(`Lønn på ${formatNOK(lonnPost.beløp)} er overført til lommeboken!`);
+        });
+        
+        document.getElementById('logoutBtn').addEventListener('click', () => { sessionStorage.removeItem('workbench_currentUser'); window.location.href = 'index.html'; });
+        document.getElementById('lonnMaaned').value = new Date().toISOString().slice(0,7);
+        renderLonn();
+    </script>
 </body>
 </html>

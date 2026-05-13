@@ -4,49 +4,107 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>WorkBench Pro - Fravær</title>
-    <link rel="stylesheet" href="style.css">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Inter', system-ui, sans-serif; }
+        body { background: #0a0f1a; min-height: 100vh; padding: 20px; }
+        .app-wrapper { max-width: 1200px; margin: 0 auto; }
+        .pro-header {
+            background: linear-gradient(135deg, #0f172a 0%, #111827 100%);
+            border-radius: 24px;
+            padding: 20px 32px;
+            margin-bottom: 24px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 16px;
+        }
+        .logo-area h1 { color: white; font-size: 1.6rem; }
+        .logo-area p { color: #94a3b8; font-size: 0.8rem; }
+        .user-area { display: flex; align-items: center; gap: 16px; background: #1e293b; padding: 8px 20px; border-radius: 60px; }
+        .user-name { color: #e2e8f0; font-weight: 500; }
+        .home-btn { background: #3b82f6; color: white; text-decoration: none; padding: 6px 16px; border-radius: 30px; }
+        .logout-btn { background: #dc2626; border: none; padding: 6px 16px; border-radius: 30px; color: white; cursor: pointer; }
+        .page-title { margin-bottom: 28px; }
+        .page-title h2 { color: white; font-size: 1.8rem; }
+        .card-glass { background: #111827; border-radius: 28px; padding: 1.6rem; margin-bottom: 1.8rem; border: 1px solid #1f2a3e; }
+        .card-title { font-size: 1.2rem; font-weight: 600; color: #e2e8f0; margin-bottom: 1.2rem; border-left: 4px solid #3b82f6; padding-left: 16px; }
+        .form-row { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 16px; margin-bottom: 20px; }
+        .input-field { background: #1e293b; border: 1px solid #334155; border-radius: 18px; padding: 12px 16px; color: white; width: 100%; }
+        label { font-size: 0.7rem; font-weight: 600; color: #94a3b8; display: block; margin-bottom: 6px; text-transform: uppercase; }
+        .btn-primary { background: #3b82f6; border: none; border-radius: 40px; padding: 12px 24px; font-weight: 600; color: white; cursor: pointer; }
+        .data-table { width: 100%; border-collapse: collapse; }
+        .data-table th { text-align: left; padding: 12px 8px; color: #94a3b8; border-bottom: 1px solid #1f2a3e; }
+        .data-table td { padding: 12px 8px; color: #e2e8f0; border-bottom: 1px solid #1e293b; }
+        .action-btn { background: none; border: none; color: #f97316; cursor: pointer; }
+        .scroll-table { max-height: 400px; overflow-y: auto; }
+    </style>
 </head>
-<body class="dashboard-body">
+<body>
     <div class="app-wrapper">
         <div class="pro-header">
-            <div class="logo-area">
-                <h1>WORKBENCH PRO</h1>
-                <p>timelogg | fravær | finans | lommebok</p>
-            </div>
-            <div class="user-area">
-                <span class="user-name" id="currentUserDisplay"></span>
-                <a href="dashboard.html" class="home-btn">🏠 Hjem</a>
-                <button id="logoutBtn" class="logout-btn">Logg ut</button>
-            </div>
+            <div class="logo-area"><h1>WORKBENCH PRO</h1><p>timelogg | fravær | finans | lommebok</p></div>
+            <div class="user-area"><span class="user-name" id="currentUserDisplay"></span><a href="dashboard.html" class="home-btn">Hjem</a><button id="logoutBtn" class="logout-btn">Logg ut</button></div>
         </div>
-        
-        <div class="page-title">
-            <h2>Fravær</h2>
-            <p>Registrer fravær og årsak</p>
-        </div>
-        
+        <div class="page-title"><h2>Fravær</h2><p>Registrer fravær og årsak</p></div>
         <div class="card-glass">
             <div class="card-title">Registrer fravær</div>
             <div class="form-row">
                 <div><label>DATO</label><input type="date" id="fravDato" class="input-field"></div>
                 <div><label>TIMER FRAVÆR</label><input type="number" step="0.5" id="fravTimer" class="input-field" placeholder="7.5"></div>
-                <div><label>ÅRSAK</label><input type="text" id="fravArsak" class="input-field" placeholder="sykdom, omsorg, etc"></div>
+                <div><label>ÅRSAK</label><input type="text" id="fravArsak" class="input-field" placeholder="sykdom, omsorg"></div>
             </div>
             <button id="leggFraværBtn" class="btn-primary">Registrer fravær</button>
         </div>
-        
         <div class="card-glass">
             <div class="card-title">Fraværsoversikt</div>
-            <div class="scroll-table">
-                <table class="data-table">
-                    <thead><tr><th>DATO</th><th>TIMER</th><th>ÅRSAK</th><th></th></tr></thead>
-                    <tbody id="fraværTableBody"></tbody>
-                </table>
-            </div>
+            <div class="scroll-table"><table class="data-table"><thead><tr><th>DATO</th><th>TIMER</th><th>ÅRSAK</th><th></th></tr></thead><tbody id="fraværTableBody"></tbody></table></div>
         </div>
     </div>
-    
-    <script src="data.js"></script>
-    <script src="fravaer.js"></script>
+    <script>
+        const currentUser = sessionStorage.getItem('workbench_currentUser');
+        if (!currentUser) { window.location.href = 'index.html'; }
+        document.getElementById('currentUserDisplay').innerText = currentUser;
+        
+        function loadData() {
+            const raw = localStorage.getItem(`workbench_${currentUser}`);
+            return raw ? JSON.parse(raw) : { timerLogg: [], fravær: [], månedslønn: [], walletHistory: [], saldo: 0 };
+        }
+        function saveData(data) { localStorage.setItem(`workbench_${currentUser}`, JSON.stringify(data)); }
+        
+        function renderFravær() {
+            const data = loadData();
+            const tbody = document.getElementById('fraværTableBody');
+            const sorted = [...(data.fravær || [])].sort((a,b) => b.dato.localeCompare(a.dato));
+            tbody.innerHTML = sorted.map(f => `<tr><td>${f.dato}</td><td>${f.timerFravær} h</td><td>${f.årsak}</td><td><button class="action-btn delete-fravær" data-id="${f.id}">Slett</button></td></tr>`).join('');
+            if (sorted.length === 0) tbody.innerHTML = '<tr><td colspan="4" style="text-align:center;">Ingen fravær registrert</td></tr>';
+            document.querySelectorAll('.delete-fravær').forEach(btn => {
+                btn.addEventListener('click', () => {
+                    const id = parseFloat(btn.getAttribute('data-id'));
+                    let d = loadData();
+                    d.fravær = d.fravær.filter(f => f.id !== id);
+                    saveData(d);
+                    renderFravær();
+                });
+            });
+        }
+        
+        document.getElementById('leggFraværBtn').addEventListener('click', () => {
+            const dato = document.getElementById('fravDato').value;
+            const timer = parseFloat(document.getElementById('fravTimer').value);
+            const arsak = document.getElementById('fravArsak').value || "Ikke oppgitt";
+            if (!dato || isNaN(timer) || timer <= 0) { alert("Fyll ut gyldig dato og timer"); return; }
+            let data = loadData();
+            data.fravær.push({ id: Date.now(), dato: dato, timerFravær: timer, årsak: arsak });
+            saveData(data);
+            renderFravær();
+            document.getElementById('fravArsak').value = '';
+            document.getElementById('fravTimer').value = '';
+        });
+        
+        document.getElementById('logoutBtn').addEventListener('click', () => { sessionStorage.removeItem('workbench_currentUser'); window.location.href = 'index.html'; });
+        document.getElementById('fravDato').value = new Date().toISOString().slice(0,10);
+        renderFravær();
+    </script>
 </body>
 </html>

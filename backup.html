@@ -4,54 +4,111 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>WorkBench Pro - Backup</title>
-    <link rel="stylesheet" href="style.css">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Inter', system-ui, sans-serif; }
+        body { background: #0a0f1a; min-height: 100vh; padding: 20px; }
+        .app-wrapper { max-width: 1000px; margin: 0 auto; }
+        .pro-header {
+            background: linear-gradient(135deg, #0f172a 0%, #111827 100%);
+            border-radius: 24px;
+            padding: 20px 32px;
+            margin-bottom: 24px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 16px;
+        }
+        .logo-area h1 { color: white; font-size: 1.6rem; }
+        .user-area { display: flex; align-items: center; gap: 16px; background: #1e293b; padding: 8px 20px; border-radius: 60px; }
+        .user-name { color: #e2e8f0; font-weight: 500; }
+        .home-btn { background: #3b82f6; color: white; text-decoration: none; padding: 6px 16px; border-radius: 30px; }
+        .logout-btn { background: #dc2626; border: none; padding: 6px 16px; border-radius: 30px; color: white; cursor: pointer; }
+        .page-title { margin-bottom: 28px; }
+        .page-title h2 { color: white; font-size: 1.8rem; }
+        .card-glass { background: #111827; border-radius: 28px; padding: 1.6rem; margin-bottom: 1.8rem; border: 1px solid #1f2a3e; }
+        .card-title { font-size: 1.2rem; font-weight: 600; color: #e2e8f0; margin-bottom: 1.2rem; border-left: 4px solid #3b82f6; padding-left: 16px; }
+        .btn-primary { background: #3b82f6; border: none; border-radius: 40px; padding: 12px 24px; font-weight: 600; color: white; cursor: pointer; }
+        .btn-outline { background: transparent; border: 1px solid #475569; border-radius: 40px; padding: 12px 24px; font-weight: 600; color: #cbd5e1; cursor: pointer; display: inline-block; }
+        .btn-danger { background: #dc2626; border: none; border-radius: 40px; padding: 12px 24px; font-weight: 600; color: white; cursor: pointer; }
+        .warning-text { color: #f87171; font-size: 0.8rem; margin-top: 8px; }
+        .info-box { background: #1e293b; border-radius: 16px; padding: 16px; color: #cbd5e1; font-size: 0.85rem; }
+        .import-status { margin-top: 12px; padding: 10px; border-radius: 16px; }
+        .flex-between { display: flex; justify-content: space-between; gap: 12px; flex-wrap: wrap; }
+    </style>
 </head>
-<body class="dashboard-body">
+<body>
     <div class="app-wrapper">
         <div class="pro-header">
-            <div class="logo-area">
-                <h1>WORKBENCH PRO</h1>
-                <p>timelogg | fravær | finans | lommebok</p>
-            </div>
-            <div class="user-area">
-                <span class="user-name" id="currentUserDisplay"></span>
-                <a href="dashboard.html" class="home-btn">🏠 Hjem</a>
-                <button id="logoutBtn" class="logout-btn">Logg ut</button>
-            </div>
+            <div class="logo-area"><h1>WORKBENCH PRO</h1></div>
+            <div class="user-area"><span class="user-name" id="currentUserDisplay"></span><a href="dashboard.html" class="home-btn">Hjem</a><button id="logoutBtn" class="logout-btn">Logg ut</button></div>
         </div>
-        
-        <div class="page-title">
-            <h2>Backup & Datasikkerhet</h2>
-            <p>Eksporter data til JSON for lagring på GitHub eller importér sikkerhetskopi</p>
-        </div>
-        
-        <div class="card-glass">
-            <div class="card-title">Eksporter data</div>
-            <p>Last ned alle dine data som en JSON-fil. Kan lagres på GitHub, Google Drive eller annen skylagring.</p>
-            <button id="exportDataBtn" class="btn-primary" style="margin-top: 16px;">📁 Eksporter alle data (JSON)</button>
-        </div>
-        
-        <div class="card-glass">
-            <div class="card-title">Importer backup</div>
-            <p>Gjenopprett data fra tidligere eksportert JSON-fil.</p>
-            <label for="importFile" class="btn-outline" style="display: inline-block; margin-top: 16px; cursor: pointer;">📂 Velg backup-fil</label>
-            <input type="file" id="importFile" accept=".json" style="display:none;">
-            <div id="importStatus" class="import-status"></div>
-        </div>
-        
-        <div class="card-glass">
-            <div class="card-title">Tilbakestill all data</div>
-            <p class="warning-text">ADVARSEL: Dette sletter ALLE dine timer, fravær, lønn og transaksjoner. Handlingen kan ikke angres.</p>
-            <button id="resetAllDataBtn" class="btn-danger">⚠️ Tilbakestill all data</button>
-        </div>
-        
-        <div class="card-glass">
-            <div class="card-title">Data informasjon</div>
-            <div class="info-box" id="dataInfo"></div>
-        </div>
+        <div class="page-title"><h2>Backup & Datasikkerhet</h2><p>Eksporter data til JSON for lagring på GitHub eller importér sikkerhetskopi</p></div>
+        <div class="card-glass"><div class="card-title">Eksporter data</div><p>Last ned alle dine data som en JSON-fil. Kan lagres på GitHub, Google Drive eller annen skylagring.</p><button id="exportDataBtn" class="btn-primary" style="margin-top: 16px;">Eksporter alle data (JSON)</button></div>
+        <div class="card-glass"><div class="card-title">Importer backup</div><p>Gjenopprett data fra tidligere eksportert JSON-fil.</p><label for="importFile" class="btn-outline" style="display: inline-block; margin-top: 16px; cursor: pointer;">Velg backup-fil</label><input type="file" id="importFile" accept=".json" style="display:none;"><div id="importStatus" class="import-status"></div></div>
+        <div class="card-glass"><div class="card-title">Tilbakestill all data</div><p class="warning-text">ADVARSEL: Dette sletter ALLE dine timer, fravær, lønn og transaksjoner. Handlingen kan ikke angres.</p><button id="resetAllDataBtn" class="btn-danger">Tilbakestill all data</button></div>
+        <div class="card-glass"><div class="card-title">Data informasjon</div><div class="info-box" id="dataInfo"></div></div>
     </div>
-    
-    <script src="data.js"></script>
-    <script src="backup.js"></script>
+    <script>
+        const currentUser = sessionStorage.getItem('workbench_currentUser');
+        if (!currentUser) { window.location.href = 'index.html'; }
+        document.getElementById('currentUserDisplay').innerText = currentUser;
+        
+        function loadData() {
+            const raw = localStorage.getItem(`workbench_${currentUser}`);
+            return raw ? JSON.parse(raw) : { timerLogg: [], fravær: [], månedslønn: [], walletHistory: [], saldo: 0 };
+        }
+        function saveData(data) { localStorage.setItem(`workbench_${currentUser}`, JSON.stringify(data)); }
+        
+        const data = loadData();
+        document.getElementById('dataInfo').innerHTML = `
+            <strong>Bruker:</strong> ${currentUser}<br>
+            <strong>Timer registrert:</strong> ${data.timerLogg.length}<br>
+            <strong>Fravær registrert:</strong> ${data.fravær.length}<br>
+            <strong>Lønnsregistreringer:</strong> ${data.månedslønn.length}<br>
+            <strong>Transaksjoner:</strong> ${data.walletHistory.length}<br>
+            <strong>Sist oppdatert:</strong> ${new Date().toLocaleString()}
+        `;
+        
+        document.getElementById('exportDataBtn').addEventListener('click', () => {
+            const exportObj = { user: currentUser, eksportDato: new Date().toISOString(), data: loadData() };
+            const blob = new Blob([JSON.stringify(exportObj, null, 2)], { type: "application/json" });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `workbench_${currentUser}_${new Date().toISOString().slice(0,19)}.json`;
+            a.click();
+            URL.revokeObjectURL(url);
+        });
+        
+        document.getElementById('importFile').addEventListener('change', (e) => {
+            const file = e.target.files[0];
+            if (!file) return;
+            const reader = new FileReader();
+            reader.onload = (ev) => {
+                try {
+                    const imported = JSON.parse(ev.target.result);
+                    if (imported.data && (imported.data.timerLogg || imported.data.fravær)) {
+                        saveData(imported.data);
+                        document.getElementById('importStatus').innerHTML = '<div style="background:#064e3b; padding:12px; border-radius:16px; color:#4ade80;">Data gjenopprettet fra backup! Last siden på nytt.</div>';
+                        setTimeout(() => { window.location.reload(); }, 1500);
+                    } else { alert("Ugyldig backup-format"); }
+                } catch(err) { alert("Feil ved parsing: " + err.message); }
+            };
+            reader.readAsText(file);
+            document.getElementById('importFile').value = '';
+        });
+        
+        document.getElementById('resetAllDataBtn').addEventListener('click', () => {
+            if (confirm("ADVARSEL: Dette sletter ALLE dine data. Kan ikke angres!")) {
+                const emptyData = { timerLogg: [], fravær: [], månedslønn: [], walletHistory: [], saldo: 0 };
+                saveData(emptyData);
+                alert("Alle data er slettet!");
+                window.location.reload();
+            }
+        });
+        
+        document.getElementById('logoutBtn').addEventListener('click', () => { sessionStorage.removeItem('workbench_currentUser'); window.location.href = 'index.html'; });
+    </script>
 </body>
 </html>

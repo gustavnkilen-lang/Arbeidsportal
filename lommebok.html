@@ -4,61 +4,126 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>WorkBench Pro - Lommebok</title>
-    <link rel="stylesheet" href="style.css">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Inter', system-ui, sans-serif; }
+        body { background: #0a0f1a; min-height: 100vh; padding: 20px; }
+        .app-wrapper { max-width: 1200px; margin: 0 auto; }
+        .pro-header {
+            background: linear-gradient(135deg, #0f172a 0%, #111827 100%);
+            border-radius: 24px;
+            padding: 20px 32px;
+            margin-bottom: 24px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 16px;
+        }
+        .logo-area h1 { color: white; font-size: 1.6rem; }
+        .user-area { display: flex; align-items: center; gap: 16px; background: #1e293b; padding: 8px 20px; border-radius: 60px; }
+        .user-name { color: #e2e8f0; font-weight: 500; }
+        .home-btn { background: #3b82f6; color: white; text-decoration: none; padding: 6px 16px; border-radius: 30px; }
+        .logout-btn { background: #dc2626; border: none; padding: 6px 16px; border-radius: 30px; color: white; cursor: pointer; }
+        .page-title { margin-bottom: 28px; }
+        .page-title h2 { color: white; font-size: 1.8rem; }
+        .saldo-card { background: linear-gradient(135deg, #1e3a5f, #0f2b44); border-radius: 28px; padding: 28px 32px; margin-bottom: 24px; text-align: center; border: 1px solid #3b82f6; }
+        .saldo-label { font-size: 0.8rem; text-transform: uppercase; color: #94a3b8; margin-bottom: 12px; }
+        .saldo-value { font-size: 3rem; font-weight: 800; color: #4ade80; }
+        .card-glass { background: #111827; border-radius: 28px; padding: 1.6rem; margin-bottom: 1.8rem; border: 1px solid #1f2a3e; }
+        .card-title { font-size: 1.2rem; font-weight: 600; color: #e2e8f0; margin-bottom: 1.2rem; border-left: 4px solid #3b82f6; padding-left: 16px; }
+        .form-row { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 16px; margin-bottom: 20px; }
+        .input-field { background: #1e293b; border: 1px solid #334155; border-radius: 18px; padding: 12px 16px; color: white; width: 100%; }
+        label { font-size: 0.7rem; font-weight: 600; color: #94a3b8; display: block; margin-bottom: 6px; text-transform: uppercase; }
+        .btn-primary { background: #3b82f6; border: none; border-radius: 40px; padding: 12px 24px; font-weight: 600; color: white; cursor: pointer; }
+        .data-table { width: 100%; border-collapse: collapse; }
+        .data-table th { text-align: left; padding: 12px 8px; color: #94a3b8; border-bottom: 1px solid #1f2a3e; }
+        .data-table td { padding: 12px 8px; color: #e2e8f0; border-bottom: 1px solid #1e293b; }
+        .action-btn { background: none; border: none; color: #f97316; cursor: pointer; }
+        .scroll-table { max-height: 400px; overflow-y: auto; }
+        select.input-field { background: #1e293b; }
+    </style>
 </head>
-<body class="dashboard-body">
+<body>
     <div class="app-wrapper">
         <div class="pro-header">
-            <div class="logo-area">
-                <h1>WORKBENCH PRO</h1>
-                <p>timelogg | fravær | finans | lommebok</p>
-            </div>
-            <div class="user-area">
-                <span class="user-name" id="currentUserDisplay"></span>
-                <a href="dashboard.html" class="home-btn">🏠 Hjem</a>
-                <button id="logoutBtn" class="logout-btn">Logg ut</button>
-            </div>
+            <div class="logo-area"><h1>WORKBENCH PRO</h1></div>
+            <div class="user-area"><span class="user-name" id="currentUserDisplay"></span><a href="dashboard.html" class="home-btn">Hjem</a><button id="logoutBtn" class="logout-btn">Logg ut</button></div>
         </div>
-        
-        <div class="page-title">
-            <h2>Lommebok</h2>
-            <p>Hold oversikt over saldo, utgifter og inntekter</p>
-        </div>
-        
-        <!-- Saldo visning -->
-        <div class="saldo-card" id="saldoCard">
-            <div class="saldo-label">NÅVÆRENDE SALDO</div>
-            <div class="saldo-value" id="saldoValue">0 kr</div>
-        </div>
-        
+        <div class="page-title"><h2>Lommebok</h2><p>Hold oversikt over saldo, utgifter og inntekter</p></div>
+        <div class="saldo-card" id="saldoCard"><div class="saldo-label">NÅVÆRENDE SALDO</div><div class="saldo-value" id="saldoValue">0 kr</div></div>
         <div class="card-glass">
             <div class="card-title">Legg til transaksjon</div>
             <div class="form-row">
-                <div><label>BESKRIVELSE</label><input type="text" id="transBeskrivelse" class="input-field" placeholder="Mat, regning, lønn"></div>
+                <div><label>BESKRIVELSE</label><input type="text" id="transBeskrivelse" class="input-field" placeholder="Mat, regning"></div>
                 <div><label>BELØP</label><input type="number" id="transBelop" class="input-field" placeholder="0"></div>
-                <div><label>TYPE</label>
-                    <select id="transType" class="input-field">
-                        <option value="utgift">Utgift (minus fra saldo)</option>
-                        <option value="inntekt">Inntekt (pluss til saldo)</option>
-                    </select>
-                </div>
+                <div><label>TYPE</label><select id="transType" class="input-field"><option value="utgift">Utgift (minus)</option><option value="inntekt">Inntekt (pluss)</option></select></div>
                 <div><label>DATO</label><input type="date" id="transDato" class="input-field"></div>
             </div>
             <button id="leggTilTransaksjonBtn" class="btn-primary">Legg til i lommebok</button>
         </div>
-        
         <div class="card-glass">
             <div class="card-title">Transaksjonshistorikk</div>
-            <div class="scroll-table">
-                <table class="data-table">
-                    <thead><tr><th>DATO</th><th>BESKRIVELSE</th><th>BELØP</th><th></th></tr></thead>
-                    <tbody id="walletTableBody"></tbody>
-                </table>
-            </div>
+            <div class="scroll-table"><table class="data-table"><thead><tr><th>DATO</th><th>BESKRIVELSE</th><th>BELØP</th><th></th></tr></thead><tbody id="walletTableBody"></tbody></table></div>
         </div>
     </div>
-    
-    <script src="data.js"></script>
-    <script src="lommebok.js"></script>
+    <script>
+        const currentUser = sessionStorage.getItem('workbench_currentUser');
+        if (!currentUser) { window.location.href = 'index.html'; }
+        document.getElementById('currentUserDisplay').innerText = currentUser;
+        
+        function loadData() {
+            const raw = localStorage.getItem(`workbench_${currentUser}`);
+            return raw ? JSON.parse(raw) : { timerLogg: [], fravær: [], månedslønn: [], walletHistory: [], saldo: 0 };
+        }
+        function saveData(data) { localStorage.setItem(`workbench_${currentUser}`, JSON.stringify(data)); }
+        function formatNOK(verdi) { return verdi.toLocaleString('nb-NO') + ' kr'; }
+        
+        function renderAll() {
+            const data = loadData();
+            const saldo = data.saldo || 0;
+            document.getElementById('saldoValue').innerHTML = formatNOK(saldo);
+            document.getElementById('saldoValue').style.color = saldo >= 0 ? '#4ade80' : '#f87171';
+            
+            const tbody = document.getElementById('walletTableBody');
+            const sorted = [...(data.walletHistory || [])].sort((a,b) => b.dato.localeCompare(a.dato));
+            tbody.innerHTML = sorted.map(w => `<tr><td>${w.dato}</td><td>${w.beskrivelse} ${w.type === 'utgift' ? '(utgift)' : '(inntekt)'}</td><td style="${w.type === 'utgift' ? 'color:#f87171' : 'color:#4ade80'}">${w.type === 'utgift' ? '-' : '+'} ${formatNOK(w.belop)}</td><td><button class="action-btn delete-trans" data-id="${w.id}">Slett</button></td>`).join('');
+            if (sorted.length === 0) tbody.innerHTML = '<tr><td colspan="4" style="text-align:center;">Ingen transaksjoner</td></tr>';
+            
+            document.querySelectorAll('.delete-trans').forEach(btn => {
+                btn.addEventListener('click', () => {
+                    const id = parseFloat(btn.getAttribute('data-id'));
+                    let d = loadData();
+                    const trans = d.walletHistory.find(t => t.id === id);
+                    if (trans) {
+                        if (trans.type === 'utgift') d.saldo += trans.belop;
+                        else d.saldo -= trans.belop;
+                        d.walletHistory = d.walletHistory.filter(t => t.id !== id);
+                        saveData(d);
+                        renderAll();
+                    }
+                });
+            });
+        }
+        
+        document.getElementById('leggTilTransaksjonBtn').addEventListener('click', () => {
+            const beskrivelse = document.getElementById('transBeskrivelse').value;
+            const belop = parseFloat(document.getElementById('transBelop').value);
+            const type = document.getElementById('transType').value;
+            const dato = document.getElementById('transDato').value;
+            if (!beskrivelse || isNaN(belop) || belop <= 0) { alert("Fyll ut beskrivelse og gyldig beløp"); return; }
+            let data = loadData();
+            const endring = type === 'utgift' ? -belop : belop;
+            data.saldo = (data.saldo || 0) + endring;
+            data.walletHistory.push({ id: Date.now(), dato: dato, beskrivelse: beskrivelse, belop: belop, type: type });
+            saveData(data);
+            renderAll();
+            document.getElementById('transBeskrivelse').value = '';
+            document.getElementById('transBelop').value = '';
+        });
+        
+        document.getElementById('logoutBtn').addEventListener('click', () => { sessionStorage.removeItem('workbench_currentUser'); window.location.href = 'index.html'; });
+        document.getElementById('transDato').value = new Date().toISOString().slice(0,10);
+        renderAll();
+    </script>
 </body>
 </html>

@@ -4,54 +4,93 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>WorkBench Pro - Analyse</title>
-    <link rel="stylesheet" href="style.css">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Inter', system-ui, sans-serif; }
+        body { background: #0a0f1a; min-height: 100vh; padding: 20px; }
+        .app-wrapper { max-width: 1200px; margin: 0 auto; }
+        .pro-header {
+            background: linear-gradient(135deg, #0f172a 0%, #111827 100%);
+            border-radius: 24px;
+            padding: 20px 32px;
+            margin-bottom: 24px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 16px;
+        }
+        .logo-area h1 { color: white; font-size: 1.6rem; }
+        .user-area { display: flex; align-items: center; gap: 16px; background: #1e293b; padding: 8px 20px; border-radius: 60px; }
+        .user-name { color: #e2e8f0; font-weight: 500; }
+        .home-btn { background: #3b82f6; color: white; text-decoration: none; padding: 6px 16px; border-radius: 30px; }
+        .logout-btn { background: #dc2626; border: none; padding: 6px 16px; border-radius: 30px; color: white; cursor: pointer; }
+        .page-title { margin-bottom: 28px; }
+        .page-title h2 { color: white; font-size: 1.8rem; }
+        .card-glass { background: #111827; border-radius: 28px; padding: 1.6rem; margin-bottom: 1.8rem; border: 1px solid #1f2a3e; }
+        .card-title { font-size: 1.2rem; font-weight: 600; color: #e2e8f0; margin-bottom: 1.2rem; border-left: 4px solid #3b82f6; padding-left: 16px; }
+        .stats-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 16px; }
+        .stat-card { background: #1e293b; border-radius: 20px; padding: 16px; text-align: center; }
+        .stat-number { font-size: 1.8rem; font-weight: 700; color: #3b82f6; }
+        .stat-label { font-size: 0.7rem; color: #94a3b8; margin-top: 6px; }
+        .aggregering-list { display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 12px; }
+        .data-table { width: 100%; border-collapse: collapse; }
+        .data-table th { text-align: left; padding: 12px 8px; color: #94a3b8; border-bottom: 1px solid #1f2a3e; }
+        .data-table td { padding: 12px 8px; color: #e2e8f0; border-bottom: 1px solid #1e293b; }
+        .scroll-table { max-height: 300px; overflow-y: auto; }
+    </style>
 </head>
-<body class="dashboard-body">
+<body>
     <div class="app-wrapper">
         <div class="pro-header">
-            <div class="logo-area">
-                <h1>WORKBENCH PRO</h1>
-                <p>timelogg | fravær | finans | lommebok</p>
-            </div>
-            <div class="user-area">
-                <span class="user-name" id="currentUserDisplay"></span>
-                <a href="dashboard.html" class="home-btn">🏠 Hjem</a>
-                <button id="logoutBtn" class="logout-btn">Logg ut</button>
-            </div>
+            <div class="logo-area"><h1>WORKBENCH PRO</h1></div>
+            <div class="user-area"><span class="user-name" id="currentUserDisplay"></span><a href="dashboard.html" class="home-btn">Hjem</a><button id="logoutBtn" class="logout-btn">Logg ut</button></div>
         </div>
-        
-        <div class="page-title">
-            <h2>Analyse & Rapporter</h2>
-            <p>Statistikk og innsikt i arbeidsdataene dine</p>
-        </div>
-        
-        <div class="card-glass">
-            <div class="card-title">Nøkkeltall</div>
-            <div class="stats-grid" id="statsContainer"></div>
-        </div>
-        
-        <div class="card-glass">
-            <div class="card-title">Timer per måned (aggregering)</div>
-            <div id="aggregeringContainer" class="aggregering-list"></div>
-        </div>
-        
-        <div class="card-glass">
-            <div class="card-title">Månedslønn historikk</div>
-            <div class="scroll-table">
-                <table class="data-table" id="lonnHistorikkTable">
-                    <thead><tr><th>MÅNED</th><th>BELØP</th></thead>
-                    <tbody id="lonnHistorikkBody"></tbody>
-                </table>
-            </div>
-        </div>
-        
-        <div class="card-glass">
-            <div class="card-title">Topp 5 arbeidsdager (flest timer)</div>
-            <div id="toppArbeidsdager" class="aggregering-list"></div>
-        </div>
+        <div class="page-title"><h2>Analyse & Rapporter</h2><p>Statistikk og innsikt i arbeidsdataene dine</p></div>
+        <div class="card-glass"><div class="card-title">Nøkkeltall</div><div class="stats-grid" id="statsContainer"></div></div>
+        <div class="card-glass"><div class="card-title">Timer per måned</div><div id="aggregeringContainer" class="aggregering-list"></div></div>
+        <div class="card-glass"><div class="card-title">Månedslønn historikk</div><div class="scroll-table"><table class="data-table"><thead><tr><th>MÅNED</th><th>BELØP</th></thead><tbody id="lonnHistorikkBody"></tbody></table></div></div>
+        <div class="card-glass"><div class="card-title">Topp 5 arbeidsdager</div><div id="toppArbeidsdager" class="aggregering-list"></div></div>
     </div>
-    
-    <script src="data.js"></script>
-    <script src="analyse.js"></script>
+    <script>
+        const currentUser = sessionStorage.getItem('workbench_currentUser');
+        if (!currentUser) { window.location.href = 'index.html'; }
+        document.getElementById('currentUserDisplay').innerText = currentUser;
+        
+        function loadData() {
+            const raw = localStorage.getItem(`workbench_${currentUser}`);
+            return raw ? JSON.parse(raw) : { timerLogg: [], fravær: [], månedslønn: [], walletHistory: [], saldo: 0 };
+        }
+        function formatNOK(verdi) { return verdi.toLocaleString('nb-NO') + ' kr'; }
+        
+        const data = loadData();
+        const totalTimer = data.timerLogg.reduce((s, t) => s + t.totalTimer, 0);
+        const totalFravær = data.fravær.reduce((s, f) => s + f.timerFravær, 0);
+        const totalLønn = data.månedslønn.reduce((s, l) => s + l.beløp, 0);
+        const snittLønn = data.månedslønn.length ? totalLønn / data.månedslønn.length : 0;
+        
+        document.getElementById('statsContainer').innerHTML = `
+            <div class="stat-card"><div class="stat-number">${totalTimer.toFixed(1)} h</div><div class="stat-label">Totalt timer jobbet</div></div>
+            <div class="stat-card"><div class="stat-number">${totalFravær.toFixed(1)} h</div><div class="stat-label">Totalt fravær</div></div>
+            <div class="stat-card"><div class="stat-number">${formatNOK(totalLønn)}</div><div class="stat-label">Total lønn registrert</div></div>
+            <div class="stat-card"><div class="stat-number">${formatNOK(snittLønn)}</div><div class="stat-label">Gjennomsnittlig månedslønn</div></div>
+            <div class="stat-card"><div class="stat-number">${data.walletHistory.length}</div><div class="stat-label">Antall transaksjoner</div></div>
+            <div class="stat-card"><div class="stat-number">${data.månedslønn.length}</div><div class="stat-label">Måneder med lønn</div></div>
+        `;
+        
+        const byMonth = {};
+        data.timerLogg.forEach(t => { const month = t.dato.slice(0,7); byMonth[month] = (byMonth[month] || 0) + t.totalTimer; });
+        document.getElementById('aggregeringContainer').innerHTML = Object.entries(byMonth).sort().map(([m, h]) => `<div class="stat-card"><div class="stat-number">${h.toFixed(1)} h</div><div class="stat-label">${m}</div></div>`).join('');
+        if (Object.keys(byMonth).length === 0) document.getElementById('aggregeringContainer').innerHTML = '<div class="stat-card">Ingen timer registrert</div>';
+        
+        const lonnSorted = [...data.månedslønn].sort((a,b) => b.måned.localeCompare(a.måned));
+        document.getElementById('lonnHistorikkBody').innerHTML = lonnSorted.map(l => `<tr><td>${l.måned}</td><td>${formatNOK(l.beløp)}</td></tr>`).join('');
+        if (lonnSorted.length === 0) document.getElementById('lonnHistorikkBody').innerHTML = '<tr><td colspan="2">Ingen lønn registrert</td></tr>';
+        
+        const toppDager = [...data.timerLogg].sort((a,b) => b.totalTimer - a.totalTimer).slice(0,5);
+        document.getElementById('toppArbeidsdager').innerHTML = toppDager.map(t => `<div class="stat-card"><div class="stat-number">${t.totalTimer} h</div><div class="stat-label">${t.dato} - ${t.beskrivelse || 'Arbeid'}</div></div>`).join('');
+        if (toppDager.length === 0) document.getElementById('toppArbeidsdager').innerHTML = '<div class="stat-card">Ingen timer registrert</div>';
+        
+        document.getElementById('logoutBtn').addEventListener('click', () => { sessionStorage.removeItem('workbench_currentUser'); window.location.href = 'index.html'; });
+    </script>
 </body>
 </html>
