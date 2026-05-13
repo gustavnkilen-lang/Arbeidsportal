@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="no">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>WorkBench Pro - Dashboard</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body class="dashboard-body">
+    <div class="app-wrapper">
+        <!-- Toppheader -->
+        <div class="pro-header">
+            <div class="logo-area">
+                <h1>WORKBENCH PRO</h1>
+                <p>timelogg | fravær | finans | lommebok</p>
+            </div>
+            <div class="user-area">
+                <span class="user-name" id="currentUserDisplay"></span>
+                <button id="logoutBtn" class="logout-btn">Logg ut</button>
+            </div>
+        </div>
+        
+        <!-- KPI Dashboard -->
+        <div class="kpi-grid" id="kpiGrid">
+            <!-- Fylles dynamisk -->
+        </div>
+        
+        <!-- Navigasjonstabs -->
+        <div class="nav-tabs-pro">
+            <button class="tab-pro active" data-tab="timereg">TIMEREGISTRERING</button>
+            <button class="tab-pro" data-tab="fravær">FRAVÆR</button>
+            <button class="tab-pro" data-tab="lonn">LØNN & LØNNSHISTORIKK</button>
+            <button class="tab-pro" data-tab="lommebok">LOMMEBOK & UTGIFTER</button>
+            <button class="tab-pro" data-tab="analyse">ANALYSE & RAPPORTER</button>
+        </div>
+        
+        <!-- Innholdspaneler -->
+        <div id="tabTimereg" class="tab-pane active-pane">
+            <div class="card-glass">
+                <div class="card-title">Registrer arbeidstid (klokkeslett)</div>
+                <div class="form-row">
+                    <div><label>DATO</label><input type="date" id="timerDato" class="input-field"></div>
+                    <div><label>START (kl.)</label><input type="time" id="startTid" class="input-field" value="08:00"></div>
+                    <div><label>SLUTT (kl.)</label><input type="time" id="sluttTid" class="input-field" value="16:00"></div>
+                    <div><label>BESKRIVELSE</label><input type="text" id="timerBeskrivelse" class="input-field" placeholder="Prosjekt / oppgave"></div>
+                </div>
+                <button id="leggTilTimerBtn" class="btn-primary">+ Legg til timelogg</button>
+            </div>
+            <div class="card-glass">
+                <div class="card-title">Timelogg historikk</div>
+                <div class="scroll-table">
+                    <table class="data-table">
+                        <thead>
+                            <tr><th>DATO</th><th>START</th><th>SLUTT</th><th>TIMER</th><th>BESKRIVELSE</th><th></th></tr>
+                        </thead>
+                        <tbody id="timerTableBody"></tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+        
+        <div id="tabFravær" class="tab-pane">
+            <div class="card-glass">
+                <div class="card-title">Registrer fravær</div>
+                <div class="form-row">
+                    <div><label>DATO</label><input type="date" id="fravDato" class="input-field"></div>
+                    <div><label>TIMER FRAVÆR</label><input type="number" step="0.5" id="fravTimer" class="input-field" placeholder="7.5"></div>
+                    <div><label>ÅRSAK</label><input type="text" id="fravArsak" class="input-field" placeholder="sykdom, omsorg, etc"></div>
+                </div>
+                <button id="leggFraværBtn" class="btn-primary">Registrer fravær</button>
+            </div>
+            <div class="card-glass">
+                <div class="card-title">Fraværsoversikt</div>
+                <div class="scroll-table">
+                    <table class="data-table">
+                        <thead><tr><th>DATO</th><th>TIMER</th><th>ÅRSAK</th><th></th></tr></thead>
+                        <tbody id="fraværTableBody"></tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+        
+        <div id="tabLonn" class="tab-pane">
+            <div class="card-glass">
+                <div class="card-title">Registrer månedslønn (brutto)</div>
+                <div class="form-row">
+                    <div><label>MÅNED</label><input type="month" id="lonnMaaned" class="input-field"></div>
+                    <div><label>BELØP (NOK)</label><input type="number" id="lonnBelop" class="input-field" placeholder="38500"></div>
+                    <div><label>KOMMENTAR</label><input type="text" id="lonnKommentar" class="input-field" placeholder="fastlønn, bonus"></div>
+                </div>
+                <div class="flex-between">
+                    <button id="regLonnBtn" class="btn-primary">Registrer lønn</button>
+                    <button id="overforTilLommebokBtn" class="btn-outline">+ Overfør til lommebok</button>
+                </div>
+            </div>
+            <div class="card-glass">
+                <div class="card-title">Lønnshistorikk</div>
+                <div class="scroll-table">
+                    <table class="data-table">
+                        <thead><tr><th>MÅNED</th><th>BELØP</th><th>KOMMENTAR</th><th></th></tr></thead>
+                        <tbody id="lonnTableBody"></tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+        
+        <div id="tabLommebok" class="tab-pane">
+            <div class="card-glass">
+                <div class="card-title">Legg til transaksjon</div>
+                <div class="form-row">
+                    <div><label>BESKRIVELSE</label><input type="text" id="transBeskrivelse" class="input-field" placeholder="Mat, regning, lønn"></div>
+                    <div><label>BELØP</label><input type="number" id="transBelop" class="input-field" placeholder="0"></div>
+                    <div><label>TYPE</label>
+                        <select id="transType" class="input-field">
+                            <option value="utgift">Utgift (minus fra saldo)</option>
+                            <option value="inntekt">Inntekt (pluss til saldo)</option>
+                        </select>
+                    </div>
+                    <div><label>DATO</label><input type="date" id="transDato" class="input-field"></div>
+                </div>
+                <button id="leggTilTransaksjonBtn" class="btn-primary">Legg til i lommebok</button>
+            </div>
+            <div class="card-glass">
+                <div class="card-title">Transaksjonshistorikk</div>
+                <div class="scroll-table">
+                    <table class="data-table">
+                        <thead><tr><th>DATO</th><th>BESKRIVELSE</th><th>BELØP</th><th></th></tr></thead>
+                        <tbody id="walletTableBody"></tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+        
+        <div id="tabAnalyse" class="tab-pane">
+            <div class="card-glass">
+                <div class="card-title">Nøkkeltall & Rapporter</div>
+                <div class="stats-grid" id="statsContainer"></div>
+            </div>
+            <div class="card-glass">
+                <div class="card-title">Timer per måned (aggregering)</div>
+                <div id="aggregeringContainer" class="aggregering-list"></div>
+            </div>
+            <div class="card-glass">
+                <div class="card-title">Eksport / Backup</div>
+                <div class="flex-between">
+                    <button id="exportDataBtn" class="btn-primary">📁 Eksporter alle data (JSON)</button>
+                    <label for="importFile" class="btn-outline" style="cursor:pointer;">📂 Importer backup</label>
+                    <input type="file" id="importFile" accept=".json" style="display:none;">
+                    <button id="resetAllDataBtn" class="btn-danger">⚠️ Tilbakestill all data</button>
+                </div>
+                <p class="footer-note" style="margin-top:16px;">Data lagres lokalt i nettleseren. Eksporter for å lagre på GitHub eller sky.</p>
+            </div>
+        </div>
+    </div>
+    
+    <script src="data.js"></script>
+    <script src="dashboard.js"></script>
+</body>
+</html>
