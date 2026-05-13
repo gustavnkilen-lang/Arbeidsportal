@@ -23,101 +23,236 @@
         .logo-area p { color: #94a3b8; font-size: 0.8rem; }
         .user-area { display: flex; align-items: center; gap: 16px; background: #1e293b; padding: 8px 20px; border-radius: 60px; }
         .user-name { color: #e2e8f0; font-weight: 500; }
-        .home-btn { background: #3b82f6; color: white; text-decoration: none; padding: 6px 16px; border-radius: 30px; }
-        .logout-btn { background: #dc2626; border: none; padding: 6px 16px; border-radius: 30px; color: white; cursor: pointer; }
+        .home-btn { background: #3b82f6; color: white; text-decoration: none; padding: 6px 16px; border-radius: 30px; font-size: 0.85rem; }
+        .logout-btn { background: #dc2626; border: none; padding: 6px 16px; border-radius: 30px; color: white; cursor: pointer; font-size: 0.85rem; }
         .page-title { margin-bottom: 28px; }
         .page-title h2 { color: white; font-size: 1.8rem; }
         .page-title p { color: #94a3b8; margin-top: 6px; }
         .card-glass { background: #111827; border-radius: 28px; padding: 1.6rem; margin-bottom: 1.8rem; border: 1px solid #1f2a3e; }
         .card-title { font-size: 1.2rem; font-weight: 600; color: #e2e8f0; margin-bottom: 1.2rem; border-left: 4px solid #3b82f6; padding-left: 16px; }
         .form-row { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 16px; margin-bottom: 20px; }
-        .input-field { background: #1e293b; border: 1px solid #334155; border-radius: 18px; padding: 12px 16px; color: white; width: 100%; }
+        .input-field { background: #1e293b; border: 1px solid #334155; border-radius: 18px; padding: 12px 16px; color: white; font-size: 0.9rem; width: 100%; }
+        .input-field:focus { outline: none; border-color: #3b82f6; }
         label { font-size: 0.7rem; font-weight: 600; color: #94a3b8; display: block; margin-bottom: 6px; text-transform: uppercase; }
-        .btn-primary { background: #3b82f6; border: none; border-radius: 40px; padding: 12px 24px; font-weight: 600; color: white; cursor: pointer; }
-        .btn-primary:hover { background: #2563eb; }
+        .btn-primary { background: #3b82f6; border: none; border-radius: 40px; padding: 12px 24px; font-weight: 600; color: white; cursor: pointer; font-size: 0.9rem; }
+        .btn-primary:hover { background: #2563eb; transform: translateY(-1px); }
         .data-table { width: 100%; border-collapse: collapse; }
-        .data-table th { text-align: left; padding: 12px 8px; color: #94a3b8; border-bottom: 1px solid #1f2a3e; }
-        .data-table td { padding: 12px 8px; color: #e2e8f0; border-bottom: 1px solid #1e293b; }
-        .action-btn { background: none; border: none; color: #f97316; cursor: pointer; padding: 4px 8px; }
+        .data-table th { text-align: left; padding: 12px 8px; color: #94a3b8; font-size: 0.75rem; border-bottom: 1px solid #1f2a3e; }
+        .data-table td { padding: 12px 8px; color: #e2e8f0; font-size: 0.85rem; border-bottom: 1px solid #1e293b; }
+        .action-btn { background: none; border: none; color: #f97316; cursor: pointer; font-size: 0.75rem; padding: 4px 8px; border-radius: 12px; }
+        .action-btn:hover { background: #1e293b; }
         .scroll-table { max-height: 400px; overflow-y: auto; }
+        .empty-row { text-align: center; padding: 20px; color: #64748b; }
     </style>
 </head>
 <body>
     <div class="app-wrapper">
         <div class="pro-header">
-            <div class="logo-area"><h1>WORKBENCH PRO</h1><p>timelogg | fravær | finans | lommebok</p></div>
-            <div class="user-area"><span class="user-name" id="currentUserDisplay"></span><a href="dashboard.html" class="home-btn">Hjem</a><button id="logoutBtn" class="logout-btn">Logg ut</button></div>
+            <div class="logo-area">
+                <h1>WORKBENCH PRO</h1>
+                <p>timelogg | fravær | finans | lommebok</p>
+            </div>
+            <div class="user-area">
+                <span class="user-name" id="currentUserDisplay"></span>
+                <a href="dashboard.html" class="home-btn">Hjem</a>
+                <button id="logoutBtn" class="logout-btn">Logg ut</button>
+            </div>
         </div>
-        <div class="page-title"><h2>Timeregistrering</h2><p>Registrer arbeidstimer med start- og sluttidspunkt</p></div>
+        
+        <div class="page-title">
+            <h2>Timeregistrering</h2>
+            <p>Registrer arbeidstimer med start- og sluttidspunkt</p>
+        </div>
+        
         <div class="card-glass">
             <div class="card-title">Registrer arbeidstid</div>
             <div class="form-row">
-                <div><label>DATO</label><input type="date" id="timerDato" class="input-field"></div>
-                <div><label>START (kl.)</label><input type="time" id="startTid" class="input-field" value="08:00"></div>
-                <div><label>SLUTT (kl.)</label><input type="time" id="sluttTid" class="input-field" value="16:00"></div>
-                <div><label>BESKRIVELSE</label><input type="text" id="timerBeskrivelse" class="input-field" placeholder="Prosjekt"></div>
+                <div>
+                    <label>DATO</label>
+                    <input type="date" id="timerDato" class="input-field">
+                </div>
+                <div>
+                    <label>START (kl.)</label>
+                    <input type="time" id="startTid" class="input-field" value="08:00">
+                </div>
+                <div>
+                    <label>SLUTT (kl.)</label>
+                    <input type="time" id="sluttTid" class="input-field" value="16:00">
+                </div>
+                <div>
+                    <label>BESKRIVELSE</label>
+                    <input type="text" id="timerBeskrivelse" class="input-field" placeholder="Prosjekt / oppgave">
+                </div>
             </div>
             <button id="leggTilTimerBtn" class="btn-primary">+ Legg til timelogg</button>
         </div>
+        
         <div class="card-glass">
             <div class="card-title">Timelogg historikk</div>
-            <div class="scroll-table"><table class="data-table"><thead><tr><th>DATO</th><th>START</th><th>SLUTT</th><th>TIMER</th><th>BESKRIVELSE</th><th></th></tr></thead><tbody id="timerTableBody"></tbody></table></div>
+            <div class="scroll-table">
+                <table class="data-table">
+                    <thead>
+                        <tr>
+                            <th>DATO</th>
+                            <th>START</th>
+                            <th>SLUTT</th>
+                            <th>TIMER</th>
+                            <th>BESKRIVELSE</th>
+                            <th></th>
+                        </tr>
+                    </thead>
+                    <tbody id="timerTableBody"></tbody>
+                </table>
+            </div>
         </div>
     </div>
+
     <script>
+        // Sjekk innlogging
         const currentUser = sessionStorage.getItem('workbench_currentUser');
-        if (!currentUser) { window.location.href = 'index.html'; }
+        if (!currentUser) {
+            window.location.href = 'index.html';
+        }
         document.getElementById('currentUserDisplay').innerText = currentUser;
         
+        // Hjelpefunksjoner for data
         function loadData() {
             const raw = localStorage.getItem(`workbench_${currentUser}`);
-            return raw ? JSON.parse(raw) : { timerLogg: [], fravær: [], månedslønn: [], walletHistory: [], saldo: 0 };
+            if (raw) {
+                return JSON.parse(raw);
+            } else {
+                // Initialiser tom data hvis ikke finnes
+                const emptyData = {
+                    timerLogg: [],
+                    fravær: [],
+                    månedslønn: [],
+                    walletHistory: [],
+                    saldo: 0
+                };
+                localStorage.setItem(`workbench_${currentUser}`, JSON.stringify(emptyData));
+                return emptyData;
+            }
         }
-        function saveData(data) { localStorage.setItem(`workbench_${currentUser}`, JSON.stringify(data)); }
         
+        function saveData(data) {
+            localStorage.setItem(`workbench_${currentUser}`, JSON.stringify(data));
+        }
+        
+        // Beregn timer mellom start og slutt
         function beregnTimer(start, slutt) {
-            let [sh, sm] = start.split(':').map(Number);
-            let [eh, em] = slutt.split(':').map(Number);
+            if (!start || !slutt) return 0;
+            const [sh, sm] = start.split(':').map(Number);
+            const [eh, em] = slutt.split(':').map(Number);
             let timer = (eh + em/60) - (sh + sm/60);
             if (timer < 0) timer += 24;
             return parseFloat(timer.toFixed(2));
         }
         
-        function renderTimer() {
+        // Vis alle timer i tabellen
+        function renderTimerTable() {
             const data = loadData();
             const tbody = document.getElementById('timerTableBody');
-            const sorted = [...(data.timerLogg || [])].sort((a,b) => b.dato.localeCompare(a.dato));
-            tbody.innerHTML = sorted.map(t => `<tr><td>${t.dato}</td><td>${t.startKl}</td><td>${t.sluttKl}</td><td>${t.totalTimer}</td><td>${t.beskrivelse || '-'}</td><td><button class="action-btn delete-timer" data-id="${t.id}">Slett</button></td></tr>`).join('');
-            if (sorted.length === 0) tbody.innerHTML = '<tr><td colspan="6" style="text-align:center;">Ingen timer registrert</td></tr>';
-            document.querySelectorAll('.delete-timer').forEach(btn => {
-                btn.addEventListener('click', (e) => {
-                    const id = parseFloat(btn.getAttribute('data-id'));
-                    let d = loadData();
-                    d.timerLogg = d.timerLogg.filter(t => t.id !== id);
-                    saveData(d);
-                    renderTimer();
+            const timerListe = data.timerLogg || [];
+            
+            if (timerListe.length === 0) {
+                tbody.innerHTML = '<tr><td colspan="6" style="text-align:center; padding: 32px; color: #64748b;">Ingen timer registrert enda</td></tr>';
+                return;
+            }
+            
+            // Sorter nyeste først
+            const sortert = [...timerListe].sort((a, b) => b.dato.localeCompare(a.dato));
+            
+            tbody.innerHTML = sortert.map(t => `
+                <tr>
+                    <td>${t.dato}</td>
+                    <td>${t.startKl}</td>
+                    <td>${t.sluttKl}</td>
+                    <td>${t.totalTimer} h</td>
+                    <td>${t.beskrivelse || '-'}</td>
+                    <td><button class="action-btn slettTimer" data-id="${t.id}">Slett</button></td>
+                </tr>
+            `).join('');
+            
+            // Legg til slett eventer
+            document.querySelectorAll('.slettTimer').forEach(btn => {
+                btn.addEventListener('click', function() {
+                    const id = parseInt(this.getAttribute('data-id'));
+                    const data = loadData();
+                    data.timerLogg = data.timerLogg.filter(t => t.id !== id);
+                    saveData(data);
+                    renderTimerTable();
                 });
             });
         }
         
-        document.getElementById('leggTilTimerBtn').addEventListener('click', () => {
+        // Sett dagens dato som standard
+        document.getElementById('timerDato').value = new Date().toISOString().slice(0, 10);
+        
+        // Legg til timer knapp
+        document.getElementById('leggTilTimerBtn').addEventListener('click', function() {
             const dato = document.getElementById('timerDato').value;
-            const start = document.getElementById('startTid').value;
-            const slutt = document.getElementById('sluttTid').value;
-            const beskrivelse = document.getElementById('timerBeskrivelse').value || "Arbeid";
-            if (!dato || !start || !slutt) { alert("Fyll ut dato og klokkeslett"); return; }
-            const timer = beregnTimer(start, slutt);
-            if (timer <= 0) { alert("Sluttid må være etter starttid"); return; }
-            let data = loadData();
-            data.timerLogg.push({ id: Date.now(), dato: dato, startKl: start, sluttKl: slutt, totalTimer: timer, beskrivelse: beskrivelse });
+            const startTid = document.getElementById('startTid').value;
+            const sluttTid = document.getElementById('sluttTid').value;
+            const beskrivelse = document.getElementById('timerBeskrivelse').value.trim();
+            
+            // Validering
+            if (!dato) {
+                alert('Vennligst velg en dato');
+                return;
+            }
+            if (!startTid) {
+                alert('Vennligst velg starttid');
+                return;
+            }
+            if (!sluttTid) {
+                alert('Vennligst velg slutttid');
+                return;
+            }
+            
+            const timer = beregnTimer(startTid, sluttTid);
+            
+            if (timer <= 0) {
+                alert('Sluttid må være etter starttid');
+                return;
+            }
+            
+            // Lagre data
+            const data = loadData();
+            const nyLogg = {
+                id: Date.now(),
+                dato: dato,
+                startKl: startTid,
+                sluttKl: sluttTid,
+                totalTimer: timer,
+                beskrivelse: beskrivelse || 'Arbeid'
+            };
+            
+            data.timerLogg.push(nyLogg);
             saveData(data);
-            renderTimer();
+            
+            // Tøm beskrivelse feltet
             document.getElementById('timerBeskrivelse').value = '';
+            
+            // Oppdater tabellen
+            renderTimerTable();
+            
+            // Vis bekreftelse
+            const btn = document.getElementById('leggTilTimerBtn');
+            const originalText = btn.innerText;
+            btn.innerText = '✓ Lagret!';
+            setTimeout(() => {
+                btn.innerText = originalText;
+            }, 1500);
         });
         
-        document.getElementById('logoutBtn').addEventListener('click', () => { sessionStorage.removeItem('workbench_currentUser'); window.location.href = 'index.html'; });
-        document.getElementById('timerDato').value = new Date().toISOString().slice(0,10);
-        renderTimer();
+        // Logg ut
+        document.getElementById('logoutBtn').addEventListener('click', function() {
+            sessionStorage.removeItem('workbench_currentUser');
+            window.location.href = 'index.html';
+        });
+        
+        // Last inn timer ved sidevisning
+        renderTimerTable();
     </script>
 </body>
 </html>
