@@ -26,6 +26,7 @@
         .logout-btn { background: #dc2626; border: none; padding: 6px 16px; border-radius: 30px; color: white; cursor: pointer; }
         .page-title { margin-bottom: 28px; }
         .page-title h2 { color: white; font-size: 1.8rem; }
+        .page-title p { color: #94a3b8; margin-top: 6px; }
         .card-glass { background: #111827; border-radius: 28px; padding: 1.6rem; margin-bottom: 1.8rem; border: 1px solid #1f2a3e; }
         .card-title { font-size: 1.2rem; font-weight: 600; color: #e2e8f0; margin-bottom: 1.2rem; border-left: 4px solid #3b82f6; padding-left: 16px; }
         .form-row { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 16px; margin-bottom: 20px; }
@@ -33,12 +34,16 @@
         label { font-size: 0.7rem; font-weight: 600; color: #94a3b8; display: block; margin-bottom: 6px; text-transform: uppercase; }
         .btn-primary { background: #3b82f6; border: none; border-radius: 40px; padding: 12px 24px; font-weight: 600; color: white; cursor: pointer; }
         .btn-outline { background: transparent; border: 1px solid #475569; border-radius: 40px; padding: 12px 24px; font-weight: 600; color: #cbd5e1; cursor: pointer; }
+        .btn-success { background: #10b981; border: none; border-radius: 40px; padding: 12px 24px; font-weight: 600; color: white; cursor: pointer; }
         .flex-between { display: flex; justify-content: space-between; gap: 12px; flex-wrap: wrap; }
         .data-table { width: 100%; border-collapse: collapse; }
         .data-table th { text-align: left; padding: 12px 8px; color: #94a3b8; border-bottom: 1px solid #1f2a3e; }
         .data-table td { padding: 12px 8px; color: #e2e8f0; border-bottom: 1px solid #1e293b; }
         .action-btn { background: none; border: none; color: #f97316; cursor: pointer; }
         .scroll-table { max-height: 400px; overflow-y: auto; }
+        .timelonn-card { background: linear-gradient(135deg, #1e3a5f, #0f2b44); border-radius: 20px; padding: 20px; margin-top: 16px; }
+        .timelonn-value { font-size: 2rem; font-weight: 700; color: #4ade80; }
+        .info-text { font-size: 0.75rem; color: #64748b; margin-top: 8px; }
     </style>
 </head>
 <body>
@@ -47,21 +52,68 @@
             <div class="logo-area"><h1>WORKBENCH PRO</h1></div>
             <div class="user-area"><span class="user-name" id="currentUserDisplay"></span><a href="dashboard.html" class="home-btn">Hjem</a><button id="logoutBtn" class="logout-btn">Logg ut</button></div>
         </div>
-        <div class="page-title"><h2>Lønn</h2><p>Registrer månedslønn og overfør til lommebok</p></div>
+        <div class="page-title"><h2>Lønn</h2><p>Registrer månedslønn, timelønn og overfør til lommebok</p></div>
+        
+        <!-- Timelønn seksjon -->
         <div class="card-glass">
-            <div class="card-title">Registrer månedslønn</div>
+            <div class="card-title">💰 Timelønn (timepris)</div>
+            <div class="form-row">
+                <div><label>TIMELØNN (NOK per time)</label><input type="number" id="timelonn" class="input-field" placeholder="f.eks. 250" step="5"></div>
+                <div><label>Beregn basert på timer</label><button id="beregnFraTimerBtn" class="btn-outline">Hent timer fra timereg</button></div>
+            </div>
+            <div id="timelonnInfo" class="timelonn-card" style="display:none;">
+                <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap;">
+                    <div><span style="color:#94a3b8;">Din timelønn:</span><br><span class="timelonn-value" id="visTimelonn">0 kr</span><span class="info-text"> per time</span></div>
+                    <div><span style="color:#94a3b8;">Basert på månedslønn:</span><br><span id="basertPaMaaned" style="font-size:1.2rem; color:#3b82f6;">-</span></div>
+                </div>
+            </div>
+            <button id="lagreTimelonnBtn" class="btn-primary" style="margin-top:12px;">💾 Lagre timelønn</button>
+        </div>
+        
+        <!-- Månedslønn seksjon -->
+        <div class="card-glass">
+            <div class="card-title">📅 Månedslønn (brutto)</div>
             <div class="form-row">
                 <div><label>MÅNED</label><input type="month" id="lonnMaaned" class="input-field"></div>
                 <div><label>BELØP (NOK)</label><input type="number" id="lonnBelop" class="input-field" placeholder="38500"></div>
+                <div><label>ARBEIDSTIMER DENNE MÅNEDEN</label><input type="number" step="0.5" id="maanedTimer" class="input-field" placeholder="f.eks. 160"></div>
                 <div><label>KOMMENTAR</label><input type="text" id="lonnKommentar" class="input-field" placeholder="fastlønn, bonus"></div>
             </div>
-            <div class="flex-between"><button id="regLonnBtn" class="btn-primary">Registrer lønn</button><button id="overforTilLommebokBtn" class="btn-outline">Overfør til lommebok</button></div>
+            <div class="flex-between">
+                <button id="regLonnBtn" class="btn-primary">Registrer månedslønn</button>
+                <button id="overforTilLommebokBtn" class="btn-outline">Overfør til lommebok</button>
+            </div>
+            <div id="beregnetTimelonn" style="margin-top:12px; padding:12px; background:#1e293b; border-radius:16px; display:none;"></div>
         </div>
+        
+        <!-- Lønnshistorikk -->
         <div class="card-glass">
-            <div class="card-title">Lønnshistorikk</div>
-            <div class="scroll-table"><table class="data-table"><thead><tr><th>MÅNED</th><th>BELØP</th><th>KOMMENTAR</th><th></th></tr></thead><tbody id="lonnTableBody"></tbody></table></div>
+            <div class="card-title">📊 Lønnshistorikk</div>
+            <div class="scroll-table">
+                <table class="data-table">
+                    <thead>
+                        <tr><th>MÅNED</th><th>MÅNEDSLØNN</th><th>TIMER</th><th>TIMELØNN</th><th>KOMMENTAR</th><th></th></tr>
+                    </thead>
+                    <tbody id="lonnTableBody"></tbody>
+                </table>
+            </div>
+        </div>
+        
+        <!-- Beregner seksjon -->
+        <div class="card-glass">
+            <div class="card-title">🧮 Lønnskalkulator</div>
+            <div class="form-row">
+                <div><label>ANTALL TIMER</label><input type="number" id="kalkTimer" class="input-field" placeholder="timer"></div>
+                <div><label>TIMELØNN (kr)</label><input type="number" id="kalkTimelonn" class="input-field" placeholder="timelønn"></div>
+            </div>
+            <button id="beregnBtn" class="btn-success">Beregn lønn</button>
+            <div id="kalkResultat" style="margin-top:16px; padding:16px; background:#1e293b; border-radius:16px; text-align:center; display:none;">
+                <span style="color:#94a3b8;">Beregnet lønn:</span>
+                <span style="font-size:1.8rem; font-weight:700; color:#4ade80; display:block;" id="beregnetBelop">0 kr</span>
+            </div>
         </div>
     </div>
+    
     <script>
         const currentUser = sessionStorage.getItem('workbench_currentUser');
         if (!currentUser) { window.location.href = 'index.html'; }
@@ -69,17 +121,30 @@
         
         function loadData() {
             const raw = localStorage.getItem(`workbench_${currentUser}`);
-            return raw ? JSON.parse(raw) : { timerLogg: [], fravær: [], månedslønn: [], walletHistory: [], saldo: 0 };
+            return raw ? JSON.parse(raw) : { timerLogg: [], fravær: [], månedslønn: [], walletHistory: [], saldo: 0, timelonn: 0 };
         }
         function saveData(data) { localStorage.setItem(`workbench_${currentUser}`, JSON.stringify(data)); }
         function formatNOK(verdi) { return verdi.toLocaleString('nb-NO') + ' kr'; }
+        
+        let currentData = loadData();
+        if (!currentData.timelonn) currentData.timelonn = 0;
         
         function renderLonn() {
             const data = loadData();
             const tbody = document.getElementById('lonnTableBody');
             const sorted = [...(data.månedslønn || [])].sort((a,b) => b.måned.localeCompare(a.måned));
-            tbody.innerHTML = sorted.map(l => `<tr><td>${l.måned}</td><td>${formatNOK(l.beløp)}</td><td>${l.kommentar || '-'}</td><td><button class="action-btn delete-lonn" data-month="${l.måned}">Slett</button></td>`).join('');
-            if (sorted.length === 0) tbody.innerHTML = '<tr><td colspan="4" style="text-align:center;">Ingen lønn registrert</td></tr>';
+            tbody.innerHTML = sorted.map(l => `
+                <tr>
+                    <td>${l.måned}</td>
+                    <td>${formatNOK(l.beløp)}</td>
+                    <td>${l.timer || '-'}</td>
+                    <td>${l.timelonn ? formatNOK(l.timelonn) + '/t' : '-'}</td>
+                    <td>${l.kommentar || '-'}</td>
+                    <td><button class="action-btn delete-lonn" data-month="${l.måned}">Slett</button></td>
+                </tr>
+            `).join('');
+            if (sorted.length === 0) tbody.innerHTML = '<tr><td colspan="6" style="text-align:center;">Ingen lønn registrert</td></tr>';
+            
             document.querySelectorAll('.delete-lonn').forEach(btn => {
                 btn.addEventListener('click', () => {
                     const month = btn.getAttribute('data-month');
@@ -87,24 +152,98 @@
                     d.månedslønn = d.månedslønn.filter(m => m.måned !== month);
                     saveData(d);
                     renderLonn();
+                    updateTimelonnVisning();
                 });
             });
         }
         
+        function updateTimelonnVisning() {
+            const data = loadData();
+            const timelonn = data.timelonn || 0;
+            const timelonnDiv = document.getElementById('timelonnInfo');
+            if (timelonn > 0) {
+                timelonnDiv.style.display = 'block';
+                document.getElementById('visTimelonn').innerHTML = formatNOK(timelonn);
+                document.getElementById('timelonn').value = timelonn;
+                
+                // Beregn basert på siste månedslønn
+                const sisteLonn = data.månedslønn.sort((a,b) => b.måned.localeCompare(a.måned))[0];
+                if (sisteLonn && sisteLonn.timer && sisteLonn.timer > 0) {
+                    const beregnet = sisteLonn.beløp / sisteLonn.timer;
+                    document.getElementById('basertPaMaaned').innerHTML = formatNOK(beregnet) + '/t';
+                } else {
+                    document.getElementById('basertPaMaaned').innerHTML = 'Registrer timer for å beregne';
+                }
+            } else {
+                timelonnDiv.style.display = 'none';
+            }
+        }
+        
+        // Lagre timelønn
+        document.getElementById('lagreTimelonnBtn').addEventListener('click', () => {
+            const timelonn = parseFloat(document.getElementById('timelonn').value);
+            if (isNaN(timelonn) || timelonn <= 0) {
+                alert('Vennligst skriv inn gyldig timelønn');
+                return;
+            }
+            let data = loadData();
+            data.timelonn = timelonn;
+            saveData(data);
+            updateTimelonnVisning();
+            alert(`✓ Timelønn satt til ${formatNOK(timelonn)} per time`);
+        });
+        
+        // Hent timer fra timeregistrering for valgt måned
+        document.getElementById('beregnFraTimerBtn').addEventListener('click', () => {
+            const data = loadData();
+            const totalTimer = data.timerLogg.reduce((sum, t) => sum + t.totalTimer, 0);
+            if (totalTimer > 0 && data.timelonn > 0) {
+                const potensiellLonn = totalTimer * data.timelonn;
+                alert(`Du har registrert ${totalTimer.toFixed(1)} timer totalt.\nMed timelønn ${formatNOK(data.timelonn)} blir det ${formatNOK(potensiellLonn)}`);
+            } else if (totalTimer === 0) {
+                alert('Ingen timer registrert i timereg.html. Registrer timer først.');
+            } else {
+                alert('Sett timelønn først under "Timelønn" seksjonen.');
+            }
+        });
+        
+        // Registrer månedslønn
         document.getElementById('regLonnBtn').addEventListener('click', () => {
             const måned = document.getElementById('lonnMaaned').value;
             const beløp = parseFloat(document.getElementById('lonnBelop').value);
+            const timer = parseFloat(document.getElementById('maanedTimer').value);
             const kommentar = document.getElementById('lonnKommentar').value || "";
+            const data = loadData();
+            const timelonn = data.timelonn || 0;
+            
             if (!måned || isNaN(beløp) || beløp <= 0) { alert("Fyll ut måned og gyldig beløp"); return; }
-            let data = loadData();
+            
+            const beregnetTimelonn = (timer && timer > 0) ? beløp / timer : timelonn;
+            
             const existing = data.månedslønn.findIndex(m => m.måned === måned);
-            if (existing !== -1) data.månedslønn[existing] = { måned, beløp, kommentar };
-            else data.månedslønn.push({ måned, beløp, kommentar });
+            const nyLonn = { måned, beløp, timer: timer || 0, timelonn: beregnetTimelonn, kommentar };
+            if (existing !== -1) data.månedslønn[existing] = nyLonn;
+            else data.månedslønn.push(nyLonn);
             saveData(data);
             renderLonn();
+            updateTimelonnVisning();
+            
+            // Vis beregnet timelønn
+            const beregnetDiv = document.getElementById('beregnetTimelonn');
+            if (timer && timer > 0) {
+                beregnetDiv.style.display = 'block';
+                beregnetDiv.innerHTML = `📊 Basert på ${timer} timer denne måneden er din timelønn: <strong style="color:#4ade80;">${formatNOK(beregnetTimelonn)}/t</strong>`;
+                setTimeout(() => { beregnetDiv.style.display = 'none'; }, 4000);
+            } else {
+                beregnetDiv.style.display = 'none';
+            }
+            
             document.getElementById('lonnBelop').value = '';
+            document.getElementById('maanedTimer').value = '';
+            document.getElementById('lonnKommentar').value = '';
         });
         
+        // Overfør til lommebok
         document.getElementById('overforTilLommebokBtn').addEventListener('click', () => {
             const måned = document.getElementById('lonnMaaned').value;
             let data = loadData();
@@ -116,9 +255,26 @@
             alert(`Lønn på ${formatNOK(lonnPost.beløp)} er overført til lommeboken!`);
         });
         
+        // Lønnskalkulator
+        document.getElementById('beregnBtn').addEventListener('click', () => {
+            const timer = parseFloat(document.getElementById('kalkTimer').value);
+            const timelonn = parseFloat(document.getElementById('kalkTimelonn').value);
+            if (isNaN(timer) || isNaN(timelonn) || timer <= 0 || timelonn <= 0) {
+                alert("Fyll ut både timer og timelønn");
+                return;
+            }
+            const resultat = timer * timelonn;
+            document.getElementById('kalkResultat').style.display = 'block';
+            document.getElementById('beregnetBelop').innerHTML = formatNOK(resultat);
+        });
+        
+        // Logg ut
         document.getElementById('logoutBtn').addEventListener('click', () => { sessionStorage.removeItem('workbench_currentUser'); window.location.href = 'index.html'; });
+        
+        // Initialiser
         document.getElementById('lonnMaaned').value = new Date().toISOString().slice(0,7);
         renderLonn();
+        updateTimelonnVisning();
     </script>
 </body>
 </html>

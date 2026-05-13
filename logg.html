@@ -1,0 +1,755 @@
+<!DOCTYPE html>
+<html lang="no">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>WorkBench Pro - Arbeidslogg</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Inter', system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+        }
+
+        body {
+            background: #0a0f1a;
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .app-wrapper {
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        /* Header */
+        .pro-header {
+            background: linear-gradient(135deg, #0f172a 0%, #111827 100%);
+            border-radius: 24px;
+            padding: 20px 32px;
+            margin-bottom: 24px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 16px;
+            border: 1px solid rgba(255,255,255,0.08);
+        }
+
+        .logo-area h1 {
+            color: white;
+            font-size: 1.6rem;
+            font-weight: 600;
+        }
+
+        .logo-area p {
+            color: #94a3b8;
+            font-size: 0.8rem;
+        }
+
+        .user-area {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            background: #1e293b;
+            padding: 8px 20px;
+            border-radius: 60px;
+        }
+
+        .user-name {
+            color: #e2e8f0;
+            font-weight: 500;
+        }
+
+        .home-btn {
+            background: #3b82f6;
+            color: white;
+            text-decoration: none;
+            padding: 6px 16px;
+            border-radius: 30px;
+            font-size: 0.85rem;
+        }
+
+        .logout-btn {
+            background: #dc2626;
+            border: none;
+            padding: 6px 16px;
+            border-radius: 30px;
+            color: white;
+            cursor: pointer;
+        }
+
+        /* Page Title */
+        .page-title {
+            margin-bottom: 28px;
+        }
+
+        .page-title h2 {
+            color: white;
+            font-size: 1.8rem;
+        }
+
+        .page-title p {
+            color: #94a3b8;
+            margin-top: 6px;
+        }
+
+        /* Stats Bar */
+        .stats-bar {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 16px;
+            margin-bottom: 28px;
+        }
+
+        .stat-card {
+            background: linear-gradient(145deg, #1e293b, #0f172a);
+            border-radius: 20px;
+            padding: 16px 20px;
+            text-align: center;
+            border: 1px solid #1f2a3e;
+        }
+
+        .stat-number {
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: #3b82f6;
+        }
+
+        .stat-label {
+            font-size: 0.7rem;
+            color: #94a3b8;
+            margin-top: 6px;
+            text-transform: uppercase;
+        }
+
+        /* Grid layout */
+        .log-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 24px;
+        }
+
+        @media (max-width: 900px) {
+            .log-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        /* Cards */
+        .card-glass {
+            background: #111827;
+            border-radius: 28px;
+            padding: 1.6rem;
+            border: 1px solid #1f2a3e;
+            margin-bottom: 24px;
+        }
+
+        .card-title {
+            font-size: 1.2rem;
+            font-weight: 600;
+            color: #e2e8f0;
+            margin-bottom: 1.2rem;
+            border-left: 4px solid #3b82f6;
+            padding-left: 16px;
+        }
+
+        /* Form */
+        .form-group {
+            margin-bottom: 18px;
+        }
+
+        label {
+            font-size: 0.7rem;
+            font-weight: 600;
+            color: #94a3b8;
+            display: block;
+            margin-bottom: 6px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .input-field {
+            background: #1e293b;
+            border: 1px solid #334155;
+            border-radius: 18px;
+            padding: 12px 16px;
+            color: white;
+            font-size: 0.9rem;
+            width: 100%;
+        }
+
+        .input-field:focus {
+            outline: none;
+            border-color: #3b82f6;
+        }
+
+        textarea.input-field {
+            resize: vertical;
+            min-height: 100px;
+        }
+
+        .btn-primary {
+            background: #3b82f6;
+            border: none;
+            border-radius: 40px;
+            padding: 12px 24px;
+            font-weight: 600;
+            color: white;
+            cursor: pointer;
+            width: 100%;
+            transition: all 0.2s;
+        }
+
+        .btn-primary:hover {
+            background: #2563eb;
+            transform: translateY(-1px);
+        }
+
+        .btn-outline {
+            background: transparent;
+            border: 1px solid #475569;
+            border-radius: 40px;
+            padding: 8px 16px;
+            font-weight: 600;
+            color: #cbd5e1;
+            cursor: pointer;
+            font-size: 0.8rem;
+        }
+
+        /* Tidslinje stil for logginnlegg */
+        .logg-innlegg {
+            background: #1e293b;
+            border-radius: 20px;
+            padding: 20px;
+            margin-bottom: 16px;
+            border-left: 3px solid #3b82f6;
+            transition: all 0.2s;
+        }
+
+        .logg-innlegg:hover {
+            background: #2d3a4e;
+            transform: translateX(4px);
+        }
+
+        .logg-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            margin-bottom: 12px;
+            padding-bottom: 8px;
+            border-bottom: 1px solid #334155;
+        }
+
+        .logg-dato {
+            font-size: 0.8rem;
+            color: #3b82f6;
+            font-weight: 600;
+        }
+
+        .logg-timer {
+            background: #0f172a;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 0.75rem;
+            color: #4ade80;
+        }
+
+        .logg-tittel {
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: white;
+            margin-bottom: 8px;
+        }
+
+        .logg-beskrivelse {
+            color: #cbd5e1;
+            font-size: 0.85rem;
+            line-height: 1.5;
+            margin-bottom: 12px;
+        }
+
+        .logg-bilder {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 12px;
+            margin-top: 12px;
+        }
+
+        .logg-bilde {
+            max-width: 120px;
+            max-height: 120px;
+            border-radius: 12px;
+            object-fit: cover;
+            cursor: pointer;
+            border: 1px solid #475569;
+            transition: 0.2s;
+        }
+
+        .logg-bilde:hover {
+            transform: scale(1.05);
+            border-color: #3b82f6;
+        }
+
+        .logg-footer {
+            display: flex;
+            justify-content: flex-end;
+            gap: 12px;
+            margin-top: 12px;
+            padding-top: 8px;
+        }
+
+        .delete-btn {
+            background: none;
+            border: none;
+            color: #f87171;
+            cursor: pointer;
+            font-size: 0.7rem;
+            padding: 4px 12px;
+            border-radius: 20px;
+        }
+
+        .delete-btn:hover {
+            background: #7f1d1d;
+        }
+
+        /* Modal for bildevisning */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.9);
+            z-index: 1000;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .modal.active {
+            display: flex;
+        }
+
+        .modal img {
+            max-width: 90%;
+            max-height: 90%;
+            border-radius: 16px;
+        }
+
+        .modal-close {
+            position: absolute;
+            top: 20px;
+            right: 40px;
+            color: white;
+            font-size: 40px;
+            cursor: pointer;
+        }
+
+        /* Filtrering */
+        .filter-bar {
+            display: flex;
+            gap: 12px;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+        }
+
+        .filter-input {
+            flex: 1;
+            background: #1e293b;
+            border: 1px solid #334155;
+            border-radius: 40px;
+            padding: 10px 16px;
+            color: white;
+        }
+
+        /* Scroll */
+        .logg-liste {
+            max-height: 600px;
+            overflow-y: auto;
+            padding-right: 8px;
+        }
+
+        .info-text {
+            color: #64748b;
+            text-align: center;
+            padding: 40px;
+            font-style: italic;
+        }
+    </style>
+</head>
+<body>
+    <div class="app-wrapper">
+        <div class="pro-header">
+            <div class="logo-area">
+                <h1>WORKBENCH PRO</h1>
+                <p>arbeidslogg | dokumentasjon | tidslinje</p>
+            </div>
+            <div class="user-area">
+                <span class="user-name" id="currentUserDisplay"></span>
+                <a href="dashboard.html" class="home-btn">Dashboard</a>
+                <a href="timereg.html" class="home-btn" style="background:#4a6a85;">Timer</a>
+                <button id="logoutBtn" class="logout-btn">Logg ut</button>
+            </div>
+        </div>
+
+        <div class="page-title">
+            <h2>Arbeidslogg & Dokumentasjon</h2>
+            <p>Skriv daglig rapport, last opp bilder, og dokumenter arbeidstimer</p>
+        </div>
+
+        <!-- Statistikk -->
+        <div class="stats-bar" id="statsBar"></div>
+
+        <div class="log-grid">
+            <!-- Venstre: Registrer ny logg -->
+            <div>
+                <div class="card-glass">
+                    <div class="card-title">📝 Ny loggføring</div>
+                    <div class="form-group">
+                        <label>Dato</label>
+                        <input type="date" id="loggDato" class="input-field">
+                    </div>
+                    <div class="form-group">
+                        <label>Tittel / Prosjekt</label>
+                        <input type="text" id="loggTittel" class="input-field" placeholder="f.eks. Frontend utvikling, Møte med kunde">
+                    </div>
+                    <div class="form-group">
+                        <label>Arbeidstimer (antall timer)</label>
+                        <input type="number" step="0.5" id="loggTimer" class="input-field" placeholder="7.5">
+                    </div>
+                    <div class="form-group">
+                        <label>Hva gjorde du? (detaljert beskrivelse)</label>
+                        <textarea id="loggBeskrivelse" class="input-field" placeholder="Skriv en detaljert beskrivelse av hva du jobbet med..."></textarea>
+                    </div>
+                    <div class="form-group">
+                        <label>Last opp bilder (dokumentasjon)</label>
+                        <input type="file" id="loggBilder" class="input-field" accept="image/*" multiple>
+                        <small style="color:#64748b; display:block; margin-top:6px;">Kan velge flere bilder samtidig</small>
+                    </div>
+                    <div id="bildePreview" style="display:flex; gap:8px; flex-wrap:wrap; margin-bottom:16px;"></div>
+                    <button id="lagreLoggBtn" class="btn-primary">💾 Lagre arbeidslogg</button>
+                </div>
+
+                <!-- Auto-timer fra timereg.html -->
+                <div class="card-glass">
+                    <div class="card-title">⚡ Hent dagens timer fra Timeregistrering</div>
+                    <button id="hentTimeregBtn" class="btn-outline" style="width:100%;">Hent timer fra dagens registrering</button>
+                    <div id="timeregStatus" style="margin-top:12px; font-size:0.8rem; color:#94a3b8;"></div>
+                </div>
+            </div>
+
+            <!-- Høyre: Vis alle logger -->
+            <div>
+                <div class="card-glass">
+                    <div class="card-title">📋 Loggoversikt</div>
+                    <div class="filter-bar">
+                        <input type="text" id="filterInput" class="filter-input" placeholder="Filtrer på tittel eller beskrivelse...">
+                        <input type="date" id="filterDato" class="filter-input" style="width:auto;">
+                        <button id="clearFilterBtn" class="btn-outline">Tøm filter</button>
+                    </div>
+                    <div class="logg-liste" id="loggListe"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal for bildevisning -->
+    <div id="imageModal" class="modal">
+        <span class="modal-close">&times;</span>
+        <img id="modalImage" src="" alt="Full størrelse">
+    </div>
+
+    <script>
+        // Sjekk innlogging
+        const currentUser = sessionStorage.getItem('workbench_currentUser');
+        if (!currentUser) {
+            window.location.href = 'index.html';
+        }
+        document.getElementById('currentUserDisplay').innerText = currentUser;
+
+        // Data struktur for logger
+        function loadLoggData() {
+            const raw = localStorage.getItem(`workbench_logg_${currentUser}`);
+            if (raw) {
+                return JSON.parse(raw);
+            } else {
+                return [];
+            }
+        }
+
+        function saveLoggData(data) {
+            localStorage.setItem(`workbench_logg_${currentUser}`, JSON.stringify(data));
+        }
+
+        // Last timereg data for å hente dagens timer
+        function loadTimeregData() {
+            const raw = localStorage.getItem(`workbench_${currentUser}`);
+            if (raw) {
+                return JSON.parse(raw);
+            }
+            return { timerLogg: [] };
+        }
+
+        // Vis alle logger
+        let alleLogger = [];
+
+        function renderLogger() {
+            const filterTekst = document.getElementById('filterInput').value.toLowerCase();
+            const filterDato = document.getElementById('filterDato').value;
+            
+            let filtrerte = [...alleLogger];
+            
+            if (filterTekst) {
+                filtrerte = filtrerte.filter(l => 
+                    l.tittel.toLowerCase().includes(filterTekst) || 
+                    l.beskrivelse.toLowerCase().includes(filterTekst)
+                );
+            }
+            
+            if (filterDato) {
+                filtrerte = filtrerte.filter(l => l.dato === filterDato);
+            }
+            
+            // Sorter nyeste først
+            filtrerte.sort((a, b) => b.dato.localeCompare(a.dato));
+            
+            const container = document.getElementById('loggListe');
+            
+            if (filtrerte.length === 0) {
+                container.innerHTML = '<div class="info-text">Ingen logger funnet. Opprett din første logg!</div>';
+            } else {
+                container.innerHTML = filtrerte.map(logg => `
+                    <div class="logg-innlegg">
+                        <div class="logg-header">
+                            <span class="logg-dato">${logg.dato}</span>
+                            <span class="logg-timer">⏱️ ${logg.timer} timer</span>
+                        </div>
+                        <div class="logg-tittel">${escapeHtml(logg.tittel)}</div>
+                        <div class="logg-beskrivelse">${escapeHtml(logg.beskrivelse)}</div>
+                        ${logg.bilder && logg.bilder.length > 0 ? `
+                            <div class="logg-bilder">
+                                ${logg.bilder.map((bilde, idx) => `
+                                    <img src="${bilde}" class="logg-bilde" alt="Bilde ${idx+1}" data-img="${bilde}">
+                                `).join('')}
+                            </div>
+                        ` : ''}
+                        <div class="logg-footer">
+                            <button class="delete-btn" data-id="${logg.id}">🗑️ Slett logg</button>
+                        </div>
+                    </div>
+                `).join('');
+            }
+            
+            // Oppdater statistikk
+            updateStats();
+            
+            // Legg til slett eventer
+            document.querySelectorAll('.delete-btn').forEach(btn => {
+                btn.addEventListener('click', (e) => {
+                    const id = parseInt(btn.getAttribute('data-id'));
+                    alleLogger = alleLogger.filter(l => l.id !== id);
+                    saveLoggData(alleLogger);
+                    renderLogger();
+                });
+            });
+            
+            // Legg til bilde klikk eventer
+            document.querySelectorAll('.logg-bilde').forEach(img => {
+                img.addEventListener('click', () => {
+                    const modal = document.getElementById('imageModal');
+                    const modalImg = document.getElementById('modalImage');
+                    modalImg.src = img.getAttribute('data-img');
+                    modal.classList.add('active');
+                });
+            });
+        }
+        
+        function escapeHtml(str) {
+            if (!str) return '';
+            return str.replace(/[&<>]/g, function(m) {
+                if (m === '&') return '&amp;';
+                if (m === '<') return '&lt;';
+                if (m === '>') return '&gt;';
+                return m;
+            }).replace(/[\uD800-\uDBFF][\uDC00-\uDFFF]/g, function(c) {
+                return c;
+            });
+        }
+        
+        function updateStats() {
+            const totalTimer = alleLogger.reduce((sum, l) => sum + l.timer, 0);
+            const antallLogger = alleLogger.length;
+            const unikeDager = new Set(alleLogger.map(l => l.dato)).size;
+            
+            document.getElementById('statsBar').innerHTML = `
+                <div class="stat-card"><div class="stat-number">${totalTimer.toFixed(1)}</div><div class="stat-label">Totaltimer loggført</div></div>
+                <div class="stat-card"><div class="stat-number">${antallLogger}</div><div class="stat-label">Antall logger</div></div>
+                <div class="stat-card"><div class="stat-number">${unikeDager}</div><div class="stat-label">Arbeidsdager</div></div>
+                <div class="stat-card"><div class="stat-number">${alleLogger.length ? (totalTimer / alleLogger.length).toFixed(1) : 0}</div><div class="stat-label">Snitt timer per logg</div></div>
+            `;
+        }
+        
+        // Bilde preview
+        document.getElementById('loggBilder').addEventListener('change', function(e) {
+            const preview = document.getElementById('bildePreview');
+            preview.innerHTML = '';
+            const files = Array.from(e.target.files);
+            
+            files.forEach(file => {
+                const reader = new FileReader();
+                reader.onload = function(event) {
+                    const img = document.createElement('img');
+                    img.src = event.target.result;
+                    img.style.width = '60px';
+                    img.style.height = '60px';
+                    img.style.objectFit = 'cover';
+                    img.style.borderRadius = '8px';
+                    img.style.border = '1px solid #334155';
+                    preview.appendChild(img);
+                };
+                reader.readAsDataURL(file);
+            });
+        });
+        
+        // Lagre ny logg
+        document.getElementById('lagreLoggBtn').addEventListener('click', () => {
+            const dato = document.getElementById('loggDato').value;
+            const tittel = document.getElementById('loggTittel').value.trim();
+            const timer = parseFloat(document.getElementById('loggTimer').value);
+            const beskrivelse = document.getElementById('loggBeskrivelse').value.trim();
+            const bildeFiles = document.getElementById('loggBilder').files;
+            
+            if (!dato) {
+                alert('Vennligst velg dato');
+                return;
+            }
+            if (!tittel) {
+                alert('Vennligst skriv inn en tittel');
+                return;
+            }
+            if (isNaN(timer) || timer <= 0) {
+                alert('Vennligst skriv inn gyldig antall timer');
+                return;
+            }
+            if (!beskrivelse) {
+                alert('Vennligst skriv en beskrivelse');
+                return;
+            }
+            
+            // Konverter bilder til base64
+            const bilder = [];
+            const files = Array.from(bildeFiles);
+            
+            if (files.length === 0) {
+                // Ingen bilder, lagre direkte
+                const nyLogg = {
+                    id: Date.now(),
+                    dato: dato,
+                    tittel: tittel,
+                    timer: timer,
+                    beskrivelse: beskrivelse,
+                    bilder: [],
+                    opprettet: new Date().toISOString()
+                };
+                alleLogger.push(nyLogg);
+                saveLoggData(alleLogger);
+                clearForm();
+                renderLogger();
+                alert('✓ Logg lagret!');
+            } else {
+                // Last opp bilder først
+                let ferdigLastet = 0;
+                files.forEach(file => {
+                    const reader = new FileReader();
+                    reader.onload = function(event) {
+                        bilder.push(event.target.result);
+                        ferdigLastet++;
+                        if (ferdigLastet === files.length) {
+                            const nyLogg = {
+                                id: Date.now(),
+                                dato: dato,
+                                tittel: tittel,
+                                timer: timer,
+                                beskrivelse: beskrivelse,
+                                bilder: bilder,
+                                opprettet: new Date().toISOString()
+                            };
+                            alleLogger.push(nyLogg);
+                            saveLoggData(alleLogger);
+                            clearForm();
+                            renderLogger();
+                            alert('✓ Logg med bilder lagret!');
+                        }
+                    };
+                    reader.readAsDataURL(file);
+                });
+            }
+        });
+        
+        function clearForm() {
+            document.getElementById('loggTittel').value = '';
+            document.getElementById('loggTimer').value = '';
+            document.getElementById('loggBeskrivelse').value = '';
+            document.getElementById('loggBilder').value = '';
+            document.getElementById('bildePreview').innerHTML = '';
+            document.getElementById('loggDato').value = new Date().toISOString().slice(0, 10);
+        }
+        
+        // Hent timer fra timereg.html data
+        document.getElementById('hentTimeregBtn').addEventListener('click', () => {
+            const dagensDato = new Date().toISOString().slice(0, 10);
+            const timeregData = loadTimeregData();
+            const dagensTimer = timeregData.timerLogg.filter(t => t.dato === dagensDato);
+            const totalTimer = dagensTimer.reduce((sum, t) => sum + t.totalTimer, 0);
+            
+            if (totalTimer > 0) {
+                document.getElementById('loggTimer').value = totalTimer;
+                document.getElementById('timeregStatus').innerHTML = `<span style="color:#4ade80;">✓ Hentet ${totalTimer} timer fra timeregistrering for ${dagensDato}</span>`;
+                setTimeout(() => {
+                    document.getElementById('timeregStatus').innerHTML = '';
+                }, 3000);
+            } else {
+                document.getElementById('timeregStatus').innerHTML = `<span style="color:#f87171;">Ingen timer registrert i timereg.html for ${dagensDato}</span>`;
+                setTimeout(() => {
+                    document.getElementById('timeregStatus').innerHTML = '';
+                }, 3000);
+            }
+        });
+        
+        // Filtrering
+        document.getElementById('filterInput').addEventListener('input', () => renderLogger());
+        document.getElementById('filterDato').addEventListener('change', () => renderLogger());
+        document.getElementById('clearFilterBtn').addEventListener('click', () => {
+            document.getElementById('filterInput').value = '';
+            document.getElementById('filterDato').value = '';
+            renderLogger();
+        });
+        
+        // Modal lukk
+        const modal = document.getElementById('imageModal');
+        const modalClose = document.querySelector('.modal-close');
+        modalClose.addEventListener('click', () => {
+            modal.classList.remove('active');
+        });
+        modal.addEventListener('click', (e) => {
+            if (e.target === modal) {
+                modal.classList.remove('active');
+            }
+        });
+        
+        // Initialiser
+        alleLogger = loadLoggData();
+        document.getElementById('loggDato').value = new Date().toISOString().slice(0, 10);
+        renderLogger();
+        
+        // Logg ut
+        document.getElementById('logoutBtn').addEventListener('click', () => {
+            sessionStorage.removeItem('workbench_currentUser');
+            window.location.href = 'index.html';
+        });
+    </script>
+</body>
+</html>
